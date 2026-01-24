@@ -78,8 +78,12 @@ export default function GoogleMap({
     try {
       const position = { lat: latitude, lng: longitude };
 
+      // Import the maps library first (required when using loading=async)
+      const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
       // Create map with Map ID (required for AdvancedMarkerElement)
-      const map = new google.maps.Map(mapRef.current, {
+      const map = new Map(mapRef.current, {
         center: position,
         zoom: zoom,
         mapTypeControl: true,
@@ -91,27 +95,12 @@ export default function GoogleMap({
 
       mapInstanceRef.current = map;
 
-      // Try to use AdvancedMarkerElement if available, fallback to standard Marker
-      let marker;
-      
-      if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-        // Use the new AdvancedMarkerElement (no deprecation warning)
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
-        
-        marker = new AdvancedMarkerElement({
-          map: map,
-          position: position,
-          title: propertyName,
-        });
-      } else {
-        // Fallback to standard Marker (will show deprecation warning)
-        marker = new google.maps.Marker({
-          position: position,
-          map: map,
-          title: propertyName,
-          animation: google.maps.Animation.DROP,
-        });
-      }
+      // Use the new AdvancedMarkerElement (no deprecation warning)
+      const marker = new AdvancedMarkerElement({
+        map: map,
+        position: position,
+        title: propertyName,
+      });
 
       // Create info window
       const infoWindow = new google.maps.InfoWindow({

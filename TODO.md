@@ -977,3 +977,77 @@ mapId: '4504f8b37365c3d0'
 - ✅ Clean console output
 
 All Google Maps warnings resolved successfully!
+
+- [x] Step 30: Fix Google Maps constructor error with async loading
+  - [x] Import maps library using google.maps.importLibrary("maps")
+  - [x] Import marker library using google.maps.importLibrary("marker")
+  - [x] Use imported Map constructor instead of google.maps.Map
+  - [x] Use imported AdvancedMarkerElement constructor
+  - [x] Remove fallback to deprecated Marker (not needed with proper imports)
+  - [x] Test map initialization with async loading
+  - [x] Verify no constructor errors
+  - [x] Run lint and confirm all code passes
+
+**Google Maps Async Loading Constructor Fix:**
+
+**Problem:**
+- Error: "google.maps.Map is not a constructor"
+- Cause: When using `loading=async`, constructors are not available on `google.maps` directly
+- Solution: Must use `importLibrary()` to load and access constructors
+
+**Root Cause:**
+With the new async loading pattern (`loading=async`), Google Maps uses dynamic imports:
+- Old way: `new google.maps.Map()` - constructors available immediately
+- New way: Must import libraries first, then use constructors from imported modules
+
+**Code Fix:**
+
+**Before (Broken):**
+```typescript
+const map = new google.maps.Map(mapRef.current, { ... });
+const marker = new AdvancedMarkerElement({ ... });
+```
+
+**After (Working):**
+```typescript
+// Import libraries first
+const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+// Use imported constructors
+const map = new Map(mapRef.current, { ... });
+const marker = new AdvancedMarkerElement({ ... });
+```
+
+**Key Changes:**
+1. Import "maps" library to get Map constructor
+2. Import "marker" library to get AdvancedMarkerElement constructor
+3. Use destructured constructors instead of google.maps.* directly
+4. Removed fallback code (not needed with proper imports)
+5. InfoWindow still works from google.maps.InfoWindow (doesn't require import)
+
+**Benefits:**
+- ✅ No constructor errors
+- ✅ Proper async loading pattern
+- ✅ Optimal performance (libraries loaded on-demand)
+- ✅ No deprecation warnings
+- ✅ Modern Google Maps API usage
+- ✅ Smaller initial bundle size
+
+**Testing Results:**
+- ✅ Map initializes correctly
+- ✅ Marker displays at property location
+- ✅ Info window opens properly
+- ✅ "Get Directions" link works
+- ✅ All map controls functional
+- ✅ No console errors or warnings
+- ✅ Clean, modern implementation
+
+**Google Maps Libraries:**
+- **maps**: Core map functionality (Map constructor)
+- **marker**: Advanced marker functionality (AdvancedMarkerElement)
+- **places**: Places API (not needed for basic map)
+- **geometry**: Geometry utilities (not needed)
+- **drawing**: Drawing tools (not needed)
+
+All Google Maps issues completely resolved!
