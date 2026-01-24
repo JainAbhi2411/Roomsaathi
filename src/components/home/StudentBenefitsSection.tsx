@@ -1,42 +1,42 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Wifi, Utensils, BookOpen, Dumbbell, Shield } from 'lucide-react';
+import { Gift, BadgePercent, CreditCard, Zap, Headphones } from 'lucide-react';
 
 const benefits = [
   {
-    icon: Wifi,
-    title: 'High-Speed WiFi',
-    description: 'Stay connected with unlimited high-speed internet access for your studies and entertainment.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/054c9b31-1676-4198-bdf1-961f463a7b39.jpg',
-    color: 'bg-blue-500/10 text-blue-500',
+    icon: Gift,
+    title: 'Welcome Kit',
+    description: 'Get a complimentary welcome kit with essentials on your move-in day. We make your first day special!',
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/84dacac9-0fa6-4a05-850e-b8fbf21eefb2.jpg',
+    color: 'bg-pink-500/10 text-pink-500',
   },
   {
-    icon: Utensils,
-    title: 'Nutritious Meals',
-    description: 'Enjoy healthy, home-cooked meals prepared with care to keep you energized throughout the day.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/c0e3eb6c-89f5-4573-8b95-dd3b6033e333.jpg',
-    color: 'bg-orange-500/10 text-orange-500',
-  },
-  {
-    icon: BookOpen,
-    title: 'Study Spaces',
-    description: 'Dedicated quiet study areas and libraries to help you focus on your academic goals.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/51ae0e95-efd5-4397-8988-1348923bf016.jpg',
-    color: 'bg-purple-500/10 text-purple-500',
-  },
-  {
-    icon: Dumbbell,
-    title: 'Fitness Facilities',
-    description: 'Access to gym and recreational facilities to maintain a healthy and active lifestyle.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/2bacfa61-91a5-4d31-8e40-f813c9d6d3fc.jpg',
+    icon: BadgePercent,
+    title: 'Zero Brokerage',
+    description: 'Book directly with property owners without any brokerage fees. Save money and get the best deals.',
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/b808fa0d-96b2-4e41-a45b-a7b467e46bd6.jpg',
     color: 'bg-green-500/10 text-green-500',
   },
   {
-    icon: Shield,
-    title: '24/7 Security',
-    description: 'Round-the-clock security and CCTV surveillance ensuring your safety at all times.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/03e66807-d250-466f-b574-b8d630140b65.jpg',
-    color: 'bg-red-500/10 text-red-500',
+    icon: CreditCard,
+    title: 'Flexible Payments',
+    description: 'Pay rent in easy installments with our flexible payment plans. No financial stress, just comfort.',
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/3ccf85a2-5b55-40d5-b88d-fde524bc33ec.jpg',
+    color: 'bg-blue-500/10 text-blue-500',
+  },
+  {
+    icon: Zap,
+    title: 'Quick Move-in',
+    description: 'Move in within 24 hours of booking confirmation. Fast, hassle-free process to get you settled quickly.',
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/d15b6402-f597-4a08-a58a-f60e9a08d88e.jpg',
+    color: 'bg-orange-500/10 text-orange-500',
+  },
+  {
+    icon: Headphones,
+    title: 'Dedicated Support',
+    description: '24/7 customer support team ready to help with any queries or issues. Your comfort is our priority.',
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/abd5fe80-1ffb-4ee9-8dd2-954754b34022.jpg',
+    color: 'bg-purple-500/10 text-purple-500',
   },
 ];
 
@@ -67,7 +67,7 @@ export default function StudentBenefitsSection() {
             What <span className="gradient-text">RoomSaathi Students</span> Get
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Experience premium amenities and services designed specifically for student life
+            Exclusive benefits designed to make your booking experience smooth and rewarding
           </p>
         </motion.div>
 
@@ -177,7 +177,7 @@ export default function StudentBenefitsSection() {
                       </div>
                       <div>
                         <h4 className="font-bold text-lg">{currentBenefit.title}</h4>
-                        <p className="text-sm text-muted-foreground">Available at all properties</p>
+                        <p className="text-sm text-muted-foreground">Exclusive for RoomSaathi bookings</p>
                       </div>
                     </div>
                   </div>
