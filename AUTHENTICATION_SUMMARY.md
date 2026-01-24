@@ -31,6 +31,14 @@
    - Filter by city, locality, property type, price range, amenities
    - No authentication required
 
+6. **Informational Pages (All Accessible Without Login)**
+   - **About Us** (`/about`) - Learn about RoomSaathi's mission and values
+   - **Our Story** (`/our-story`) - Journey and milestones
+   - **Blogs** (`/blogs`) - Articles, tips, and guides for students
+   - **FAQs** (`/faqs`) - Frequently asked questions
+   - **Contact Us** (`/contact`) - Contact form and support information
+   - **Help Center** (`/help-center`) - Comprehensive help resources and guides
+
 ### 🔒 Features That REQUIRE Login
 
 1. **Schedule Property Visit**
@@ -47,6 +55,29 @@
        - Pre-fills user name and phone from profile
        - Allows user to select date, time, and add message
        - Saves visit request to database
+
+## Navigation Access to Informational Pages
+
+### Header Navigation (Desktop)
+All informational pages are accessible via the **"Company"** dropdown menu in the header:
+- About Us
+- Our Story
+- Blogs
+- FAQs
+
+Support pages accessible via **"Support"** dropdown:
+- Help Center
+- Contact Us
+
+### Header Navigation (Mobile)
+Mobile menu includes dedicated sections:
+- **Company Section**: About Us, Our Story, Blogs, FAQs
+- **Support Section**: Help Center, Contact Us
+
+### Footer Navigation
+All informational pages are linked in the footer:
+- **Company Section**: About Us, Our Story, Blogs, Community, Careers
+- **Support Section**: FAQs, Contact Us, Help Center, Browse Properties, List Your Property
 
 ## Authentication Flow for Schedule Visit
 
@@ -114,6 +145,29 @@ const handleOpenChange = (newOpen: boolean) => {
 };
 ```
 
+## Available Pages and Routes
+
+### Public Pages (No Login Required)
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Homepage with featured properties |
+| Browse Properties | `/browse` | Search and filter properties |
+| Property Details | `/property/:id` | Detailed property information |
+| Favorites | `/favorites` | Saved favorite properties (session-based) |
+| About Us | `/about` | Company information and values |
+| Our Story | `/our-story` | Company journey and milestones |
+| Blogs | `/blogs` | Articles and tips for students |
+| FAQs | `/faqs` | Frequently asked questions |
+| Contact Us | `/contact` | Contact form and information |
+| Help Center | `/help-center` | Comprehensive help resources |
+| How to Use | `/how-to-use` | Platform usage guide |
+| Owner Features | `/owner-features` | Information for property owners |
+
+### Authentication Pages
+| Page | Route | Description |
+|------|-------|-------------|
+| Login | `/login` | User login page |
+
 ## User Experience
 
 ### For Non-Logged-In Users
@@ -121,6 +175,7 @@ const handleOpenChange = (newOpen: boolean) => {
 - Can save favorites (session-based)
 - Can contact property owners
 - Can view all property information
+- Can access all informational pages (About, Story, Blogs, FAQs, Contact, Help)
 - **Cannot** schedule visits (will be prompted to login)
 
 ### For Logged-In Users
@@ -128,12 +183,15 @@ const handleOpenChange = (newOpen: boolean) => {
 - Can schedule property visits
 - Visit requests saved with user profile information
 - Favorites can be synced with user account (if implemented)
+- Access to personalized dashboard (My Visits, My Favorites)
 
 ## Summary
 
 ✅ **Current implementation matches requirements perfectly:**
 - Login is **ONLY** required for scheduling property visits
 - All other features work without authentication
+- All informational pages (About Us, Our Story, Blogs, FAQs, Contact Us, Help Center) are fully accessible without login
+- Pages are accessible via Header navigation (Company & Support dropdowns) and Footer links
 - Smooth user experience with clear login prompts when needed
 - Session-based favorites for non-authenticated users
 - Secure visit scheduling for authenticated users only
