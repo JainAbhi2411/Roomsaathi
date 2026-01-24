@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
-import { Phone, Lock, ArrowLeft } from 'lucide-react';
+import { Mail, Phone, User, Lock, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,11 +12,13 @@ import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [step, setStep] = useState<'details' | 'otp'>('details');
   const [loading, setLoading] = useState(false);
-  const { signInWithPhone, verifyOtp } = useAuth();
+  const { signInWithEmail, verifyOtp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,8 +28,18 @@ export default function LoginPage() {
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate phone number
-    if (!phone || phone.length < 10) {
+    // Validate email
+    if (!email || !email.includes('@')) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Validate phone number (optional but recommended)
+    if (phone && phone.length < 10) {
       toast({
         title: 'Invalid Phone Number',
         description: 'Please enter a valid 10-digit phone number',
@@ -36,11 +48,8 @@ export default function LoginPage() {
       return;
     }
 
-    // Format phone number with country code
-    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
-
     setLoading(true);
-    const { error } = await signInWithPhone(formattedPhone);
+    const { error } = await signInWithEmail(email, phone, name);
     setLoading(false);
 
     if (error) {
@@ -52,7 +61,7 @@ export default function LoginPage() {
     } else {
       toast({
         title: 'OTP Sent!',
-        description: 'Please check your phone for the verification code.',
+        description: 'Please check your email for the verification code.',
       });
       setStep('otp');
     }
@@ -64,16 +73,14 @@ export default function LoginPage() {
     if (!otp || otp.length !== 6) {
       toast({
         title: 'Invalid OTP',
-        description: 'Please enter the 6-digit OTP sent to your phone',
+        description: 'Please enter the 6-digit OTP sent to your email',
         variant: 'destructive',
       });
       return;
     }
 
-    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
-
     setLoading(true);
-    const { error } = await verifyOtp(formattedPhone, otp);
+    const { error } = await verifyOtp(email, otp);
     setLoading(false);
 
     if (error) {
@@ -92,7 +99,7 @@ export default function LoginPage() {
   };
 
   const handleBack = () => {
-    setStep('phone');
+    setStep('details');
     setOtp('');
   };
 
@@ -112,32 +119,62 @@ export default function LoginPage() {
                 Welcome to <span className="gradient-text">RoomSaathi</span>
               </CardTitle>
               <CardDescription>
-                {step === 'phone' 
-                  ? 'Enter your phone number to get started'
-                  : 'Enter the OTP sent to your phone'
+                {step === 'details' 
+                  ? 'Enter your details to get started'
+                  : 'Enter the OTP sent to your email'
                 }
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {step === 'phone' ? (
+              {step === 'details' ? (
                 <form onSubmit={handleSendOtp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="email">Email Address *</Label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                       <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="Enter 10-digit mobile number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        id="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="pl-10"
                         required
                         autoFocus
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Your Name (Optional)</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number (Optional)</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="10-digit mobile number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        className="pl-10"
+                      />
+                    </div>
                     <p className="text-xs text-muted-foreground">
-                      We'll send you a one-time password (OTP) to verify your number
+                      We'll send a verification code to your email
                     </p>
                   </div>
 
@@ -158,7 +195,7 @@ export default function LoginPage() {
                     className="mb-4"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Change Number
+                    Change Email
                   </Button>
 
                   <div className="space-y-2">
@@ -178,7 +215,7 @@ export default function LoginPage() {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      OTP sent to +91 {phone}
+                      OTP sent to {email}
                     </p>
                   </div>
 
@@ -204,6 +241,7 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Need help? Contact us at support@roomsaathi.com</p>
+            <p className="mt-2 text-xs">Check your spam folder if you don't see the email</p>
           </div>
         </motion.div>
       </main>

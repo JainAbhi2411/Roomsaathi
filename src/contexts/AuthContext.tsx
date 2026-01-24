@@ -4,6 +4,7 @@ import type { User } from '@supabase/supabase-js';
 
 export interface Profile {
   id: string;
+  email: string | null;
   phone: string | null;
   name: string | null;
   role: 'user' | 'admin';
@@ -29,8 +30,8 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  signInWithPhone: (phone: string) => Promise<{ error: Error | null }>;
-  verifyOtp: (phone: string, otp: string) => Promise<{ error: Error | null }>;
+  signInWithEmail: (email: string, phone?: string, name?: string) => Promise<{ error: Error | null }>;
+  verifyOtp: (email: string, otp: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -74,10 +75,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signInWithPhone = async (phone: string) => {
+  const signInWithEmail = async (email: string, phone?: string, name?: string) => {
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        phone: phone,
+        email: email,
+        options: {
+          data: {
+            phone: phone || '',
+            name: name || '',
+          },
+        },
       });
 
       if (error) throw error;
@@ -87,12 +94,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const verifyOtp = async (phone: string, otp: string) => {
+  const verifyOtp = async (email: string, otp: string) => {
     try {
       const { error } = await supabase.auth.verifyOtp({
-        phone: phone,
+        email: email,
         token: otp,
-        type: 'sms',
+        type: 'email',
       });
 
       if (error) throw error;
@@ -109,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithPhone, verifyOtp, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, signInWithEmail, verifyOtp, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

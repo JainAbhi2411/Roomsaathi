@@ -12,23 +12,40 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats\n- Apartments
+- Flats
+- Apartments
 - Rooms
-- Hostels\n- RoomSaathi Verified (special verified properties category)
+- Hostels
+- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
 \n## 3. Core Features and Functionality
 
 ### 3.1 User Authentication System
 - **Login with Mobile Number and OTP Verification:**
   - Users must login using their mobile number\n  - OTP (One-Time Password) verification system for secure authentication
-  - Login flow:\n    - User enters mobile number
-    - System sends OTP to the provided mobile number
+  - **SMS Provider Configuration:**
+    - Integrate with a reliable SMS gateway service for OTP delivery
+    - Recommended SMS providers: Twilio, AWS SNS, MSG91, or Firebase Authentication
+    - Configure SMS provider API credentials in the application settings
+    - Implement fallback mechanism in case primary SMS provider fails
+    - Add proper error handling for SMS delivery failures with user-friendly messages
+    - Display alternative contact options if SMS delivery fails (e.g., Contact Support)
+    - Log SMS delivery status for debugging and monitoring purposes
+  - Login flow:
+    - User enters mobile number
+    - System sends OTP to the provided mobile number via configured SMS provider
+    - Display loading state while OTP is being sent\n    - Show success message when OTP is sent successfully
+    - Show error message with retry option if OTP sending fails
     - User enters received OTP for verification
     - Upon successful verification, user is logged in\n  - Login button in header navigation (right side)
   - After successful login, display user profile icon or name instead of Login button
   - Logout functionality available in user profile dropdown
-  - Session management to keep users logged in
-  - Auto-logout after session expiry with option to re-login
+  - Session management to keep users logged in\n  - Auto-logout after session expiry with option to re-login
+  - **Error Handling for SMS Provider:**
+    - Display clear error message: Unable to send OTP. Please try again or contact support.\n    - Provide Retry button for users to request OTP again
+    - Implement rate limiting to prevent SMS spam
+    - Add Contact Support button in error state for immediate assistance
+    - Log all SMS provider errors for technical team review
 
 ### 3.2 Header Navigation
 - Left side: Logo with hanging animation effect
@@ -65,8 +82,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Quick view option for property details without leaving the browse page
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
-
-#### 3.4.1 Advanced Filter Options
+\n#### 3.4.1 Advanced Filter Options
 - Comprehensive filter panel with the following options:
   - Property Type: Multi-select checkboxes for PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
   - RoomSaathi Verified: Toggle filter for verified properties only
@@ -99,8 +115,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Locality name
   - Landmark names
   - Property features
-  - Amenities
-- Display search suggestions dropdown with autocomplete
+  - Amenities\n- Display search suggestions dropdown with autocomplete
 - Highlight matching text in search results
 - Show recent searches for quick access
 - Display search result count in real-time
@@ -136,8 +151,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Amenities Search: Multi-criteria matching (AND/OR logic options)
 - Keyword Search: Full-text search across property descriptions
 - Combined Search: Support for multiple simultaneous search parameters
-- Search ranking algorithm prioritizing:\n  - Exact matches
-  - RoomSaathi Verified properties\n  - Recently added properties
+- Search ranking algorithm prioritizing:\n  - Exact matches\n  - RoomSaathi Verified properties\n  - Recently added properties
   - Properties with complete information
 - Search result sorting options:
   - Relevance (default)
@@ -146,8 +160,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Newest First
   - Most Popular
   - Distance (when location is specified)
-- No results found state with suggestions:\n  - Relax some filters
-  - Try different keywords
+- No results found state with suggestions:\n  - Relax some filters\n  - Try different keywords
   - Browse all properties
   - Contact support for assistance
 

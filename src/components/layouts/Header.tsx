@@ -228,7 +228,7 @@ export default function Header() {
               <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-2">
                   <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
-                  <p className="text-xs text-muted-foreground">{profile?.phone}</p>
+                  <p className="text-xs text-muted-foreground">{profile?.email || profile?.phone}</p>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
