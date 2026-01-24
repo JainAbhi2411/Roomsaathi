@@ -1575,3 +1575,19 @@ All features completed successfully with lint passing! 🎉
 - Responsive design for all screen sizes
 
 All features completed successfully with lint passing! 🎉
+
+- [x] Step 28: Fix Quick Listing Form Submission Bug
+  - [x] Identified issue: INSERT without SELECT permission
+  - [x] Removed .select() from createUserQuery API function
+  - [x] Changed return value to { success: true }
+  - [x] Verified fix works for anonymous users
+  - [x] Run lint check - PASSED ✅
+
+**Bug Fix Summary:**
+- Quick Listing form now works without user login
+- Removed unnecessary .select() call from database insert
+- Follows Supabase best practice: "Prefer .insert() without .select()"
+- Anonymous users can now submit owner listing requests successfully
+- Also fixes ContactPage form submission for non-logged-in users
+
+All issues resolved! 🎉

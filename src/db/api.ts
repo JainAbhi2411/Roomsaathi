@@ -291,7 +291,7 @@ export const createUserQuery = async (query: {
   property_id?: string;
   property_name?: string;
 }) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('user_queries')
     .insert({
       name: query.name,
@@ -301,10 +301,8 @@ export const createUserQuery = async (query: {
       property_id: query.property_id || null,
       property_name: query.property_name || null,
       status: 'pending'
-    })
-    .select()
-    .maybeSingle();
+    });
 
   if (error) throw error;
-  return data;
+  return { success: true };
 };
