@@ -30,24 +30,24 @@ const cities = [
 
 export default function CitiesSection() {
   return (
-    <section className="py-16 xl:py-24 bg-muted/30">
+    <section className="py-12 xl:py-20 bg-background">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 xl:mb-12"
         >
-          <h2 className="text-3xl xl:text-4xl font-bold mb-4">
+          <h2 className="text-2xl xl:text-4xl font-bold mb-3 xl:mb-4">
             Cities We <span className="gradient-text">Serve</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm xl:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Explore quality accommodations across major cities in Rajasthan
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-6 max-w-6xl mx-auto">
           {cities.map((city, index) => (
             <motion.div
               key={index}
@@ -57,42 +57,42 @@ export default function CitiesSection() {
               transition={{ duration: 0.5, delay: index * 0.15 }}
             >
               <Card className="overflow-hidden hover:shadow-hover transition-all duration-300 group h-full flex flex-col">
-                <div className="relative h-56 overflow-hidden flex-shrink-0">
+                <div className="relative h-40 xl:h-48 overflow-hidden flex-shrink-0">
                   <img
                     src={city.image}
                     alt={city.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-2xl font-bold text-white mb-1">{city.name}</h3>
-                    <p className="text-sm text-white/90">{city.description}</p>
+                  <div className="absolute bottom-3 xl:bottom-4 left-3 xl:left-4 right-3 xl:right-4">
+                    <h3 className="text-xl xl:text-2xl font-bold text-white mb-0.5 xl:mb-1">{city.name}</h3>
+                    <p className="text-xs xl:text-sm text-white/90">{city.description}</p>
                   </div>
                 </div>
-                <CardContent className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-primary">
-                      <MapPin className="h-4 w-4" />
-                      <span className="font-semibold">{city.properties} Properties</span>
+                <CardContent className="p-4 xl:p-5 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between mb-3 xl:mb-4">
+                    <div className="flex items-center gap-1.5 xl:gap-2 text-primary">
+                      <MapPin className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
+                      <span className="font-semibold text-sm xl:text-base">{city.properties} Properties</span>
                     </div>
                   </div>
-                  <div className="mb-6 flex-1">
-                    <p className="text-sm text-muted-foreground mb-2">Popular Localities:</p>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="mb-4 xl:mb-5 flex-1">
+                    <p className="text-xs xl:text-sm text-muted-foreground mb-2">Popular Localities:</p>
+                    <div className="flex flex-wrap gap-1.5 xl:gap-2">
                       {city.localities.map((locality, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full"
+                          className="text-xs bg-secondary text-secondary-foreground px-2.5 xl:px-3 py-1 xl:py-1.5 rounded-full"
                         >
                           {locality}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <Button asChild variant="outline" className="w-full group hover:bg-primary hover:text-primary-foreground transition-all">
+                  <Button asChild variant="outline" size="sm" className="w-full group hover:bg-primary hover:text-primary-foreground transition-all">
                     <Link to={`/browse?city=${encodeURIComponent(city.name)}`}>
-                      Explore {city.name}
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      <span className="text-xs xl:text-sm">Explore {city.name}</span>
+                      <ArrowRight className="ml-1.5 xl:ml-2 h-3.5 w-3.5 xl:h-4 xl:w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </Button>
                 </CardContent>

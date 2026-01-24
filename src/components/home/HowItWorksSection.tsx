@@ -31,24 +31,24 @@ const steps = [
 
 export default function HowItWorksSection() {
   return (
-    <section className="py-16 xl:py-24 bg-muted/30">
+    <section className="py-12 xl:py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 xl:mb-12"
         >
-          <h2 className="text-3xl xl:text-4xl font-bold mb-4">
+          <h2 className="text-2xl xl:text-4xl font-bold mb-3 xl:mb-4">
             How It <span className="gradient-text">Works</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm xl:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Finding your perfect accommodation is just four simple steps away
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 xl:gap-6 max-w-6xl mx-auto">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -56,19 +56,20 @@ export default function HowItWorksSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="flex"
             >
-              <Card className="relative h-full hover:shadow-hover transition-shadow duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
+              <Card className="relative h-full hover:shadow-hover transition-shadow duration-300 w-full">
+                <CardContent className="p-3 xl:p-5 text-center flex flex-col h-full">
+                  <div className="absolute -top-2 xl:-top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full w-6 h-6 xl:w-8 xl:h-8 flex items-center justify-center font-bold text-xs xl:text-sm shadow-md">
                     {index + 1}
                   </div>
-                  <div className="mb-4 mt-2">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">
-                      <step.icon className={`h-8 w-8 ${step.color}`} />
+                  <div className="mb-2 xl:mb-3 mt-2 xl:mt-3">
+                    <div className="inline-flex items-center justify-center w-10 h-10 xl:w-14 xl:h-14 rounded-full bg-primary/10">
+                      <step.icon className={`h-5 w-5 xl:h-7 xl:w-7 ${step.color}`} />
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
+                  <h3 className="text-sm xl:text-lg font-semibold mb-1.5 xl:mb-2 leading-tight">{step.title}</h3>
+                  <p className="text-xs xl:text-sm text-muted-foreground leading-snug flex-1">{step.description}</p>
                 </CardContent>
               </Card>
             </motion.div>
