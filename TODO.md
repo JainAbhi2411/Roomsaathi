@@ -1589,12 +1589,22 @@ All features completed successfully with lint passing! 🎉
   - [x] Applied database migration successfully
   - [x] Verified column exists and is nullable
 
+- [x] Step 30: Fix Quick Listing Form - Email Field Issue
+  - [x] Identified issue: Form only collects phone, but email is required in DB
+  - [x] Made email field nullable in user_queries table
+  - [x] Updated TypeScript type to make email optional
+  - [x] Changed form to send null for email instead of fake email
+  - [x] Added column comments explaining optional contact methods
+  - [x] Run lint check - PASSED ✅
+
 **Bug Fix Summary:**
 - Quick Listing form now works without user login
 - Removed unnecessary .select() call from database insert
 - Added missing property_name column to user_queries table
+- Made email field optional (nullable) to support phone-only forms
+- Updated API types to reflect optional email field
 - Follows Supabase best practice: "Prefer .insert() without .select()"
 - Anonymous users can now submit owner listing requests successfully
-- Also fixes ContactPage form submission for non-logged-in users
+- Supports both email-based and phone-based contact forms
 
 All issues resolved! 🎉

@@ -44,12 +44,38 @@ Added the missing `property_name` column to the `user_queries` table via databas
 
 ---
 
+## Issue 3: Quick Listing Form - Email Field Constraint
+After fixing the missing column, the Quick Listing form still failed because it was trying to create a fake email address.
+
+### Root Cause
+The Quick Listing form only collects **name** and **phone** (no email field), but the `user_queries` table had `email` as a required (NOT NULL) field. The code was creating a fake email like `9876543210@owner.roomsaathi.com` to satisfy the constraint.
+
+### Solution
+Made the `email` field nullable in the database since some forms (like Quick Listing) only collect phone numbers as the primary contact method.
+
+#### Changes Made
+- Created migration: `make_email_nullable_in_user_queries`
+- Changed `email` column from `NOT NULL` to nullable
+- Updated TypeScript type in `api.ts` to make email optional: `email?: string | null`
+- Modified `OwnerFeaturesPage.tsx` to send `null` for email instead of fake email
+- Added column comments explaining that either email or phone can be the primary contact method
+
+#### Why This Design Is Better
+1. **Flexibility**: Supports both email-based forms (Contact Page) and phone-based forms (Quick Listing)
+2. **Data Integrity**: No fake/invalid email addresses in the database
+3. **User Experience**: Owners can quickly submit listing requests with just name and phone
+4. **Real-world Usage**: Some users prefer phone contact, others prefer email
+
+---
+
 ## Final Status
-✅ **Both issues resolved!**
+✅ **All three issues resolved!**
 
 ### Testing
 - ✅ Lint check passed
 - ✅ No authentication required for form submission
 - ✅ Database schema updated with property_name column
-- ✅ Works for both ContactPage and OwnerFeaturesPage
+- ✅ Email field is now optional (nullable)
+- ✅ Works for both ContactPage (email required) and OwnerFeaturesPage (phone only)
 - ✅ Anonymous users can submit queries successfully
+- ✅ No fake email addresses being created

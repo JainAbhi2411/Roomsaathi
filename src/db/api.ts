@@ -285,7 +285,7 @@ export const getBlogBySlug = async (slug: string) => {
 // User Query Management
 export const createUserQuery = async (query: {
   name: string;
-  email: string;
+  email?: string | null;
   phone?: string;
   message: string;
   property_id?: string;
@@ -295,7 +295,7 @@ export const createUserQuery = async (query: {
     .from('user_queries')
     .insert({
       name: query.name,
-      email: query.email,
+      email: query.email || null,
       phone: query.phone || null,
       message: query.message,
       property_id: query.property_id || null,

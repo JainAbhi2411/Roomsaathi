@@ -77,7 +77,7 @@ export default function OwnerFeaturesPage() {
       // Save to database
       await createUserQuery({
         name: quickListingForm.name,
-        email: `${quickListingForm.phone}@owner.roomsaathi.com`,
+        email: null, // Email not collected in Quick Listing form
         phone: quickListingForm.phone,
         message: 'Quick Listing Request - Owner wants to list property',
         property_name: 'Owner Listing Request',
