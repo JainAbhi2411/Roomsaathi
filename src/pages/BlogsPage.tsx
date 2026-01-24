@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import { Card, CardContent } from '@/components/ui/card';
