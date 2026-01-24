@@ -3,6 +3,10 @@ import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import OwnerFeaturesPage from './pages/OwnerFeaturesPage';
+import BlogsPage from './pages/BlogsPage';
+import AboutUsPage from './pages/AboutUsPage';
+import OurStoryPage from './pages/OurStoryPage';
+import FAQsPage from './pages/FAQsPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -38,6 +42,30 @@ const routes: RouteConfig[] = [
     name: 'Owner Features',
     path: '/owner-features',
     element: <OwnerFeaturesPage />,
+    visible: false
+  },
+  {
+    name: 'Blogs',
+    path: '/blogs',
+    element: <BlogsPage />,
+    visible: false
+  },
+  {
+    name: 'About Us',
+    path: '/about',
+    element: <AboutUsPage />,
+    visible: false
+  },
+  {
+    name: 'Our Story',
+    path: '/our-story',
+    element: <OurStoryPage />,
+    visible: false
+  },
+  {
+    name: 'FAQs',
+    path: '/faqs',
+    element: <FAQsPage />,
     visible: false
   }
 ];
