@@ -17,6 +17,7 @@ export interface Property {
   description: string;
   verified: boolean;
   images: string[];
+  video_url?: string;
   contact_phone?: string;
   contact_email?: string;
   owner_name?: string;

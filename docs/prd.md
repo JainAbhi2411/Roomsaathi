@@ -5,8 +5,8 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.\n
-### 1.3 Logo
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.
+\n### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
 ## 2. Property Categories
 
@@ -21,9 +21,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 \n### 2.2 Property Type Classifications
 - For Girls
 - For Boys
-- For Family
-- For Bachelors
-- For Students\n
+- For Family\n- For Bachelors\n- For Students
+
 ## 3. Core Features and Functionality
 
 ### 3.1 User Authentication System
@@ -37,8 +36,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
     - Add proper error handling for SMS delivery failures with user-friendly messages
     - Display alternative contact options if SMS delivery fails (e.g., Contact Support)
     - Log SMS delivery status for debugging and monitoring purposes
-  - Login flow:
-    - User enters mobile number
+  - Login flow:\n    - User enters mobile number
     - System sends OTP to the provided mobile number via configured SMS provider
     - Display loading state while OTP is being sent
     - Show success message when OTP is sent successfully
@@ -75,8 +73,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
-
-### 3.4 Dedicated Property Browse Page
+\n### 3.4 Dedicated Property Browse Page
 - Create a separate dedicated page for browsing all properties
 - Display all property listings with preview cards
 - Show property thumbnail images with auto slider functionality for multiple property images
@@ -191,8 +188,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
   - **Add property type classification options: For Girls, For Boys, For Family, For Bachelors, For Students**
   - On category click, navigate to Browse Property page with selected category pre-filtered
-- Right side:
-  - Display property cards with small and minimal design
+- Right side:\n  - Display property cards with small and minimal design
   - **Show amenities icons on property cards** (3-5 key amenities)
   - **Display accommodation type badge** on each property card
   - **Display property type classification badge** (For Girls/For Boys/For Family/For Bachelors/For Students)
@@ -243,6 +239,15 @@ Each property should display complete information with the following advanced la
 - Property images gallery with multiple high-quality images
 - Image slider/carousel functionality\n- Thumbnail navigation for quick image browsing
 - Full-screen image view option
+- **Property Video Gallery:**
+  - Display property video URLs stored in database
+  - Video player with standard controls (play, pause, volume, fullscreen)
+  - Support for multiple video formats\n  - Video thumbnail preview before playing
+  - Option to view videos in fullscreen mode
+  - Video gallery navigation if multiple videos are available
+  - Smooth transition between images and videos in the media gallery
+  - Video loading indicator
+  - Fallback message if video fails to load
 \n**Right Side:**
 \n- **Neighborhood Highlights:**
   - Nearby landmarks and facilities
@@ -283,7 +288,8 @@ Each property should display complete information with the following advanced la
   - Display complete list of available amenities with corresponding icons
   - Each amenity should have a clear icon representation
   - Amenities include:
-    - WiFi\n    - AC
+    - WiFi
+    - AC
     - Parking
     - Laundry
     - Meals (Breakfast/Lunch/Dinner options)
@@ -323,8 +329,7 @@ Each property should display complete information with the following advanced la
     - Power outlets
     - Reading light
     - Mattress type
-  - Visual design approach:
-    - Use floor plan view with clickable room sections
+  - Visual design approach:\n    - Use floor plan view with clickable room sections
     - Color-coded availability status (Available/Occupied/Reserved)
     - Hover effect to show quick room details
     - Click on room to expand detailed view with images and amenities
@@ -364,8 +369,7 @@ Each property should display complete information with the following advanced la
   - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
     - Opens query form or chat interface
     - Quick response commitment display
-
-- **Payment Policies:**
+\n- **Payment Policies:**
   - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
   - Payment schedule (Monthly/Quarterly/Advance)
   - Due date for monthly payments
@@ -426,6 +430,7 @@ Each property should display complete information with the following advanced la
 \n### 3.10 User Actions\n- Login with mobile number and OTP verification
 - Browse all properties on dedicated browse page
 - View detailed property information including room details and images
+- **Watch property videos in the property detail page**
 - Filter and search properties with advanced options including amenities, accommodation type, and property type classification
 - Save favorite properties (requires login)
 - Contact property owners\n- Share property listings\n- Compare multiple properties
@@ -437,7 +442,8 @@ Each property should display complete information with the following advanced la
 - Review payment and cancellation policies
 - View property location on Google Map
 - Get directions to property location
-- Filter properties by amenities, accommodation type, and property type classification\n\n### 3.11 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison
+- Filter properties by amenities, accommodation type, and property type classification\n\n### 3.11 Property Comparison
+- Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
 - **Include accommodation type comparison** (furnishing, gender preference, property age)
 - **Include property type classification comparison** (For Girls/For Boys/For Family/For Bachelors/For Students)
@@ -476,15 +482,15 @@ Each property should display complete information with the following advanced la
   - Popular localities preview for each city (optional)
   - City-specific statistics or highlights
 \n### 3.15 City Guides Section
-- Provide information about Sikar, Jaipur, and Kota
-- Highlight popular localities in each city
+- Provide information about Sikar, Jaipur, and Kota\n- Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
 \n### 3.16 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
-\n### 3.17 Why Choose RoomSaathi Section
+
+### 3.17 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
@@ -522,8 +528,8 @@ Each property should display complete information with the following advanced la
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image\n    - Blog title
-    - Brief excerpt or summary
+    - Featured image
+    - Blog title\n    - Brief excerpt or summary
     - Author name and avatar
     - Publication date
     - Category tags
@@ -728,6 +734,7 @@ Each property should display complete information with the following advanced la
 - **Amenity icon hover effects and tooltips**
 - **Accommodation type badge animations on property cards**
 - **Property type classification badge animations on property cards**
+- **Video player loading animations and smooth transitions between media items**
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
@@ -752,7 +759,9 @@ Each property should display complete information with the following advanced la
 - Room-specific images for each room type
 - Floor plan visual diagrams\n- Amenity icons for room furnishings
 - 360-degree room view images (if available)
-\n## 5. Primary Operating Locations
+- **Property video content stored in database and displayed in property detail page**
+
+## 5. Primary Operating Locations
 - Sikar\n- Jaipur
 - Kota
 

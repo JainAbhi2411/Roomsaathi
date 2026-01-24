@@ -7,7 +7,7 @@ import {
   Tv, Refrigerator, WashingMachine, CheckCircle2, Users, Bed,
   Bath, Maximize, Home, MapPinned, School, ShoppingBag, Hospital,
   Bus, Coffee, ChevronLeft, ChevronRight, X, Info, FileText,
-  CreditCard, XCircle, Clock, Armchair, DoorOpen, Lamp
+  CreditCard, XCircle, Clock, Armchair, DoorOpen, Lamp, Video
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +25,7 @@ import FloorPlanView from '@/components/property/FloorPlanView';
 import SendQueryDialog from '@/components/property/SendQueryDialog';
 import ScheduleVisitDialog from '@/components/property/ScheduleVisitDialog';
 import GoogleMap from '@/components/common/GoogleMap';
+import VideoPlayer from '@/components/ui/video-player';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
@@ -221,6 +222,14 @@ export default function PropertyDetailsPage() {
                         {currentImageIndex + 1} / {property.images.length}
                       </div>
 
+                      {/* Video Available Badge */}
+                      {property.video_url && (
+                        <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium text-primary-foreground flex items-center gap-1.5">
+                          <Video className="h-4 w-4" />
+                          <span>Video Available</span>
+                        </div>
+                      )}
+
                       {/* Navigation Arrows */}
                       {property.images.length > 1 && (
                         <>
@@ -324,10 +333,16 @@ export default function PropertyDetailsPage() {
 
                 {/* Tabs for Different Sections */}
                 <Tabs defaultValue="details" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
+                  <TabsList className={`grid w-full ${property.video_url ? 'grid-cols-5' : 'grid-cols-4'}`}>
                     <TabsTrigger value="details">Details</TabsTrigger>
                     <TabsTrigger value="rooms">Rooms</TabsTrigger>
                     <TabsTrigger value="amenities">Amenities</TabsTrigger>
+                    {property.video_url && (
+                      <TabsTrigger value="video">
+                        <Video className="h-4 w-4 mr-1" />
+                        Video
+                      </TabsTrigger>
+                    )}
                     <TabsTrigger value="policies">Policies</TabsTrigger>
                   </TabsList>
 
@@ -795,6 +810,30 @@ export default function PropertyDetailsPage() {
                       </Card>
                     )}
                   </TabsContent>
+
+                  {/* Video Tab */}
+                  {property.video_url && (
+                    <TabsContent value="video" className="space-y-6 mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Video className="h-5 w-5" />
+                            Property Video Tour
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <VideoPlayer 
+                            url={property.video_url} 
+                            title={`${property.name} - Video Tour`}
+                            className="w-full"
+                          />
+                          <p className="text-sm text-muted-foreground mt-4">
+                            Watch this video tour to get a better view of the property and its surroundings.
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  )}
                 </Tabs>
               </div>
 
