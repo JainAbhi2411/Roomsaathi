@@ -1583,9 +1583,16 @@ All features completed successfully with lint passing! 🎉
   - [x] Verified fix works for anonymous users
   - [x] Run lint check - PASSED ✅
 
+- [x] Step 29: Fix 400 Bad Request Error - Missing property_name Column
+  - [x] Identified issue: API tries to insert property_name but column doesn't exist
+  - [x] Added property_name column to user_queries table
+  - [x] Applied database migration successfully
+  - [x] Verified column exists and is nullable
+
 **Bug Fix Summary:**
 - Quick Listing form now works without user login
 - Removed unnecessary .select() call from database insert
+- Added missing property_name column to user_queries table
 - Follows Supabase best practice: "Prefer .insert() without .select()"
 - Anonymous users can now submit owner listing requests successfully
 - Also fixes ContactPage form submission for non-logged-in users
