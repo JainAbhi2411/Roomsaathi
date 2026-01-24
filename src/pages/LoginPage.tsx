@@ -48,20 +48,23 @@ export default function LoginPage() {
       return;
     }
 
+    console.log('Sending OTP to:', email);
     setLoading(true);
     const { error } = await signInWithEmail(email, phone, name);
     setLoading(false);
 
     if (error) {
+      console.error('Failed to send OTP:', error);
       toast({
-        title: 'Error',
+        title: 'Error Sending OTP',
         description: error.message || 'Failed to send OTP. Please try again.',
         variant: 'destructive',
       });
     } else {
+      console.log('OTP sent successfully');
       toast({
-        title: 'OTP Sent!',
-        description: 'Please check your email for the verification code.',
+        title: 'OTP Sent Successfully! ✅',
+        description: 'Please check your email inbox (and spam folder) for the 6-digit verification code.',
       });
       setStep('otp');
     }
@@ -79,19 +82,22 @@ export default function LoginPage() {
       return;
     }
 
+    console.log('Verifying OTP for:', email);
     setLoading(true);
     const { error } = await verifyOtp(email, otp);
     setLoading(false);
 
     if (error) {
+      console.error('Failed to verify OTP:', error);
       toast({
         title: 'Verification Failed',
-        description: error.message || 'Invalid OTP. Please try again.',
+        description: error.message || 'Invalid OTP. Please check the code and try again.',
         variant: 'destructive',
       });
     } else {
+      console.log('Login successful');
       toast({
-        title: 'Success!',
+        title: 'Success! 🎉',
         description: 'You have been logged in successfully.',
       });
       navigate(from, { replace: true });

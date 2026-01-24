@@ -9,6 +9,7 @@ import AboutUsPage from './pages/AboutUsPage';
 import OurStoryPage from './pages/OurStoryPage';
 import FAQsPage from './pages/FAQsPage';
 import LoginPage from './pages/LoginPage';
+import TestAuthPage from './pages/TestAuthPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -74,6 +75,12 @@ const routes: RouteConfig[] = [
     name: 'Login',
     path: '/login',
     element: <LoginPage />,
+    visible: false
+  },
+  {
+    name: 'Test Auth',
+    path: '/test-auth',
+    element: <TestAuthPage />,
     visible: false
   }
 ];

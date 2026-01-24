@@ -77,9 +77,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithEmail = async (email: string, phone?: string, name?: string) => {
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      console.log('Sending OTP to email:', email);
+      const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
+          shouldCreateUser: true,
           data: {
             phone: phone || '',
             name: name || '',
@@ -87,24 +89,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
 
-      if (error) throw error;
+      console.log('OTP Response:', { data, error });
+
+      if (error) {
+        console.error('OTP Send Error:', error);
+        throw error;
+      }
+      
+      console.log('OTP sent successfully to:', email);
       return { error: null };
     } catch (error) {
+      console.error('SignIn Error:', error);
       return { error: error as Error };
     }
   };
 
   const verifyOtp = async (email: string, otp: string) => {
     try {
-      const { error } = await supabase.auth.verifyOtp({
+      console.log('Verifying OTP for email:', email);
+      const { data, error } = await supabase.auth.verifyOtp({
         email: email,
         token: otp,
         type: 'email',
       });
 
-      if (error) throw error;
+      console.log('Verify OTP Response:', { data, error });
+
+      if (error) {
+        console.error('OTP Verify Error:', error);
+        throw error;
+      }
+      
+      console.log('OTP verified successfully');
       return { error: null };
     } catch (error) {
+      console.error('Verify Error:', error);
       return { error: error as Error };
     }
   };
