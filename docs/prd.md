@@ -12,9 +12,11 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats\n- Apartments
+- Flats
+- Apartments
 - Rooms
-- Hostels\n- RoomSaathi Verified (special verified properties category)
+- Hostels
+- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
 \n## 3. Core Features and Functionality
 
@@ -205,8 +207,7 @@ Each property should display complete information with the following advanced la
   - Availability status
 \n- **Google Map Integration:**
   - Display interactive Google Map showing the exact property location
-  - Use user-provided Google Maps API for map integration
-  - Map should display a marker at the property's precise location
+  - Google Maps API Key: AIzaSyDWxlGHqTSpDoWE66rhv9tEC3ZgSs0PZCQ\n  - Map should display a marker at the property's precise location
   - Map features:
     - Zoom in/out controls
     - Street view option (if available)
@@ -240,8 +241,7 @@ Each property should display complete information with the following advanced la
     - Attached/Common bathroom indicator
   - Room-specific amenities and furnishings with icons:\n    - Bed (Single/Double/Bunk)
     - Almirah/Wardrobe
-    - Study Table
-    - Chair\n    - Shoe Rack
+    - Study Table\n    - Chair\n    - Shoe Rack
     - Fan/AC
     - Window\n    - Balcony access
     - Power outlets
@@ -288,8 +288,7 @@ Each property should display complete information with the following advanced la
   - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
     - Opens query form or chat interface
     - Quick response commitment display
-
-- **Payment Policies:**
+\n- **Payment Policies:**
   - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
   - Payment schedule (Monthly/Quarterly/Advance)
   - Due date for monthly payments
@@ -386,8 +385,7 @@ Each property should display complete information with the following advanced la
 - Provide information about Sikar, Jaipur, and Kota\n- Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
-
-### 3.15 Testimonials Section
+\n### 3.15 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
@@ -430,8 +428,8 @@ Each property should display complete information with the following advanced la
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image\n    - Blog title
-    - Brief excerpt or summary
+    - Featured image
+    - Blog title\n    - Brief excerpt or summary
     - Author name and avatar
     - Publication date
     - Category tags

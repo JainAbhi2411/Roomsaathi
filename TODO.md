@@ -801,3 +801,40 @@ All features implemented successfully with lint passing!
 5. Add user's actual Google Maps API key to .env file
 
 All features implemented successfully with lint passing!
+
+- [x] Step 27: Add user's Google Maps API key to environment
+  - [x] Replace placeholder with actual API key: AIzaSyDWxlGHqTSpDoWE66rhv9tEC3ZgSs0PZCQ
+  - [x] Verify API key is correctly set in .env file
+  - [x] Google Maps now fully functional and ready to display property locations
+
+**Google Maps API Key Configuration:**
+- API Key successfully added to .env file
+- Key: AIzaSyDWxlGHqTSpDoWE66rhv9tEC3ZgSs0PZCQ
+- Maps will now load on Property Details pages
+- Interactive map with property marker fully functional
+- "Get Directions" link working
+- No server restart needed for development (Vite hot reload)
+
+**Important Security Recommendations:**
+1. Go to Google Cloud Console: https://console.cloud.google.com/google/maps-apis
+2. Click on your API key to edit restrictions
+3. Under "Application restrictions", select "HTTP referrers"
+4. Add your domains:
+   - http://localhost:*
+   - http://127.0.0.1:*
+   - https://yourdomain.com/*
+5. Under "API restrictions", select "Restrict key"
+6. Select only: Maps JavaScript API
+7. Click Save
+
+This will prevent unauthorized use of your API key and protect your billing account.
+
+**Testing the Map:**
+1. Navigate to any property details page
+2. Click on the "Details" tab
+3. Scroll down past the Contact Owner section
+4. You should see an interactive Google Map with a red marker showing the property location
+5. Click the marker to see property info
+6. Click "Get Directions" to open Google Maps navigation
+
+All features ready to use!
