@@ -295,3 +295,21 @@ All features completed successfully with lint passing!
 - Responsive accordion layout
 
 All pages completed successfully with lint passing!
+
+- [x] Step 21: Fix React hook errors
+  - [x] Identified root cause: Missing React import in routes.tsx
+  - [x] Added `import React from 'react'` to routes.tsx
+  - [x] Verified lint passes successfully
+
+**Issue Fixed:**
+The error "Cannot read properties of null (reading 'useContext/useState/useRef/useMemo')" was caused by missing React import in routes.tsx file. When creating JSX elements outside of component context (in configuration files), React must be explicitly imported even in React 18+.
+
+**Root Cause:**
+- routes.tsx was creating JSX elements (<HomePage />, <BlogsPage />, etc.) without importing React
+- This caused React hooks to be null when components tried to use them
+- The error manifested in multiple components: Link, DropdownMenu, Dialog, motion components, useState, useContext, etc.
+
+**Solution:**
+Added `import React from 'react'` at the top of routes.tsx file to ensure React is available when JSX elements are created in the routes configuration.
+
+Error resolved successfully!

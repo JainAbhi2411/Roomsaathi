@@ -1,3 +1,4 @@
+import React from 'react';
 import HomePage from './pages/HomePage';
 import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
