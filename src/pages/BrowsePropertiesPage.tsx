@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSearchParams } from 'react-router';
 import { Grid3x3, List, SlidersHorizontal, Search, X } from 'lucide-react';
-import type { Property } from '@/types/index';
+import type { PropertyWithDetails } from '@/types/index';
 import type { FilterOptions } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCard from '@/components/property/PropertyCard';
@@ -22,8 +22,8 @@ type ViewMode = 'grid' | 'list';
 
 export default function BrowsePropertiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
+  const [filteredProperties, setFilteredProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterOptions>({});
   const [searchQuery, setSearchQuery] = useState('');

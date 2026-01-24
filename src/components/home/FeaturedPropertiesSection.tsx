@@ -3,13 +3,13 @@ import { motion } from 'motion/react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router';
-import type { Property } from '@/types/index';
+import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FeaturedPropertiesSection() {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

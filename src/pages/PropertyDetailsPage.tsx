@@ -66,7 +66,7 @@ export default function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [property, setProperty] = useState<PropertyWithDetails | null>(null);
-  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
+  const [similarProperties, setSimilarProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
@@ -346,10 +346,12 @@ export default function PropertyDetailsPage() {
                             <p className="text-sm text-muted-foreground mb-1">Verified</p>
                             <p className="font-semibold">{property.verified ? 'Yes' : 'No'}</p>
                           </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground mb-1">Accommodation</p>
-                            <p className="font-semibold">{property.type === 'PG' ? 'Paying Guest' : property.type}</p>
-                          </div>
+                          {property.accommodation_type && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Accommodation Type</p>
+                              <p className="font-semibold">{property.accommodation_type}</p>
+                            </div>
+                          )}
                         </div>
                         <Separator />
                         <div>

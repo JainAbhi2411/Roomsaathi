@@ -11,8 +11,8 @@ const getUserSessionId = (): string => {
   return sessionId;
 };
 
-// Fetch all properties with optional filters
-export const getProperties = async (filters?: FilterOptions): Promise<Property[]> => {
+// Fetch all properties with optional filters and amenities
+export const getProperties = async (filters?: FilterOptions): Promise<PropertyWithDetails[]> => {
   let query = supabase.from('properties').select('*').order('created_at', { ascending: false });
 
   if (filters?.city) {
@@ -39,7 +39,34 @@ export const getProperties = async (filters?: FilterOptions): Promise<Property[]
 
   const { data, error } = await query;
   if (error) throw error;
-  return Array.isArray(data) ? data : [];
+  
+  const properties = Array.isArray(data) ? data : [];
+  
+  // Fetch amenities for all properties
+  if (properties.length > 0) {
+    const propertyIds = properties.map(p => p.id);
+    const { data: amenitiesData } = await supabase
+      .from('amenities')
+      .select('*')
+      .in('property_id', propertyIds);
+    
+    const amenitiesMap = new Map<string, Amenity[]>();
+    if (amenitiesData) {
+      amenitiesData.forEach((amenity: Amenity) => {
+        if (!amenitiesMap.has(amenity.property_id)) {
+          amenitiesMap.set(amenity.property_id, []);
+        }
+        amenitiesMap.get(amenity.property_id)!.push(amenity);
+      });
+    }
+    
+    return properties.map(property => ({
+      ...property,
+      amenities: amenitiesMap.get(property.id) || [],
+    }));
+  }
+  
+  return properties;
 };
 
 // Fetch single property with rooms and amenities

@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { Property } from '@/types/index';
+import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,7 +19,7 @@ const categories = [
 
 export default function CategoryPropertiesSection() {
   const [selectedCategory, setSelectedCategory] = useState('PG');
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

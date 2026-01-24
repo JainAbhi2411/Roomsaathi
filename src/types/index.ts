@@ -22,6 +22,7 @@ export interface Property {
   owner_name?: string;
   owner_details?: string;
   availability_status: string;
+  accommodation_type?: string;
   created_at: string;
   updated_at: string;
 }

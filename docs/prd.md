@@ -74,7 +74,13 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Display all property listings with preview cards
 - Show property thumbnail images with auto slider functionality for multiple property images
 - Display basic details and pricing on listing cards
-- Support infinite scroll or pagination for property listings
+- **Display Amenities on Property Cards:**
+  - Show key amenities with icons on each property card (e.g., WiFi, AC, Parking, Meals)\n  - Display 3-5 most important amenities for quick reference
+  - Use compact icon representation to maintain card design
+- **Display Accommodation Type on Property Cards:**
+  - Show accommodation type badge (PG/Flat/Apartment/Room/Hostel)
+  - Display gender preference indicator (Male/Female/Co-ed)
+  - Show furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n- Support infinite scroll or pagination for property listings
 - Provide comprehensive search and filter functionalities on this page
 - Include sorting options (by price, date added, popularity, etc.)
 - Display active filters with option to clear individual or all filters
@@ -82,12 +88,14 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Quick view option for property details without leaving the browse page
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
-\n#### 3.4.1 Advanced Filter Options
+
+#### 3.4.1 Advanced Filter Options
 - Comprehensive filter panel with the following options:
   - Property Type: Multi-select checkboxes for PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
   - RoomSaathi Verified: Toggle filter for verified properties only
   - Price Range: Dual slider with min/max input fields for custom range selection
-  - City: Dropdown selector for Sikar, Jaipur, Kota\n  - Locality: Dynamic dropdown based on selected city with multi-select capability
+  - City: Dropdown selector for Sikar, Jaipur, Kota
+  - Locality: Dynamic dropdown based on selected city with multi-select capability
   - Amenities: Multi-select checkboxes including:\n    - WiFi
     - AC
     - Parking
@@ -171,8 +179,9 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Show category icons for selection
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
   - On category click, navigate to Browse Property page with selected category pre-filtered
-- Right side:
-  - Display property cards with small and minimal design
+- Right side:\n  - Display property cards with small and minimal design
+  - **Show amenities icons on property cards** (3-5 key amenities)
+  - **Display accommodation type badge** on each property card
   - Arrange property cards in column-wise layout
   - Enable vertical scrolling for property cards within the column
   - Update property cards dynamically based on category selection from left side
@@ -184,7 +193,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Display images of students in accommodation settings
   - Show student lifestyle and accommodation experiences
 \n### 3.7 What RoomSaathi Students Get Section
-- Split layout design with left and right sections\n- Left side:
+- Split layout design with left and right sections
+- Left side:
   - Display 4 to 5 key features and benefits for students that impress and attract them
   - Include benefits such as:
     - Welcome kits upon booking
@@ -207,6 +217,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Filter by RoomSaathi Verified properties
 - Filter by price range with slider or input fields
 - Filter by amenities with checkbox options
+- **Filter by accommodation type** (PG/Flat/Apartment/Room/Hostel)\n- **Filter by gender preference** (Male/Female/Co-ed)
+- **Filter by furnishing status** (Fully Furnished/Semi-Furnished/Unfurnished)
 - Search by property name or keywords with autocomplete
 - Advanced search options with multiple criteria
 - Save search preferences for future visits
@@ -245,13 +257,38 @@ Each property should display complete information with the following advanced la
   - Get Directions button that opens the location in Google Maps app or browser
 
 - **Accommodation Type:**
-  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)
-  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities with Icons:**
+  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)
+  - Gender preference (Male/Female/Co-ed)
+  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - Property age (New/Recent/Established)
+  - Total number of floors
+  - Total number of rooms
+  - Occupancy type options available (Single/Double/Triple/Shared)
+\n- **Amenities with Icons:**
   - Display complete list of available amenities with corresponding icons
   - Each amenity should have a clear icon representation
-  - Amenities include: WiFi, AC, Parking, Laundry, Meals, Security, Power Backup, Water Supply, Gym, Common Area, etc.
+  - Amenities include:
+    - WiFi
+    - AC
+    - Parking
+    - Laundry
+    - Meals (Breakfast/Lunch/Dinner options)
+    - Security (CCTV/Security Guard)
+    - Power Backup\n    - Water Supply (24/7)
+    - Gym/Fitness Center
+    - Common Area/Lounge
+    - TV/Entertainment
+    - Refrigerator
+    - Microwave/Kitchen Access
+    - Washing Machine\n    - Geyser/Hot Water
+    - Elevator/Lift
+    - Balcony\n    - Garden/Terrace Access
+    - Study Room
+    - Housekeeping\n    - Intercom
+    - Fire Safety Equipment
   - Use visual grid or card layout for amenity display
   - Highlight premium or unique amenities
+  - Group amenities by category (Basic, Safety, Entertainment, Kitchen, etc.)
 
 - **Rooms Visual Layout:**
   - Interactive visual representation of property floor plan
@@ -314,7 +351,8 @@ Each property should display complete information with the following advanced la
   - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
     - Opens query form or chat interface
     - Quick response commitment display
-\n- **Payment Policies:**
+
+- **Payment Policies:**
   - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
   - Payment schedule (Monthly/Quarterly/Advance)
   - Due date for monthly payments
@@ -369,14 +407,14 @@ Each property should display complete information with the following advanced la
 - Reviews and Ratings section
 - Similar Properties section:\n  - Display 3-4 similar properties based on location, price range, and property type
   - Property cards with basic information and images
+  - **Show amenities and accommodation type on similar property cards**
   - Quick navigation to similar property detail pages
 \n### 3.10 User Actions\n- Login with mobile number and OTP verification
 - Browse all properties on dedicated browse page
 - View detailed property information including room details and images
-- Filter and search properties with advanced options
+- Filter and search properties with advanced options including amenities and accommodation type
 - Save favorite properties (requires login)
-- Contact property owners\n- Share property listings
-- Compare multiple properties
+- Contact property owners\n- Share property listings\n- Compare multiple properties
 - Schedule property visits (requires login):\n  - Select date and time for visit
   - Name and phone number auto-filled from user profile
   - View and manage scheduled visits in user profile\n- Read and view property reviews
@@ -386,17 +424,21 @@ Each property should display complete information with the following advanced la
 - Review payment and cancellation policies
 - View property location on Google Map
 - Get directions to property location
-
-### 3.11 Property Comparison
+- Filter properties by amenities and accommodation type
+\n### 3.11 Property Comparison
 - Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
-- Visual comparison interface with clear distinctions
-\n### 3.12 Reviews and Ratings
+- **Include accommodation type comparison** (furnishing, gender preference, property age)
+- **Display amenities comparison** with visual indicators for available/not available
+- Visual comparison interface with clear distinctions\n\n### 3.12 Reviews and Ratings
 - Display user reviews and ratings for properties
 - Show overall rating scores\n- Filter reviews by rating level\n- Display review highlights\n\n### 3.13 Featured Properties Section
 - Showcase premium or featured listings
-- Highlight RoomSaathi Verified properties\n- Display special offers or deals
-\n### 3.14 Cities We Serve Section
+- Highlight RoomSaathi Verified properties\n- **Display key amenities on featured property cards**
+- **Show accommodation type badges on featured properties**
+- Display special offers or deals
+
+### 3.14 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
 - Each city card should have:
@@ -423,11 +465,11 @@ Each property should display complete information with the following advanced la
   - Popular localities preview for each city (optional)
   - City-specific statistics or highlights
 \n### 3.15 City Guides Section
-- Provide information about Sikar, Jaipur, and Kota\n- Highlight popular localities in each city
+- Provide information about Sikar, Jaipur, and Kota
+- Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
-
-### 3.16 Testimonials Section
+\n### 3.16 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
@@ -641,6 +683,8 @@ Each property should display complete information with the following advanced la
 - Consistent visual hierarchy across all sections
 - Responsive design for all device sizes
 - Small and minimal design for property cards in Browse by Category section
+- **Clear visual representation of amenities with icons throughout the website**
+- **Consistent accommodation type badges and indicators across all property displays**
 \n### 4.2 Design References
 - Take inspiration from orooms.in\n- Take inspiration from https://www.homversity.com/
 \n### 4.3 Special Animations
@@ -671,12 +715,16 @@ Each property should display complete information with the following advanced la
 - Login modal animations with smooth fade-in effect
 - OTP input field animations
 - Schedule Visit form animations
+- **Amenity icon hover effects and tooltips**
+- **Accommodation type badge animations on property cards**
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
 - Lifestyle images depicting accommodation experiences
 - City-specific imagery for location sections
 - Icons for amenities and features
+- **Comprehensive amenity icon set with consistent design style**
+- **Accommodation type visual indicators and badges**
 - Infographics for statistics and processes
 - Background images with overlay effects where appropriate
 - Category images with cutout design for Browse by Category section

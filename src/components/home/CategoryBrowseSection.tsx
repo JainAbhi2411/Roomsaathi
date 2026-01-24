@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Bed, Building2, Home, DoorOpen, Hotel, Calendar } from 'lucide-react';
-import type { Property } from '@/types/index';
+import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -65,7 +65,7 @@ const categories = [
 
 export default function CategoryBrowseSection() {
   const [selectedCategory, setSelectedCategory] = useState('PG');
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

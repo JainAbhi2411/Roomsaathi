@@ -1,18 +1,26 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
-import { MapPin, IndianRupee } from 'lucide-react';
+import { MapPin, IndianRupee, Wifi, Car, Utensils, Shield, Users } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { Property } from '@/types/index';
+import type { Property, PropertyWithDetails } from '@/types/index';
 import VerifiedBadge from './VerifiedBadge';
 import FavoriteButton from './FavoriteButton';
 import { useState, useEffect } from 'react';
 import { isFavorite } from '@/db/api';
 
 interface PropertyCardProps {
-  property: Property;
+  property: Property | PropertyWithDetails;
   onFavoriteToggle?: () => void;
 }
+
+// Amenity icons mapping
+const amenityIconMap: Record<string, React.ElementType> = {
+  'WiFi': Wifi,
+  'Parking': Car,
+  'Mess/Kitchen': Utensils,
+  'Security': Shield,
+};
 
 export default function PropertyCard({ property, onFavoriteToggle }: PropertyCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -35,6 +43,11 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
   const priceDisplay = property.price_to
     ? `₹${property.price_from.toLocaleString()} - ₹${property.price_to.toLocaleString()}`
     : `₹${property.price_from.toLocaleString()}`;
+
+  // Get amenities if available
+  const propertyWithDetails = property as PropertyWithDetails;
+  const amenities = propertyWithDetails.amenities || [];
+  const displayAmenities = amenities.slice(0, 4);
 
   return (
     <motion.div
@@ -88,9 +101,39 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
             <MapPin className="h-4 w-4" />
             <span className="line-clamp-1">{property.locality}, {property.city}</span>
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-            {property.description}
-          </p>
+          
+          {/* Accommodation Type */}
+          {property.accommodation_type && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+              <Users className="h-3.5 w-3.5" />
+              <span>{property.accommodation_type}</span>
+            </div>
+          )}
+
+          {/* Amenities */}
+          {displayAmenities.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {displayAmenities.map((amenity) => {
+                const IconComponent = amenityIconMap[amenity.amenity_name] || Shield;
+                return (
+                  <div
+                    key={amenity.id}
+                    className="flex items-center gap-1 text-xs bg-secondary/50 text-secondary-foreground px-2 py-1 rounded-md"
+                    title={amenity.amenity_name}
+                  >
+                    <IconComponent className="h-3 w-3" />
+                    <span className="hidden xl:inline">{amenity.amenity_name}</span>
+                  </div>
+                );
+              })}
+              {amenities.length > 4 && (
+                <div className="flex items-center text-xs text-muted-foreground px-2 py-1">
+                  +{amenities.length - 4} more
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-1 text-lg font-bold text-primary">
             <IndianRupee className="h-5 w-5" />
             <span>{priceDisplay}</span>
