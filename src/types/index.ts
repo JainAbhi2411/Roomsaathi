@@ -23,6 +23,7 @@ export interface Property {
   owner_details?: string;
   availability_status: string;
   accommodation_type?: string;
+  suitable_for?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -76,7 +77,7 @@ export interface FilterOptions {
   price_max?: number;
   search?: string;
   amenities?: string[];
-  gender?: string;
+  suitable_for?: string;
   food_included?: boolean;
 }
 

@@ -45,7 +45,7 @@ export default function BrowsePropertiesPage() {
     const priceMin = searchParams.get('price_min');
     const priceMax = searchParams.get('price_max');
     const amenities = searchParams.get('amenities');
-    const gender = searchParams.get('gender');
+    const suitableFor = searchParams.get('suitable_for');
     const foodIncluded = searchParams.get('food_included');
 
     if (city) urlFilters.city = city;
@@ -59,7 +59,7 @@ export default function BrowsePropertiesPage() {
     if (priceMin) urlFilters.price_min = parseInt(priceMin);
     if (priceMax) urlFilters.price_max = parseInt(priceMax);
     if (amenities) urlFilters.amenities = amenities.split(',');
-    if (gender) urlFilters.gender = gender;
+    if (suitableFor) urlFilters.suitable_for = suitableFor;
     if (foodIncluded === 'true') urlFilters.food_included = true;
 
     setFilters(urlFilters);
@@ -156,7 +156,7 @@ export default function BrowsePropertiesPage() {
     if (newFilters.amenities && newFilters.amenities.length > 0) {
       params.set('amenities', newFilters.amenities.join(','));
     }
-    if (newFilters.gender) params.set('gender', newFilters.gender);
+    if (newFilters.suitable_for) params.set('suitable_for', newFilters.suitable_for);
     if (newFilters.food_included) params.set('food_included', 'true');
 
     setSearchParams(params);
@@ -190,7 +190,7 @@ export default function BrowsePropertiesPage() {
     filters.price_min !== undefined || filters.price_max !== undefined,
     filters.search,
     filters.amenities && filters.amenities.length > 0,
-    filters.gender,
+    filters.suitable_for,
     filters.food_included,
   ].filter(Boolean).length;
 
@@ -314,10 +314,10 @@ export default function BrowsePropertiesPage() {
                     </button>
                   </Badge>
                 )}
-                {filters.gender && (
+                {filters.suitable_for && (
                   <Badge variant="secondary" className="gap-1">
-                    Gender: {filters.gender}
-                    <button onClick={() => removeFilter('gender')} className="ml-1 hover:text-destructive">
+                    Suitable for: {filters.suitable_for}
+                    <button onClick={() => removeFilter('suitable_for')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>

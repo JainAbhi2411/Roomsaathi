@@ -36,6 +36,9 @@ export const getProperties = async (filters?: FilterOptions): Promise<PropertyWi
   if (filters?.search) {
     query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,locality.ilike.%${filters.search}%`);
   }
+  if (filters?.suitable_for) {
+    query = query.contains('suitable_for', [filters.suitable_for]);
+  }
 
   const { data, error } = await query;
   if (error) throw error;

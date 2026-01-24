@@ -29,7 +29,7 @@ const amenitiesList = [
   'Refrigerator',
   'Geyser',
 ];
-const genderOptions = ['Male', 'Female', 'Co-ed'];
+const suitableForOptions = ['Boys', 'Girls', 'Family', 'Bachelors', 'Students'];
 
 // Localities by city
 const localitiesByCity: Record<string, string[]> = {
@@ -188,21 +188,21 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
 
       <Separator />
 
-      {/* Gender Preference */}
+      {/* Suitable For */}
       <div className="space-y-2">
-        <Label>Gender Preference</Label>
+        <Label>Suitable For</Label>
         <Select
-          value={localFilters.gender || 'all'}
-          onValueChange={(value) => handleChange('gender', value === 'all' ? undefined : value)}
+          value={localFilters.suitable_for || 'all'}
+          onValueChange={(value) => handleChange('suitable_for', value === 'all' ? undefined : value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Any</SelectItem>
-            {genderOptions.map((gender) => (
-              <SelectItem key={gender} value={gender}>
-                {gender}
+            {suitableForOptions.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
               </SelectItem>
             ))}
           </SelectContent>

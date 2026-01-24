@@ -5,8 +5,8 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.
-\n### 1.3 Logo
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.\n
+### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
 ## 2. Property Categories
 
@@ -18,7 +18,13 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Hostels
 - RoomSaathi Verified (special verified properties category)
 - Short Term Stays
-\n## 3. Core Features and Functionality
+\n### 2.2 Property Type Classifications
+- For Girls
+- For Boys
+- For Family
+- For Bachelors
+- For Students\n
+## 3. Core Features and Functionality
 
 ### 3.1 User Authentication System
 - **Login with Mobile Number and OTP Verification:**
@@ -34,7 +40,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Login flow:
     - User enters mobile number
     - System sends OTP to the provided mobile number via configured SMS provider
-    - Display loading state while OTP is being sent\n    - Show success message when OTP is sent successfully
+    - Display loading state while OTP is being sent
+    - Show success message when OTP is sent successfully
     - Show error message with retry option if OTP sending fails
     - User enters received OTP for verification
     - Upon successful verification, user is logged in\n  - Login button in header navigation (right side)
@@ -76,11 +83,11 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Display basic details and pricing on listing cards
 - **Display Amenities on Property Cards:**
   - Show key amenities with icons on each property card (e.g., WiFi, AC, Parking, Meals)\n  - Display 3-5 most important amenities for quick reference
-  - Use compact icon representation to maintain card design
-- **Display Accommodation Type on Property Cards:**
-  - Show accommodation type badge (PG/Flat/Apartment/Room/Hostel)
-  - Display gender preference indicator (Male/Female/Co-ed)
-  - Show furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n- Support infinite scroll or pagination for property listings
+  - Use compact icon representation to maintain card design\n- **Display Accommodation Type on Property Cards:**
+  - Show accommodation type badge (PG/Flat/Apartment/Room/Hostel)\n  - Display gender preference indicator (Male/Female/Co-ed)
+  - Show furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - **Display property type classification badge (For Girls/For Boys/For Family/For Bachelors/For Students)**
+- Support infinite scroll or pagination for property listings
 - Provide comprehensive search and filter functionalities on this page
 - Include sorting options (by price, date added, popularity, etc.)
 - Display active filters with option to clear individual or all filters
@@ -88,10 +95,10 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Quick view option for property details without leaving the browse page
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
-
-#### 3.4.1 Advanced Filter Options
+\n#### 3.4.1 Advanced Filter Options
 - Comprehensive filter panel with the following options:
   - Property Type: Multi-select checkboxes for PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
+  - **Property Type Classification: Multi-select checkboxes for For Girls, For Boys, For Family, For Bachelors, For Students**
   - RoomSaathi Verified: Toggle filter for verified properties only
   - Price Range: Dual slider with min/max input fields for custom range selection
   - City: Dropdown selector for Sikar, Jaipur, Kota
@@ -123,7 +130,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Locality name
   - Landmark names
   - Property features
-  - Amenities\n- Display search suggestions dropdown with autocomplete
+  - Amenities\n  - Property type classifications (For Girls, For Boys, For Family, For Bachelors, For Students)
+- Display search suggestions dropdown with autocomplete
 - Highlight matching text in search results
 - Show recent searches for quick access
 - Display search result count in real-time
@@ -147,6 +155,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - When user selects a city from Cities We Serve section, navigate to Browse Property page with that city pre-selected
 - When user clicks on a locality from Popular Localities section, navigate to Browse Property page with that locality pre-filtered
 - When user clicks RoomSaathi Verified from navigation, navigate to Browse Property page with verified filter applied
+- **When user selects a property type classification (For Girls/For Boys/For Family/For Bachelors/For Students), navigate to Browse Property page with that classification pre-filtered**
 - Preserve filter context when navigating back from property detail page
 - URL parameters should reflect active filters for shareable links
 - Breadcrumb navigation showing active filter path
@@ -154,12 +163,14 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 #### 3.4.5 Perfect Search on Each Parameter
 - Property Type Search: Exact match and partial match support
+- **Property Type Classification Search: Exact match for For Girls, For Boys, For Family, For Bachelors, For Students**
 - Location Search: City, locality, and landmark-based search with fuzzy matching
 - Price Search: Range-based search with flexible min/max inputs
 - Amenities Search: Multi-criteria matching (AND/OR logic options)
 - Keyword Search: Full-text search across property descriptions
 - Combined Search: Support for multiple simultaneous search parameters
-- Search ranking algorithm prioritizing:\n  - Exact matches\n  - RoomSaathi Verified properties\n  - Recently added properties
+- Search ranking algorithm prioritizing:\n  - Exact matches
+  - RoomSaathi Verified properties\n  - Recently added properties
   - Properties with complete information
 - Search result sorting options:
   - Relevance (default)
@@ -178,10 +189,13 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Implement hover effects on category images
   - Show category icons for selection
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
+  - **Add property type classification options: For Girls, For Boys, For Family, For Bachelors, For Students**
   - On category click, navigate to Browse Property page with selected category pre-filtered
-- Right side:\n  - Display property cards with small and minimal design
+- Right side:
+  - Display property cards with small and minimal design
   - **Show amenities icons on property cards** (3-5 key amenities)
   - **Display accommodation type badge** on each property card
+  - **Display property type classification badge** (For Girls/For Boys/For Family/For Bachelors/For Students)
   - Arrange property cards in column-wise layout
   - Enable vertical scrolling for property cards within the column
   - Update property cards dynamically based on category selection from left side
@@ -214,6 +228,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
 - Locality Selector: Dropdown menu for specific localities within selected city
 - Filter by property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
+- **Filter by property type classification (For Girls, For Boys, For Family, For Bachelors, For Students)**
 - Filter by RoomSaathi Verified properties
 - Filter by price range with slider or input fields
 - Filter by amenities with checkbox options
@@ -236,6 +251,7 @@ Each property should display complete information with the following advanced la
   - Area description and locality benefits
 \n- **Property Details:**
   - Property name\n  - Property type and category
+  - **Property type classification (For Girls/For Boys/For Family/For Bachelors/For Students)**
   - RoomSaathi Verified badge (if applicable)
   - Complete address\n  - Location (city and locality)
   - Detailed description
@@ -258,8 +274,7 @@ Each property should display complete information with the following advanced la
 
 - **Accommodation Type:**
   - Type of accommodation (PG/Flat/Apartment/Room/Hostel)
-  - Gender preference (Male/Female/Co-ed)
-  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
   - Property age (New/Recent/Established)
   - Total number of floors
   - Total number of rooms
@@ -268,8 +283,7 @@ Each property should display complete information with the following advanced la
   - Display complete list of available amenities with corresponding icons
   - Each amenity should have a clear icon representation
   - Amenities include:
-    - WiFi
-    - AC
+    - WiFi\n    - AC
     - Parking
     - Laundry
     - Meals (Breakfast/Lunch/Dinner options)
@@ -289,8 +303,7 @@ Each property should display complete information with the following advanced la
   - Use visual grid or card layout for amenity display
   - Highlight premium or unique amenities
   - Group amenities by category (Basic, Safety, Entertainment, Kitchen, etc.)
-
-- **Rooms Visual Layout:**
+\n- **Rooms Visual Layout:**
   - Interactive visual representation of property floor plan
   - Display floor-wise breakdown:\n    - Floor number (Ground Floor, First Floor, Second Floor, etc.)\n    - Number of rooms on each floor
     - Visual floor map showing room positions
@@ -408,27 +421,26 @@ Each property should display complete information with the following advanced la
 - Similar Properties section:\n  - Display 3-4 similar properties based on location, price range, and property type
   - Property cards with basic information and images
   - **Show amenities and accommodation type on similar property cards**
+  - **Display property type classification badge on similar property cards**
   - Quick navigation to similar property detail pages
 \n### 3.10 User Actions\n- Login with mobile number and OTP verification
 - Browse all properties on dedicated browse page
 - View detailed property information including room details and images
-- Filter and search properties with advanced options including amenities and accommodation type
+- Filter and search properties with advanced options including amenities, accommodation type, and property type classification
 - Save favorite properties (requires login)
 - Contact property owners\n- Share property listings\n- Compare multiple properties
 - Schedule property visits (requires login):\n  - Select date and time for visit
   - Name and phone number auto-filled from user profile
-  - View and manage scheduled visits in user profile\n- Read and view property reviews
-- Send queries about specific properties
+  - View and manage scheduled visits in user profile\n- Read and view property reviews\n- Send queries about specific properties
 - View floor plans and room layouts
 - Check short term stay availability
 - Review payment and cancellation policies
 - View property location on Google Map
 - Get directions to property location
-- Filter properties by amenities and accommodation type
-\n### 3.11 Property Comparison
-- Allow users to select multiple properties for side-by-side comparison
+- Filter properties by amenities, accommodation type, and property type classification\n\n### 3.11 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
 - **Include accommodation type comparison** (furnishing, gender preference, property age)
+- **Include property type classification comparison** (For Girls/For Boys/For Family/For Bachelors/For Students)
 - **Display amenities comparison** with visual indicators for available/not available
 - Visual comparison interface with clear distinctions\n\n### 3.12 Reviews and Ratings
 - Display user reviews and ratings for properties
@@ -436,9 +448,8 @@ Each property should display complete information with the following advanced la
 - Showcase premium or featured listings
 - Highlight RoomSaathi Verified properties\n- **Display key amenities on featured property cards**
 - **Show accommodation type badges on featured properties**
-- Display special offers or deals
-
-### 3.14 Cities We Serve Section
+- **Display property type classification badges on featured properties**
+\n### 3.14 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
 - Each city card should have:
@@ -473,8 +484,7 @@ Each property should display complete information with the following advanced la
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
-
-### 3.17 Why Choose RoomSaathi Section
+\n### 3.17 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
@@ -640,8 +650,7 @@ Each property should display complete information with the following advanced la
   - Recently updated FAQs indicator
 
 ### 3.26 Contact Section
-- Contact form for inquiries
-- Display contact information (email, phone)\n- Office locations in Sikar, Jaipur, and Kota
+- Contact form for inquiries\n- Display contact information (email, phone)\n- Office locations in Sikar, Jaipur, and Kota
 - Social media links\n\n### 3.27 Newsletter Subscription
 - Email subscription form for updates and offers
 - Promotional messaging about benefits of subscribing
@@ -685,6 +694,7 @@ Each property should display complete information with the following advanced la
 - Small and minimal design for property cards in Browse by Category section
 - **Clear visual representation of amenities with icons throughout the website**
 - **Consistent accommodation type badges and indicators across all property displays**
+- **Consistent property type classification badges (For Girls/For Boys/For Family/For Bachelors/For Students) across all property displays**
 \n### 4.2 Design References
 - Take inspiration from orooms.in\n- Take inspiration from https://www.homversity.com/
 \n### 4.3 Special Animations
@@ -717,6 +727,7 @@ Each property should display complete information with the following advanced la
 - Schedule Visit form animations
 - **Amenity icon hover effects and tooltips**
 - **Accommodation type badge animations on property cards**
+- **Property type classification badge animations on property cards**
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
@@ -725,6 +736,7 @@ Each property should display complete information with the following advanced la
 - Icons for amenities and features
 - **Comprehensive amenity icon set with consistent design style**
 - **Accommodation type visual indicators and badges**
+- **Property type classification visual indicators and badges (For Girls/For Boys/For Family/For Bachelors/For Students)**
 - Infographics for statistics and processes
 - Background images with overlay effects where appropriate
 - Category images with cutout design for Browse by Category section

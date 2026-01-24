@@ -277,7 +277,7 @@ export default function PropertyDetailsPage() {
                         <MapPin className="h-4 w-4" />
                         <span>{property.locality}, {property.city}</span>
                       </div>
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-2 flex-wrap mb-3">
                         <Badge variant="secondary" className="text-sm">
                           {property.type}
                         </Badge>
@@ -287,6 +287,22 @@ export default function PropertyDetailsPage() {
                           </Badge>
                         )}
                       </div>
+                      {/* Suitable For */}
+                      {property.suitable_for && property.suitable_for.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          <span className="text-sm text-muted-foreground">Suitable for:</span>
+                          {property.suitable_for.map((type) => (
+                            <Badge
+                              key={type}
+                              variant="outline"
+                              className="text-xs bg-primary/5 border-primary/20 text-primary"
+                            >
+                              <Users className="h-3 w-3 mr-1" />
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <FavoriteButton propertyId={property.id} isFavorite={property.is_favorite || false} />
@@ -353,6 +369,26 @@ export default function PropertyDetailsPage() {
                             </div>
                           )}
                         </div>
+                        {property.suitable_for && property.suitable_for.length > 0 && (
+                          <>
+                            <Separator />
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-2">Suitable For</p>
+                              <div className="flex flex-wrap gap-2">
+                                {property.suitable_for.map((type) => (
+                                  <Badge
+                                    key={type}
+                                    variant="outline"
+                                    className="bg-primary/5 border-primary/20 text-primary"
+                                  >
+                                    <Users className="h-3.5 w-3.5 mr-1" />
+                                    {type}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
                         <Separator />
                         <div>
                           <p className="text-sm text-muted-foreground mb-2">Full Address</p>
