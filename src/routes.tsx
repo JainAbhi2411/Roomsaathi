@@ -8,6 +8,7 @@ import BlogsPage from './pages/BlogsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import OurStoryPage from './pages/OurStoryPage';
 import FAQsPage from './pages/FAQsPage';
+import LoginPage from './pages/LoginPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -67,6 +68,12 @@ const routes: RouteConfig[] = [
     name: 'FAQs',
     path: '/faqs',
     element: <FAQsPage />,
+    visible: false
+  },
+  {
+    name: 'Login',
+    path: '/login',
+    element: <LoginPage />,
     visible: false
   }
 ];

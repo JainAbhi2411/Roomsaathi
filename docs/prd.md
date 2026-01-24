@@ -12,33 +12,47 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats
-- Apartments
+- Flats\n- Apartments
 - Rooms
-- Hostels
-- RoomSaathi Verified (special verified properties category)
+- Hostels\n- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
 \n## 3. Core Features and Functionality
 
-### 3.1 Header Navigation
+### 3.1 User Authentication System
+- **Login with Mobile Number and OTP Verification:**
+  - Users must login using their mobile number\n  - OTP (One-Time Password) verification system for secure authentication
+  - Login flow:\n    - User enters mobile number
+    - System sends OTP to the provided mobile number
+    - User enters received OTP for verification
+    - Upon successful verification, user is logged in\n  - Login button in header navigation (right side)
+  - After successful login, display user profile icon or name instead of Login button
+  - Logout functionality available in user profile dropdown
+  - Session management to keep users logged in
+  - Auto-logout after session expiry with option to re-login
+
+### 3.2 Header Navigation
 - Left side: Logo with hanging animation effect
-- Left side navigation items:\n  - RoomSaathi Properties: On click, display RoomSaathi Verified properties
+- Left side navigation items:
+  - RoomSaathi Properties: On click, display RoomSaathi Verified properties
   - For Owner: On click, show Learn More button that navigates to dedicated Owner Features section
 - Right side navigation items:
   - Support: On click, display dropdown menu with transition effect showing:\n    - WhatsApp Support
     - Contact Support
     - Call\n    - Help Center
     - How to Use
-  - List Your Property\n  - Login (display button only, no login functionality implementation for now)
-
-### 3.2 Animated Home Screen
+  - List Your Property\n  - Login button (when user is not logged in)
+  - User profile icon/name (when user is logged in) with dropdown menu:\n    - My Profile
+    - My Scheduled Visits
+    - Saved Properties
+    - Logout\n
+### 3.3 Animated Home Screen
 - Hero section with split layout: one side featuring animated images that transition with a hanging hook effect, displaying images of hostels, PG accommodations, and students
 - Images should appear as if hanging from a hook and smoothly transition between different property types and student lifestyle scenes
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
 
-### 3.3 Dedicated Property Browse Page
+### 3.4 Dedicated Property Browse Page
 - Create a separate dedicated page for browsing all properties
 - Display all property listings with preview cards
 - Show property thumbnail images with auto slider functionality for multiple property images
@@ -52,13 +66,12 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
 
-#### 3.3.1 Advanced Filter Options
+#### 3.4.1 Advanced Filter Options
 - Comprehensive filter panel with the following options:
   - Property Type: Multi-select checkboxes for PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
   - RoomSaathi Verified: Toggle filter for verified properties only
   - Price Range: Dual slider with min/max input fields for custom range selection
-  - City: Dropdown selector for Sikar, Jaipur, Kota
-  - Locality: Dynamic dropdown based on selected city with multi-select capability
+  - City: Dropdown selector for Sikar, Jaipur, Kota\n  - Locality: Dynamic dropdown based on selected city with multi-select capability
   - Amenities: Multi-select checkboxes including:\n    - WiFi
     - AC
     - Parking
@@ -80,7 +93,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Apply Filters button for mobile view
 - Save Filter Preset option for future use
 
-#### 3.3.2 Real-Time Search Functionality
+#### 3.4.2 Real-Time Search Functionality
 - Instant search results as user types in search bar
 - Search across multiple parameters:\n  - Property name
   - Locality name
@@ -95,7 +108,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Clear search button (X icon) in search bar
 - Search history with option to clear
 
-#### 3.3.3 Sticky Search Bar on Scroll
+#### 3.4.3 Sticky Search Bar on Scroll
 - Search bar becomes sticky and fixed to top of page when user scrolls down
 - Smooth transition animation when search bar becomes sticky
 - Compact sticky version with essential search and filter controls
@@ -105,7 +118,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Sticky bar should have subtle shadow for depth perception
 - Responsive behavior: on mobile, sticky bar should be optimized for smaller screens
 
-#### 3.3.4 Contextual Filtering Throughout Navigation
+#### 3.4.4 Contextual Filtering Throughout Navigation
 - Enable filtering and browsing from any section of the main screen
 - When user selects a category from Browse by Category section, automatically navigate to Browse Property page with that category pre-filtered
 - When user selects a city from Cities We Serve section, navigate to Browse Property page with that city pre-selected
@@ -116,7 +129,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Breadcrumb navigation showing active filter path
 - Smooth transition animations when applying contextual filters
 
-#### 3.3.5 Perfect Search on Each Parameter
+#### 3.4.5 Perfect Search on Each Parameter
 - Property Type Search: Exact match and partial match support
 - Location Search: City, locality, and landmark-based search with fuzzy matching
 - Price Search: Range-based search with flexible min/max inputs
@@ -138,7 +151,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Browse all properties
   - Contact support for assistance
 
-### 3.4 Browse by Category Section
+### 3.5 Browse by Category Section
 - Split layout design with left and right sections
 - Left side:\n  - Display category images with cutout design effect
   - Implement hover effects on category images
@@ -150,16 +163,15 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Arrange property cards in column-wise layout
   - Enable vertical scrolling for property cards within the column
   - Update property cards dynamically based on category selection from left side
-\n### 3.5 Student Information Section
+\n### 3.6 Student Information Section
 - Split layout design with left and right sections\n- Left side:
   - Display informational content about RoomSaathi services for students
   - Include text describing benefits and features
 - Right side:
   - Display images of students in accommodation settings
   - Show student lifestyle and accommodation experiences
-\n### 3.6 What RoomSaathi Students Get Section
-- Split layout design with left and right sections
-- Left side:
+\n### 3.7 What RoomSaathi Students Get Section
+- Split layout design with left and right sections\n- Left side:
   - Display 4 to 5 key features and benefits for students that impress and attract them
   - Include benefits such as:
     - Welcome kits upon booking
@@ -175,7 +187,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Right side:
   - Display relevant images corresponding to the features
   - Images should change in sync with the auto sliding features
-\n### 3.7 Search and Filter System (on Browse Page)
+\n### 3.8 Search and Filter System (on Browse Page)
 - City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
 - Locality Selector: Dropdown menu for specific localities within selected city
 - Filter by property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
@@ -185,7 +197,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Search by property name or keywords with autocomplete
 - Advanced search options with multiple criteria
 - Save search preferences for future visits
-- Recent searches display\n\n### 3.8 Property Detail Page
+- Recent searches display\n\n### 3.9 Property Detail Page
 Each property should display complete information with the following advanced layout:
 \n**Left Side:**
 - Property images gallery with multiple high-quality images
@@ -197,8 +209,7 @@ Each property should display complete information with the following advanced la
   - Distance to key locations (colleges, hospitals, markets, etc.)
   - Transportation connectivity information
   - Area description and locality benefits
-
-- **Property Details:**
+\n- **Property Details:**
   - Property name\n  - Property type and category
   - RoomSaathi Verified badge (if applicable)
   - Complete address\n  - Location (city and locality)
@@ -207,7 +218,8 @@ Each property should display complete information with the following advanced la
   - Availability status
 \n- **Google Map Integration:**
   - Display interactive Google Map showing the exact property location
-  - Google Maps API Key: AIzaSyDWxlGHqTSpDoWE66rhv9tEC3ZgSs0PZCQ\n  - Map should display a marker at the property's precise location
+  - Google Maps API Key: AIzaSyDWxlGHqTSpDoWE66rhv9tEC3ZgSs0PZCQ
+  - Map should display a marker at the property's precise location
   - Map features:
     - Zoom in/out controls
     - Street view option (if available)
@@ -241,7 +253,8 @@ Each property should display complete information with the following advanced la
     - Attached/Common bathroom indicator
   - Room-specific amenities and furnishings with icons:\n    - Bed (Single/Double/Bunk)
     - Almirah/Wardrobe
-    - Study Table\n    - Chair\n    - Shoe Rack
+    - Study Table
+    - Chair\n    - Shoe Rack
     - Fan/AC
     - Window\n    - Balcony access
     - Power outlets
@@ -322,10 +335,21 @@ Each property should display complete information with the following advanced la
   - Check-in/Check-out flexibility for short stays
 
 - **Action Buttons:**
-  - Schedule Visit button: Allow users to request a property visit
+  - **Schedule Visit button:**
+    - User must be logged in to schedule a visit
+    - If user is not logged in, clicking this button will prompt login with mobile number and OTP verification
+    - After successful login, open Schedule Visit form with:\n      - Date picker for selecting visit date
+      - Time picker for selecting visit time
+      - Name field (auto-filled from user profile)
+      - Phone number field (auto-filled from user profile)
+      - Additional notes or requirements field (optional)
+      - Submit button to confirm visit scheduling
+    - Upon successful submission, display confirmation message with visit details
+    - Send confirmation notification to user's mobile number
+    - User can view and manage scheduled visits in their profile section
   - See Rooms button: Navigate to detailed room information section or modal
   - Contact Owner button\n  - Share Property button
-  - Save to Favorites button
+  - Save to Favorites button (requires login)
   - Send Query button (for Things You Should Know section)
 \n**Additional Sections on Property Detail Page:**
 - Virtual tour option (if available)
@@ -333,29 +357,33 @@ Each property should display complete information with the following advanced la
 - Similar Properties section:\n  - Display 3-4 similar properties based on location, price range, and property type
   - Property cards with basic information and images
   - Quick navigation to similar property detail pages
-\n### 3.9 User Actions\n- Browse all properties on dedicated browse page
+\n### 3.10 User Actions\n- Login with mobile number and OTP verification
+- Browse all properties on dedicated browse page
 - View detailed property information including room details and images
 - Filter and search properties with advanced options
-- Save favorite properties\n- Contact property owners\n- Share property listings
+- Save favorite properties (requires login)
+- Contact property owners\n- Share property listings
 - Compare multiple properties
-- Request property visits
-- Read and view property reviews
+- Schedule property visits (requires login):\n  - Select date and time for visit
+  - Name and phone number auto-filled from user profile
+  - View and manage scheduled visits in user profile\n- Read and view property reviews
 - Send queries about specific properties
 - View floor plans and room layouts
 - Check short term stay availability
 - Review payment and cancellation policies
 - View property location on Google Map
 - Get directions to property location
-\n### 3.10 Property Comparison
+
+### 3.11 Property Comparison
 - Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
 - Visual comparison interface with clear distinctions
-\n### 3.11 Reviews and Ratings
+\n### 3.12 Reviews and Ratings
 - Display user reviews and ratings for properties
-- Show overall rating scores\n- Filter reviews by rating level\n- Display review highlights\n\n### 3.12 Featured Properties Section
+- Show overall rating scores\n- Filter reviews by rating level\n- Display review highlights\n\n### 3.13 Featured Properties Section
 - Showcase premium or featured listings
 - Highlight RoomSaathi Verified properties\n- Display special offers or deals
-\n### 3.13 Cities We Serve Section
+\n### 3.14 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
 - Each city card should have:
@@ -381,37 +409,38 @@ Each property should display complete information with the following advanced la
   - Property count badge on each city card
   - Popular localities preview for each city (optional)
   - City-specific statistics or highlights
-\n### 3.14 City Guides Section
+\n### 3.15 City Guides Section
 - Provide information about Sikar, Jaipur, and Kota\n- Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
-\n### 3.15 Testimonials Section
+
+### 3.16 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
 
-### 3.16 Why Choose RoomSaathi Section
+### 3.17 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
 - Use icons and visual elements to enhance presentation
 
-### 3.17 How It Works Section
+### 3.18 How It Works Section
 - Step-by-step guide on using the platform
 - Visual representation of the property search and booking process
 - Clear call-to-action at each step
-\n### 3.18 Popular Localities Section
+\n### 3.19 Popular Localities Section
 - Display trending or popular localities in each city
 - Show number of available properties per locality
 - Quick access links to locality-specific listings
 - On click, navigate to Browse Property page with selected locality pre-filtered
 
-### 3.19 Property Owner Section
+### 3.20 Property Owner Section
 - Information for property owners wanting to list their properties
 - Benefits of listing on RoomSaathi\n- Call-to-action for property listing
 - Display functionalities provided for owners: management software, website listing services, etc.
 
-### 3.20 Owner Features Section
+### 3.21 Owner Features Section
 - Dedicated section accessible via Learn More button from For Owner navigation item
 - Display comprehensive owner features with informational content and images
 - Feature 1: In-App Quick Listing
@@ -423,13 +452,13 @@ Each property should display complete information with the following advanced la
 - Additional owner features with relevant descriptions and visual demonstrations
 - Use split layout or card-based design to present features effectively
 
-### 3.21 Blog Section
+### 3.22 Blog Section
 - Create a dedicated blog page with complete blog functionality
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image
-    - Blog title\n    - Brief excerpt or summary
+    - Featured image\n    - Blog title
+    - Brief excerpt or summary
     - Author name and avatar
     - Publication date
     - Category tags
@@ -465,7 +494,7 @@ Each property should display complete information with the following advanced la
   - Breadcrumb navigation
   - Newsletter subscription prompt within blog posts
   - Related articles recommendation engine
-\n### 3.22 About Us Section
+\n### 3.23 About Us Section
 - Create a comprehensive About Us page with the following elements:
 - Company Introduction:\n  - RoomSaathi's mission and vision statement
   - Core values and principles
@@ -493,7 +522,7 @@ Each property should display complete information with the following advanced la
   - Infographics showing company statistics
   - Video introduction (optional)
 
-### 3.23 Our Story Section
+### 3.24 Our Story Section
 - Create a dedicated Our Story page with narrative storytelling:\n- The Beginning:
   - How RoomSaathi was conceived
   - Initial challenges faced by founders
@@ -520,7 +549,7 @@ Each property should display complete information with the following advanced la
   - Photo galleries documenting the journey
   - Video testimonials (optional)
 
-### 3.24 FAQ Section
+### 3.25 FAQ Section
 - Create a comprehensive FAQ page with the following structure:
 - Categorized FAQ sections:
   - General Questions about RoomSaathi
@@ -555,13 +584,13 @@ Each property should display complete information with the following advanced la
   - Link to contact support\n  - Popular questions highlighted at the top
   - Recently updated FAQs indicator
 
-### 3.25 Contact Section
+### 3.26 Contact Section
 - Contact form for inquiries
 - Display contact information (email, phone)\n- Office locations in Sikar, Jaipur, and Kota
-- Social media links\n\n### 3.26 Newsletter Subscription
+- Social media links\n\n### 3.27 Newsletter Subscription
 - Email subscription form for updates and offers
 - Promotional messaging about benefits of subscribing
-\n### 3.27 Footer Section
+\n### 3.28 Footer Section
 - Professional footer design with comprehensive link structure
 - Organized into multiple columns with the following categories:
 \n**Company**
@@ -626,6 +655,9 @@ Each property should display complete information with the following advanced la
 - Hover effects on room sections in floor plan
 - Smooth transitions when expanding room details
 - Google Map loading animation and smooth zoom transitions
+- Login modal animations with smooth fade-in effect
+- OTP input field animations
+- Schedule Visit form animations
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
@@ -645,8 +677,7 @@ Each property should display complete information with the following advanced la
 - Testimonial photos for success stories
 - High-quality city images for Cities We Serve section with consistent aspect ratios
 - Room-specific images for each room type
-- Floor plan visual diagrams
-- Amenity icons for room furnishings
+- Floor plan visual diagrams\n- Amenity icons for room furnishings
 - 360-degree room view images (if available)
 \n## 5. Primary Operating Locations
 - Sikar\n- Jaipur

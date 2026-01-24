@@ -173,3 +173,57 @@ export const getLocalitiesByCity = async (city: string): Promise<string[]> => {
   const uniqueLocalities = [...new Set(data.map(item => item.locality))];
   return uniqueLocalities.sort();
 };
+
+// Property Visit Management
+export interface PropertyVisit {
+  id: string;
+  property_id: string;
+  user_id: string;
+  visitor_name: string;
+  visitor_phone: string;
+  visit_date: string;
+  visit_time: string;
+  message: string | null;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  created_at: string;
+  updated_at: string;
+}
+
+export const createPropertyVisit = async (visit: {
+  property_id: string;
+  user_id: string;
+  visitor_name: string;
+  visitor_phone: string;
+  visit_date: string;
+  visit_time: string;
+  message?: string | null;
+}): Promise<PropertyVisit> => {
+  const { data, error } = await supabase
+    .from('property_visits')
+    .insert({
+      property_id: visit.property_id,
+      user_id: visit.user_id,
+      visitor_name: visit.visitor_name,
+      visitor_phone: visit.visitor_phone,
+      visit_date: visit.visit_date,
+      visit_time: visit.visit_time,
+      message: visit.message || null,
+      status: 'pending'
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getUserVisits = async (userId: string): Promise<PropertyVisit[]> => {
+  const { data, error } = await supabase
+    .from('property_visits')
+    .select('*')
+    .eq('user_id', userId)
+    .order('visit_date', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+};

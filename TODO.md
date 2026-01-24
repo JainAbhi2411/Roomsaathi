@@ -1051,3 +1051,165 @@ const marker = new AdvancedMarkerElement({ ... });
 - **drawing**: Drawing tools (not needed)
 
 All Google Maps issues completely resolved!
+
+- [x] Step 31: Implement phone OTP authentication and schedule visit feature
+  - [x] Call get_pre_code_requirements for login functionality
+  - [x] Enable phone verification using supabase_verification tool
+  - [x] Create profiles table with user_role enum (user, admin)
+  - [x] Create property_visits table for visit scheduling
+  - [x] Create handle_new_user trigger function for auto-sync
+  - [x] Create is_admin helper function to prevent policy recursion
+  - [x] Set up RLS policies for profiles and property_visits
+  - [x] Update AuthContext to support phone OTP login
+  - [x] Add signInWithPhone and verifyOtp methods
+  - [x] Update Profile interface with phone and name fields
+  - [x] Update RouteGuard PUBLIC_ROUTES to allow browse and property pages
+  - [x] Create LoginPage with phone OTP verification
+  - [x] Implement two-step login (phone → OTP)
+  - [x] Add phone number validation and formatting
+  - [x] Create ScheduleVisitDialog component
+  - [x] Implement login check before scheduling
+  - [x] Auto-fill name and phone from user profile
+  - [x] Add date and time picker with validation
+  - [x] Create createPropertyVisit API function
+  - [x] Update Header with login/logout functionality
+  - [x] Add user dropdown menu with account options
+  - [x] Enable AuthProvider and RouteGuard in App.tsx
+  - [x] Add login route to routes.tsx
+  - [x] Run lint and verify all code passes
+
+**Phone OTP Authentication System:**
+
+**1. Database Schema:**
+- **profiles table**:
+  * id (UUID, references auth.users)
+  * phone (TEXT)
+  * name (TEXT)
+  * role (user_role ENUM: 'user' | 'admin')
+  * created_at, updated_at (TIMESTAMPTZ)
+  * First user automatically becomes admin
+  * RLS enabled with admin full access, users view/edit own profile
+
+- **property_visits table**:
+  * id (UUID, primary key)
+  * property_id (UUID, references properties)
+  * user_id (UUID, references profiles)
+  * visitor_name (TEXT)
+  * visitor_phone (TEXT)
+  * visit_date (DATE)
+  * visit_time (TIME)
+  * message (TEXT, optional)
+  * status (TEXT: pending/confirmed/cancelled/completed)
+  * created_at, updated_at (TIMESTAMPTZ)
+  * RLS enabled: users view/create/update own visits, admins full access
+
+- **Trigger Function**:
+  * handle_new_user() runs on auth.users confirmation
+  * Auto-creates profile when confirmed_at changes from NULL to NOT NULL
+  * First user gets admin role, subsequent users get user role
+  * Syncs phone number from auth.users
+
+- **Helper Function**:
+  * is_admin(uid) checks if user has admin role
+  * Prevents infinite recursion in RLS policies
+  * Used in all admin-level policies
+
+**2. AuthContext Updates:**
+- Replaced username/password with phone OTP
+- **signInWithPhone(phone)**: Sends OTP to phone number
+- **verifyOtp(phone, otp)**: Verifies OTP and logs in user
+- **Profile interface**: Added phone, name, role fields
+- Removed old signInWithUsername and signUpWithUsername methods
+- Maintained signOut and refreshProfile methods
+
+**3. LoginPage Component:**
+- **Two-step process**:
+  1. Enter phone number (10 digits)
+  2. Enter 6-digit OTP
+- **Phone validation**: Auto-formats to +91 prefix
+- **OTP input**: Large centered input with tracking
+- **Back button**: Change phone number if needed
+- **Resend OTP**: Button to request new OTP
+- **Error handling**: Clear error messages for invalid input
+- **Success redirect**: Returns to previous page after login
+- **Gradient design**: Matches RoomSaathi branding
+
+**4. ScheduleVisitDialog Component:**
+- **Login check**: Redirects to login if not authenticated
+- **Auto-filled fields**:
+  * Name from profile.name (read-only)
+  * Phone from profile.phone (read-only)
+- **User input fields**:
+  * Visit date (date picker, minimum today)
+  * Visit time (time picker)
+  * Message (optional textarea)
+- **Validation**:
+  * Date/time must be in future
+  * All required fields must be filled
+- **API integration**: Uses createPropertyVisit function
+- **Success feedback**: Toast notification on successful booking
+- **Form reset**: Clears form after submission
+
+**5. Header Component Updates:**
+- **Conditional rendering**:
+  * Not logged in: "Login" button
+  * Logged in: User dropdown menu
+- **User dropdown**:
+  * Display name and phone
+  * "My Favorites" link
+  * "My Visits" link
+  * "Logout" button (red text)
+- **Logout functionality**: Signs out and redirects to home
+- **Responsive design**: Works on mobile and desktop
+
+**6. RouteGuard Updates:**
+- **PUBLIC_ROUTES**: Added '/browse' and '/property/*'
+- **Protected routes**: Favorites, My Visits require login
+- **Login redirect**: Saves previous page for return after login
+- **Loading state**: Shows spinner while checking auth
+
+**7. App.tsx Integration:**
+- Enabled AuthProvider wrapping entire app
+- Enabled RouteGuard for route protection
+- Maintains Toaster for notifications
+- Maintains IntersectObserver for animations
+
+**8. API Functions:**
+- **createPropertyVisit**: Creates new visit booking
+- **getUserVisits**: Fetches user's visit history
+- **PropertyVisit interface**: TypeScript types for visits
+
+**Authentication Flow:**
+1. User clicks "Schedule Visit" on property page
+2. If not logged in, redirected to /login
+3. User enters phone number
+4. OTP sent via Supabase Auth
+5. User enters 6-digit OTP
+6. OTP verified, user logged in
+7. Profile auto-created via trigger
+8. User redirected back to property page
+9. Schedule Visit dialog opens with pre-filled info
+10. User selects date/time and submits
+11. Visit saved to database
+12. Success notification shown
+
+**Security Features:**
+- Phone verification enabled via Supabase
+- RLS policies protect user data
+- Admin role for first user
+- Users can only access own data
+- Admins have full access to all data
+- JWT-based authentication
+- Secure OTP delivery via SMS
+
+**User Experience:**
+- Seamless login flow
+- No password required
+- Quick OTP verification
+- Auto-filled booking forms
+- Clear error messages
+- Success notifications
+- Persistent login state
+- Easy logout
+
+All authentication and visit scheduling features implemented successfully!

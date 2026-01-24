@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
-import { Link } from 'react-router';
-import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, LogOut, User, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -10,8 +10,17 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -206,10 +215,47 @@ export default function Header() {
             <PlusCircle className="mr-2 h-4 w-4" />
             List Your Property
           </Button>
-          <Button size="sm" className="hover:scale-105 transition-transform">
-            <LogIn className="mr-2 h-4 w-4" />
-            Login
-          </Button>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" className="hover:scale-105 transition-transform gap-1">
+                  <User className="h-4 w-4" />
+                  {profile?.name || profile?.phone || 'Account'}
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <div className="px-2 py-2">
+                  <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
+                  <p className="text-xs text-muted-foreground">{profile?.phone}</p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/favorites" className="cursor-pointer">
+                    My Favorites
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/my-visits" className="cursor-pointer">
+                    My Visits
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button size="sm" className="hover:scale-105 transition-transform" asChild>
+              <Link to="/login">
+                <LogIn className="mr-2 h-4 w-4" />
+                Login
+              </Link>
+            </Button>
+          )}
         </div>
 
         {/* Mobile Navigation */}

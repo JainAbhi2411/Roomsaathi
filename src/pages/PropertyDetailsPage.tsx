@@ -23,6 +23,7 @@ import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
 import FloorPlanView from '@/components/property/FloorPlanView';
 import SendQueryDialog from '@/components/property/SendQueryDialog';
+import ScheduleVisitDialog from '@/components/property/ScheduleVisitDialog';
 import GoogleMap from '@/components/common/GoogleMap';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
@@ -771,10 +772,7 @@ export default function PropertyDetailsPage() {
                       <p className="text-sm text-muted-foreground text-center">
                         Book a visit to see this property in person
                       </p>
-                      <Button className="w-full" size="lg">
-                        <Calendar className="mr-2 h-5 w-5" />
-                        Schedule Visit
-                      </Button>
+                      <ScheduleVisitDialog propertyId={property.id} propertyName={property.name} />
                       <Button variant="outline" className="w-full" size="lg">
                         <Phone className="mr-2 h-5 w-5" />
                         Call Now
