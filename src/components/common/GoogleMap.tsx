@@ -54,9 +54,9 @@ export default function GoogleMap({
       return;
     }
 
-    // Load Google Maps script
+    // Load Google Maps script with async loading pattern
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
@@ -72,13 +72,13 @@ export default function GoogleMap({
     // No cleanup needed - keep script loaded for other map instances
   }, [latitude, longitude]);
 
-  const initializeMap = () => {
+  const initializeMap = async () => {
     if (!mapRef.current) return;
 
     try {
       const position = { lat: latitude, lng: longitude };
 
-      // Create map
+      // Create map with Map ID (required for AdvancedMarkerElement)
       const map = new google.maps.Map(mapRef.current, {
         center: position,
         zoom: zoom,
@@ -86,18 +86,32 @@ export default function GoogleMap({
         streetViewControl: true,
         fullscreenControl: true,
         zoomControl: true,
-        mapId: 'DEMO_MAP_ID', // Required for AdvancedMarkerElement
+        mapId: '4504f8b37365c3d0', // A valid Map ID for markers
       });
 
       mapInstanceRef.current = map;
 
-      // Create marker using the standard Marker (AdvancedMarkerElement requires more setup)
-      const marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        title: propertyName,
-        animation: google.maps.Animation.DROP,
-      });
+      // Try to use AdvancedMarkerElement if available, fallback to standard Marker
+      let marker;
+      
+      if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+        // Use the new AdvancedMarkerElement (no deprecation warning)
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+        
+        marker = new AdvancedMarkerElement({
+          map: map,
+          position: position,
+          title: propertyName,
+        });
+      } else {
+        // Fallback to standard Marker (will show deprecation warning)
+        marker = new google.maps.Marker({
+          position: position,
+          map: map,
+          title: propertyName,
+          animation: google.maps.Animation.DROP,
+        });
+      }
 
       // Create info window
       const infoWindow = new google.maps.InfoWindow({
