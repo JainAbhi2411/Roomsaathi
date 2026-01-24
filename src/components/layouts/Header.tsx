@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router';
-import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, LogOut, User, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen, Info, Newspaper } from 'lucide-react';
+import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, LogOut, User, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -126,56 +126,6 @@ export default function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/owner-features" className="cursor-pointer text-primary hover:bg-primary/10 transition-colors">
                     Learn More →
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Company Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-1 hover:bg-primary/10 hover:text-primary transition-all">
-                  <Info className="h-4 w-4" />
-                  Company
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuItem asChild>
-                  <Link to="/about" className="cursor-pointer hover:bg-primary/10 transition-colors">
-                    <Info className="mr-2 h-4 w-4 text-primary" />
-                    <div>
-                      <div className="font-medium">About Us</div>
-                      <div className="text-xs text-muted-foreground">Learn about RoomSaathi</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/our-story" className="cursor-pointer hover:bg-primary/10 transition-colors">
-                    <BookOpen className="mr-2 h-4 w-4 text-primary" />
-                    <div>
-                      <div className="font-medium">Our Story</div>
-                      <div className="text-xs text-muted-foreground">How we started</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/blogs" className="cursor-pointer hover:bg-primary/10 transition-colors">
-                    <Newspaper className="mr-2 h-4 w-4 text-primary" />
-                    <div>
-                      <div className="font-medium">Blogs</div>
-                      <div className="text-xs text-muted-foreground">Latest articles & tips</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/faqs" className="cursor-pointer hover:bg-primary/10 transition-colors">
-                    <HelpCircle className="mr-2 h-4 w-4 text-primary" />
-                    <div>
-                      <div className="font-medium">FAQs</div>
-                      <div className="text-xs text-muted-foreground">Common questions</div>
-                    </div>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -356,72 +306,54 @@ export default function Header() {
                 </div>
               </div>
 
-              <div className="border-t pt-4 space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Company</p>
-                <Link to="/about" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <Info className="inline-block mr-2 h-4 w-4" />
-                  About Us
-                </Link>
-                <Link to="/our-story" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <BookOpen className="inline-block mr-2 h-4 w-4" />
-                  Our Story
-                </Link>
-                <Link to="/blogs" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <Newspaper className="inline-block mr-2 h-4 w-4" />
-                  Blogs
-                </Link>
-                <Link to="/faqs" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <HelpCircle className="inline-block mr-2 h-4 w-4" />
-                  FAQs
-                </Link>
-              </div>
-
-              <div className="border-t pt-4 space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Support</p>
-                <Link to="/help-center" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <HelpCircle className="inline-block mr-2 h-4 w-4" />
-                  Help Center
-                </Link>
-                <Link to="/contact" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
-                  <Mail className="inline-block mr-2 h-4 w-4" />
-                  Contact Us
-                </Link>
-              </div>
-
               <div className="border-t pt-4 space-y-3">
+                <Button variant="outline" className="w-full justify-start hover:bg-primary/10 transition-colors">
+                  <Headphones className="mr-2 h-4 w-4" />
+                  Support
+                </Button>
+                <Button variant="outline" className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  List Your Property
+                </Button>
                 {user ? (
-                  <>
-                    <div className="px-2 py-2 bg-muted/50 rounded-lg">
-                      <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
-                      <p className="text-xs text-muted-foreground">{profile?.email || profile?.phone}</p>
-                    </div>
-                    <Link to="/favorites">
-                      <Button variant="outline" className="w-full justify-start hover:bg-primary/10 transition-colors">
-                        My Favorites
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="w-full justify-start hover:scale-105 transition-transform gap-1">
+                        <User className="h-4 w-4" />
+                        {profile?.name || profile?.phone || 'Account'}
+                        <ChevronDown className="h-3 w-3 ml-auto" />
                       </Button>
-                    </Link>
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start text-destructive hover:bg-destructive/10 transition-colors"
-                      onClick={handleLogout}
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </Button>
-                  </>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <div className="px-2 py-2">
+                        <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
+                        <p className="text-xs text-muted-foreground">{profile?.email || profile?.phone}</p>
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/favorites" className="cursor-pointer">
+                          My Favorites
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/my-visits" className="cursor-pointer">
+                          My Visits
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
-                  <>
-                    <Button variant="outline" className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      List Your Property
+                  <Link to="/login">
+                    <Button className="w-full justify-start hover:scale-105 transition-transform">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Login
                     </Button>
-                    <Link to="/login">
-                      <Button className="w-full justify-start hover:scale-105 transition-transform">
-                        <LogIn className="mr-2 h-4 w-4" />
-                        Login
-                      </Button>
-                    </Link>
-                  </>
+                  </Link>
                 )}
               </div>
             </nav>
