@@ -1,13 +1,45 @@
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Search, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+
+const heroImages = [
+  {
+    url: 'https://miaoda-site-img.s3cdn.medo.dev/images/9e0e51b8-011a-424c-b7f9-037bb1db001c.jpg',
+    alt: 'Students studying together in hostel room',
+    label: 'Student Hostels',
+  },
+  {
+    url: 'https://miaoda-site-img.s3cdn.medo.dev/images/2298646c-5884-46dd-9489-da8836dbdf2b.jpg',
+    alt: 'PG paying guest accommodation',
+    label: 'PG Accommodations',
+  },
+  {
+    url: 'https://miaoda-site-img.s3cdn.medo.dev/images/750cf05c-5157-4b42-bb9c-1e218d432ae6.jpg',
+    alt: 'College students group in hostel',
+    label: 'Shared Living',
+  },
+  {
+    url: 'https://miaoda-site-img.s3cdn.medo.dev/images/3f4580cb-9242-45f9-8494-dc1b7a4af2d3.jpg',
+    alt: 'Affordable student accommodation',
+    label: 'Affordable Rooms',
+  },
+];
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -85,32 +117,120 @@ export default function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* Right Image */}
+          {/* Right Image with Hanging Animation */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-hover">
-              <img
-                src="https://miaoda-site-img.s3cdn.medo.dev/images/ee83d5f7-c817-453f-93c5-2233e610c7d1.jpg"
-                alt="Happy family moving into new home"
-                className="w-full h-auto object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 0.6 }}
-                className="absolute bottom-6 left-6 right-6 bg-card/90 backdrop-blur-sm rounded-lg p-4 border border-border"
-              >
-                <p className="text-sm font-semibold">✨ Verified Properties</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  All properties are verified by RoomSaathi for your safety
-                </p>
-              </motion.div>
-            </div>
+            {/* Hook at the top */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
+            >
+              <div className="relative">
+                {/* Hook shape */}
+                <svg width="40" height="40" viewBox="0 0 40 40" className="text-muted-foreground">
+                  <path
+                    d="M20 5 L20 15 Q20 20 25 20 L30 20"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="20" cy="5" r="3" fill="currentColor" />
+                </svg>
+              </div>
+            </motion.div>
+
+            {/* Hanging rope/string */}
+            <motion.div
+              animate={{ 
+                rotate: [0, 2, 0, -2, 0],
+              }}
+              transition={{ 
+                duration: 4,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut"
+              }}
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-12 bg-muted-foreground/40 origin-top z-10"
+              style={{ transformOrigin: 'top center' }}
+            />
+
+            {/* Image container with hanging animation */}
+            <motion.div
+              animate={{ 
+                rotate: [0, 1.5, 0, -1.5, 0],
+                y: [0, -3, 0, -3, 0]
+              }}
+              transition={{ 
+                duration: 4,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut"
+              }}
+              className="relative rounded-2xl overflow-hidden shadow-hover"
+              style={{ transformOrigin: 'top center' }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentImageIndex}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.7 }}
+                  className="relative"
+                >
+                  <img
+                    src={heroImages[currentImageIndex].url}
+                    alt={heroImages[currentImageIndex].alt}
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                  
+                  {/* Image label */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold"
+                  >
+                    {heroImages[currentImageIndex].label}
+                  </motion.div>
+
+                  {/* Bottom info card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="absolute bottom-6 left-6 right-6 bg-card/90 backdrop-blur-sm rounded-lg p-4 border border-border"
+                  >
+                    <p className="text-sm font-semibold">✨ Verified Properties</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      All properties are verified by RoomSaathi for your safety
+                    </p>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Image indicators */}
+              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                {heroImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`h-2 rounded-full transition-all ${
+                      index === currentImageIndex 
+                        ? 'bg-primary w-8' 
+                        : 'bg-white/60 w-2 hover:bg-white/80'
+                    }`}
+                    aria-label={`View image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </motion.div>
 
             {/* Floating Elements */}
             <motion.div

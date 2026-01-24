@@ -12,16 +12,15 @@
 - [x] Step 9: Run lint and fix issues
 - [x] Step 10: Enhance homepage with additional sections (inspired by homversity.com)
 - [x] Step 11: Create separate Browse Properties page with advanced functionalities
-  - [x] Create BrowsePropertiesPage with dedicated property browsing
-  - [x] Add sidebar filters for desktop (sticky)
-  - [x] Add mobile filter sheet
-  - [x] Implement sorting options (newest, price low/high, name A-Z/Z-A)
-  - [x] Add grid/list view toggle
-  - [x] Show property count and active filter badges
-  - [x] Add URL parameter support for filtering
-  - [x] Update HomePage to be pure landing page
-  - [x] Update all navigation links to point to /browse
-  - [x] Update Header with Browse Properties link
+- [x] Step 12: Add hanging hook animation with image transitions in hero section
+  - [x] Search and integrate hostel, PG, and student images
+  - [x] Create hook SVG element at top
+  - [x] Add hanging rope/string with swing animation
+  - [x] Implement image carousel with 4 images
+  - [x] Add smooth fade transitions between images
+  - [x] Create hanging/swinging animation for image container
+  - [x] Add image indicators with click functionality
+  - [x] Add category labels for each image
   - [x] Run lint and fix issues
 
 ## Notes
@@ -34,7 +33,14 @@
 - RoomSaathi Verified badge for trusted properties
 
 **Homepage Sections (Landing Page):**
-1. Animated hero section with split layout and search
+1. Animated hero section with hanging hook image carousel
+   - Hook SVG element with realistic design
+   - Hanging rope with continuous swing animation
+   - 4 rotating images: Students studying, PG accommodation, College students, Affordable rooms
+   - Smooth fade transitions every 4 seconds
+   - Image container swings like hanging from hook
+   - Interactive image indicators
+   - Category labels for each image type
 2. Featured properties (verified only)
 3. Property types showcase (6 categories)
 4. How it works (4-step process)
