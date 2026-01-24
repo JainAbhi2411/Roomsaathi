@@ -371,3 +371,27 @@ Error resolved successfully!
 8. Amenities (12 options with multi-select)
 
 All features completed successfully with lint passing!
+
+- [x] Step 23: Fix React hook errors (second occurrence)
+  - [x] Identified root cause: Missing React imports in new page components
+  - [x] Added `import React from 'react'` to BlogsPage.tsx
+  - [x] Added `import React from 'react'` to AboutUsPage.tsx
+  - [x] Added `import React from 'react'` to OurStoryPage.tsx
+  - [x] Added `import React from 'react'` to FAQsPage.tsx
+  - [x] Added `import React from 'react'` to OwnerFeaturesPage.tsx
+  - [x] Added `import React from 'react'` to BrowsePropertiesPage.tsx
+  - [x] Added `import React from 'react'` to AdvancedFilterBar.tsx
+  - [x] Verified lint passes successfully
+
+**Issue Fixed:**
+The error "Cannot read properties of null (reading 'useContext/useState/useRef/useMemo')" returned because the newly created page components (BlogsPage, AboutUsPage, OurStoryPage, FAQsPage, OwnerFeaturesPage) and the enhanced BrowsePropertiesPage did not have explicit React imports.
+
+**Root Cause:**
+- All new page files created in Step 20 and Step 22 were missing `import React from 'react'`
+- While React 18+ doesn't always require explicit React imports for JSX, when components use hooks and are part of a route configuration, React must be explicitly imported
+- The error manifested at runtime in the browser, affecting multiple components: IntersectObserver, HeroSection, Toaster, Dialog, motion components, and DropdownMenu
+
+**Solution:**
+Added `import React from 'react'` (or `import React, { useState } from 'react'` for components using hooks) at the top of all new page files and the AdvancedFilterBar component to ensure React is available when JSX elements and hooks are used.
+
+Error resolved successfully!

@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import { Card, CardContent } from '@/components/ui/card';
