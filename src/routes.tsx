@@ -5,6 +5,7 @@ import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import OwnerFeaturesPage from './pages/OwnerFeaturesPage';
 import BlogsPage from './pages/BlogsPage';
+import BlogPostPage from './pages/BlogPostPage';
 import AboutUsPage from './pages/AboutUsPage';
 import OurStoryPage from './pages/OurStoryPage';
 import FAQsPage from './pages/FAQsPage';
@@ -54,6 +55,12 @@ const routes: RouteConfig[] = [
     name: 'Blogs',
     path: '/blogs',
     element: <BlogsPage />,
+    visible: false
+  },
+  {
+    name: 'Blog Post',
+    path: '/blog/:id',
+    element: <BlogPostPage />,
     visible: false
   },
   {

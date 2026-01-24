@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,75 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, User, Search, ArrowRight } from 'lucide-react';
-
-const blogPosts = [
-  {
-    id: 1,
-    title: '10 Essential Tips for Finding Your Perfect Student Accommodation',
-    excerpt: 'Moving to a new city for studies? Here are the top tips to help you find the ideal place that feels like home.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/57488dc0-497f-4476-bbe6-cf75b85c5eef.jpg',
-    category: 'Student Life',
-    author: 'Priya Sharma',
-    date: '2026-01-20',
-    readTime: '5 min read',
-  },
-  {
-    id: 2,
-    title: 'Complete Guide to Renting Your First Apartment',
-    excerpt: 'Everything you need to know about renting your first apartment, from viewing properties to signing the lease.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/44d74750-d9b4-4ed0-a476-405ff37f4da3.jpg',
-    category: 'Rental Guide',
-    author: 'Rahul Verma',
-    date: '2026-01-18',
-    readTime: '8 min read',
-  },
-  {
-    id: 3,
-    title: 'Moving Into Your New Place: A Comprehensive Checklist',
-    excerpt: 'Make your move stress-free with our detailed checklist covering everything from packing to settling in.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/42f6e6a3-19bf-410a-92c5-1d1f2c0d6a96.jpg',
-    category: 'Moving Tips',
-    author: 'Anjali Patel',
-    date: '2026-01-15',
-    readTime: '6 min read',
-  },
-  {
-    id: 4,
-    title: 'How to Make the Most of College Life in a New City',
-    excerpt: 'Discover tips and tricks to balance studies, social life, and personal growth while living away from home.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/1911c5b9-1b8b-4e8f-99f8-f3306db168c5.jpg',
-    category: 'Student Life',
-    author: 'Vikram Singh',
-    date: '2026-01-12',
-    readTime: '7 min read',
-  },
-  {
-    id: 5,
-    title: 'Property Investment Tips for First-Time Owners',
-    excerpt: 'Thinking of investing in rental properties? Here is expert advice to get you started on the right foot.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/c20c0ccb-ca88-4790-bc17-76470cca8e2f.jpg',
-    category: 'Investment',
-    author: 'Suresh Kumar',
-    date: '2026-01-10',
-    readTime: '10 min read',
-  },
-  {
-    id: 6,
-    title: 'Understanding Your Rights as a Tenant in India',
-    excerpt: 'Know your legal rights and responsibilities as a tenant to ensure a smooth rental experience.',
-    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/44d74750-d9b4-4ed0-a476-405ff37f4da3.jpg',
-    category: 'Legal',
-    author: 'Meera Reddy',
-    date: '2026-01-08',
-    readTime: '9 min read',
-  },
-];
-
-const categories = ['All', 'Student Life', 'Rental Guide', 'Moving Tips', 'Investment', 'Legal'];
+import { blogPosts, categories } from '@/data/blogPosts';
 
 export default function BlogsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const filteredPosts = blogPosts.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
@@ -158,7 +96,9 @@ export default function BlogsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <Card className="h-full hover:shadow-hover transition-all duration-300 hover:-translate-y-1 group overflow-hidden">
+                    <Card className="h-full hover:shadow-hover transition-all duration-300 hover:-translate-y-1 group overflow-hidden cursor-pointer"
+                      onClick={() => navigate(`/blog/${post.id}`)}
+                    >
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
                         <img
