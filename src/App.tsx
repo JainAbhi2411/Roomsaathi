@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router';
 import IntersectObserver from '@/components/common/IntersectObserver';
 
 import routes from './routes';
