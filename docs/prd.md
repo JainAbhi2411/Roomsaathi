@@ -50,16 +50,31 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 3.4 Browse by Category Section
 - Split layout design with left and right sections
-- Left side:\n  - Display category images with cutout design effect
-  - Implement hover effects on category images
-  - Show category icons for selection
+- Left side:
+  - Display category images with cutout design effect
+  - Implement hover effects on category images\n  - Show category icons for selection
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
 - Right side:
-  - Display property cards according to selected category
-  - Arrange property cards in column-wise layout
-  - Enable vertical scrolling for property cards within the column
+  - Display property cards with small and minimal design
+  - Arrange property cards in column-wise layout\n  - Enable vertical scrolling for property cards within the column
   - Update property cards dynamically based on category selection from left side
-\n### 3.5 Search and Filter System (on Browse Page)\n- City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
+\n### 3.5 Student Information Section
+- Split layout design with left and right sections\n- Left side:
+  - Display informational content about RoomSaathi services for students
+  - Include text describing benefits and features
+- Right side:
+  - Display images of students in accommodation settings
+  - Show student lifestyle and accommodation experiences
+\n### 3.6 What RoomSaathi Students Get Section
+- Split layout design with left and right sections\n- Left side:
+  - Display 4 to 5 key features and benefits for students
+  - Implement auto slide functionality to cycle through features
+  - Each feature should include title and description
+- Right side:
+  - Display relevant images corresponding to the features
+  - Images should change in sync with the auto sliding features
+
+### 3.7 Search and Filter System (on Browse Page)\n- City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
 - Locality Selector: Dropdown menu for specific localities within selected city
 - Filter by property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
 - Filter by RoomSaathi Verified properties
@@ -70,7 +85,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Save search preferences for future visits
 - Recent searches display
 
-### 3.6 Property Detail Page
+### 3.8 Property Detail Page
 Each property should display complete information including:
 - Property name
 - Property type and category
@@ -90,7 +105,7 @@ Each property should display complete information including:
 - Nearby facilities and landmarks
 - Transportation connectivity information
 
-### 3.7 User Actions
+### 3.9 User Actions
 - Browse all properties on dedicated browse page
 - View detailed property information including room details and images
 - Filter and search properties with advanced options
@@ -101,59 +116,59 @@ Each property should display complete information including:
 - Request property visits
 - Read and view property reviews
 
-### 3.8 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison\n- Compare key features, amenities, pricing, and locations
+### 3.10 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison\n- Compare key features, amenities, pricing, and locations
 - Visual comparison interface with clear distinctions\n
-### 3.9 Reviews and Ratings
+### 3.11 Reviews and Ratings
 - Display user reviews and ratings for properties\n- Show overall rating scores
 - Filter reviews by rating level
 - Display review highlights
 
-### 3.10 Featured Properties Section
+### 3.12 Featured Properties Section
 - Showcase premium or featured listings
 - Highlight RoomSaathi Verified properties\n- Display special offers or deals\n
-### 3.11 City Guides Section
+### 3.13 City Guides Section
 - Provide information about Sikar, Jaipur, and Kota
 - Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
-\n### 3.12 Testimonials Section
+\n### 3.14 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
 
-### 3.13 Why Choose RoomSaathi Section
+### 3.15 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
 - Use icons and visual elements to enhance presentation\n
-### 3.14 How It Works Section
+### 3.16 How It Works Section
 - Step-by-step guide on using the platform
 - Visual representation of the property search and booking process
 - Clear call-to-action at each step
 
-### 3.15 Popular Localities Section
+### 3.17 Popular Localities Section
 - Display trending or popular localities in each city
 - Show number of available properties per locality
 - Quick access links to locality-specific listings
 
-### 3.16 Property Owner Section
+### 3.18 Property Owner Section
 - Information for property owners wanting to list their properties
 - Benefits of listing on RoomSaathi
 - Call-to-action for property listing
 - Display functionalities provided for owners: management software, website listing services, etc.
 
-### 3.17 Blog/Resources Section
+### 3.19 Blog/Resources Section
 - Articles about accommodation tips\n- City guides and locality information\n- Student accommodation advice
 - Property hunting tips
 
-### 3.18 FAQ Section\n- Common questions and answers
+### 3.20 FAQ Section\n- Common questions and answers
 - Categorized by topic (searching, booking, payments, etc.)\n- Expandable/collapsible accordion interface
 
-### 3.19 Contact Section\n- Contact form for inquiries\n- Display contact information (email, phone)
+### 3.21 Contact Section\n- Contact form for inquiries\n- Display contact information (email, phone)
 - Office locations in Sikar, Jaipur, and Kota
 - Social media links
 
-### 3.20 Newsletter Subscription\n- Email subscription form for updates and offers
+### 3.22 Newsletter Subscription\n- Email subscription form for updates and offers
 - Promotional messaging about benefits of subscribing
 
 ## 4. Design Requirements
@@ -166,15 +181,17 @@ Each property should display complete information including:
 - Incorporate relevant property and accommodation-related images for enhanced visual appeal
 - Consistent visual hierarchy across all sections
 - Responsive design for all device sizes
+- Small and minimal design for property cards in Browse by Category section
 
 ### 4.2 Design References
 - Take inspiration from orooms.in
 - Take inspiration from https://www.homversity.com/
 
-### 4.3 Special Animations
-- Logo hanging animation: Create a string-hanging effect with subtle swinging motion for the RoomSaathi logo\n- Hero section animated images with hanging hook transition effect: Images of hostels, PG accommodations, and students should appear as if hanging from a hook and smoothly change between different scenes\n- Auto slider for property images in listing cards
-- Smooth page transitions
-- Interactive hover effects on property cards
+### 4.3 Special Animations\n- Logo hanging animation: Create a string-hanging effect with subtle swinging motion for the RoomSaathi logo
+- Hero section animated images with hanging hook transition effect: Images of hostels, PG accommodations, and students should appear as if hanging from a hook and smoothly change between different scenes
+- Auto slider for property images in listing cards
+- Auto slide functionality for What RoomSaathi Students Get section features
+- Smooth page transitions\n- Interactive hover effects on property cards
 - Animated filter and search interactions
 - Scroll-triggered animations for section reveals
 - Parallax effects on hero sections
@@ -188,9 +205,9 @@ Each property should display complete information including:
 - Lifestyle images depicting accommodation experiences
 - City-specific imagery for location sections
 - Icons for amenities and features
-- Infographics for statistics and processes
-- Background images with overlay effects where appropriate
-- Category images with cutout design for Browse by Category section
+- Infographics for statistics and processes\n- Background images with overlay effects where appropriate
+- Category images with cutout design for Browse by Category section\n- Student images for Student Information Section
+- Feature-specific images for What RoomSaathi Students Get section
 
 ## 5. Primary Operating Locations
 - Sikar

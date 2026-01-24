@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Bed, Building2, Home, DoorOpen, Hotel, Calendar } from 'lucide-react';
 import type { Property } from '@/types/index';
 import { getProperties } from '@/db/api';
-import PropertyCard from '@/components/property/PropertyCard';
+import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const categories = [
@@ -204,10 +204,10 @@ export default function CategoryBrowseSection() {
                 {/* Scrollable Property Grid */}
                 <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                   {loading ? (
-                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
-                      {[...Array(4)].map((_, i) => (
+                    <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-4">
+                      {[...Array(6)].map((_, i) => (
                         <div key={i} className="space-y-3">
-                          <Skeleton className="h-48 w-full bg-muted" />
+                          <Skeleton className="h-40 w-full bg-muted" />
                           <Skeleton className="h-4 w-3/4 bg-muted" />
                           <Skeleton className="h-3 w-full bg-muted" />
                           <Skeleton className="h-3 w-2/3 bg-muted" />
@@ -215,7 +215,7 @@ export default function CategoryBrowseSection() {
                       ))}
                     </div>
                   ) : properties.length > 0 ? (
-                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-4">
                       {properties.map((property, index) => (
                         <motion.div
                           key={property.id}
@@ -223,7 +223,7 @@ export default function CategoryBrowseSection() {
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
-                          <PropertyCard property={property} onFavoriteToggle={loadCategoryProperties} />
+                          <PropertyCardSmall property={property} onFavoriteToggle={loadCategoryProperties} />
                         </motion.div>
                       ))}
                     </div>

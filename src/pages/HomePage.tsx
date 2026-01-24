@@ -4,10 +4,11 @@ import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import HeroSection from '@/components/home/HeroSection';
 import HowItWorksSection from '@/components/home/HowItWorksSection';
-import PropertyTypesSection from '@/components/home/PropertyTypesSection';
 import CitiesSection from '@/components/home/CitiesSection';
 import FeaturedPropertiesSection from '@/components/home/FeaturedPropertiesSection';
 import CategoryBrowseSection from '@/components/home/CategoryBrowseSection';
+import StudentInfoSection from '@/components/home/StudentInfoSection';
+import StudentBenefitsSection from '@/components/home/StudentBenefitsSection';
 import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import StatsSection from '@/components/home/StatsSection';
@@ -24,7 +25,9 @@ export default function HomePage() {
         <Separator />
         <CategoryBrowseSection />
         <Separator />
-        <PropertyTypesSection />
+        <StudentInfoSection />
+        <Separator />
+        <StudentBenefitsSection />
         <Separator />
         <HowItWorksSection />
         <Separator />
