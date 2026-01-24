@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 import Header from '@/components/layouts/Header';
@@ -8,17 +8,40 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, User, Search, ArrowRight } from 'lucide-react';
-import { blogPosts, categories } from '@/data/blogPosts';
+import { getPublishedBlogs } from '@/db/api';
+import type { Blog } from '@/types';
 
 export default function BlogsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const filteredPosts = blogPosts.filter(post => {
+  useEffect(() => {
+    loadBlogs();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadBlogs, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadBlogs = async () => {
+    try {
+      const data = await getPublishedBlogs();
+      setBlogs(data);
+    } catch (error) {
+      console.error('Error loading blogs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const categories = ['All', ...Array.from(new Set(blogs.map(b => b.category)))];
+
+  const filteredPosts = blogs.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+                         (post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
     return matchesCategory && matchesSearch;
   });
 
@@ -87,7 +110,11 @@ export default function BlogsPage() {
         {/* Blog Posts Grid */}
         <section className="py-16 xl:py-24">
           <div className="container mx-auto px-4">
-            {filteredPosts.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            ) : filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredPosts.map((post, index) => (
                   <motion.div
@@ -97,32 +124,34 @@ export default function BlogsPage() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
                     <Card className="h-full hover:shadow-hover transition-all duration-300 hover:-translate-y-1 group overflow-hidden cursor-pointer"
-                      onClick={() => navigate(`/blog/${post.id}`)}
+                      onClick={() => navigate(`/blog/${post.slug}`)}
                     >
                       {/* Image */}
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <Badge className="bg-primary text-primary-foreground">
-                            {post.category}
-                          </Badge>
+                      {post.image_url && (
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={post.image_url}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute top-4 left-4">
+                            <Badge className="bg-primary text-primary-foreground">
+                              {post.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       <CardContent className="p-6">
                         {/* Meta Info */}
                         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
-                            <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            <span>{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            <span>{post.readTime}</span>
+                            <span>{post.read_time} min read</span>
                           </div>
                         </div>
 
@@ -133,7 +162,7 @@ export default function BlogsPage() {
 
                         {/* Excerpt */}
                         <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                          {post.excerpt}
+                          {post.excerpt || post.content.substring(0, 150) + '...'}
                         </p>
 
                         {/* Author & Read More */}
@@ -142,7 +171,7 @@ export default function BlogsPage() {
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <User className="h-4 w-4 text-primary" />
                             </div>
-                            <span className="text-sm font-medium">{post.author}</span>
+                            <span className="text-sm font-medium">{post.author_name}</span>
                           </div>
                           <Button variant="ghost" size="sm" className="gap-1 group-hover:gap-2 transition-all">
                             Read More

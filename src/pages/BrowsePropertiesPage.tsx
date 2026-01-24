@@ -81,6 +81,9 @@ export default function BrowsePropertiesPage() {
   // Load properties when filters change
   useEffect(() => {
     loadProperties();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadProperties, 30000);
+    return () => clearInterval(interval);
   }, [filters]);
 
   // Sort properties when sort option changes

@@ -18,6 +18,8 @@ interface ScheduleVisitDialogProps {
 export default function ScheduleVisitDialog({ propertyId, propertyName }: ScheduleVisitDialogProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
     visitDate: '',
     visitTime: '',
     message: ''
@@ -71,8 +73,8 @@ export default function ScheduleVisitDialog({ propertyId, propertyName }: Schedu
       await createPropertyVisit({
         property_id: propertyId,
         user_id: user.id,
-        visitor_name: profile.name || 'Guest',
-        visitor_phone: profile.phone || '',
+        visitor_name: profile.username || 'Guest',
+        visitor_phone: formData.phone,
         visit_date: formData.visitDate,
         visit_time: formData.visitTime,
         message: formData.message || null,
@@ -84,7 +86,7 @@ export default function ScheduleVisitDialog({ propertyId, propertyName }: Schedu
       });
 
       setOpen(false);
-      setFormData({ visitDate: '', visitTime: '', message: '' });
+      setFormData({ name: '', phone: '', visitDate: '', visitTime: '', message: '' });
     } catch (error) {
       console.error('Error scheduling visit:', error);
       toast({
@@ -123,23 +125,27 @@ export default function ScheduleVisitDialog({ propertyId, propertyName }: Schedu
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="name"
-                value={profile?.name || 'Guest'}
-                disabled
-                className="pl-10 bg-muted"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Enter your name"
+                className="pl-10"
+                required
               />
             </div>
           </div>
 
-          {/* Phone (Read-only, from profile) */}
+          {/* Phone */}
           <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="phone"
-                value={profile?.phone || ''}
-                disabled
-                className="pl-10 bg-muted"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter your phone number"
+                className="pl-10"
+                required
               />
             </div>
           </div>

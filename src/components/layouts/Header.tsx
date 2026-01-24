@@ -221,16 +221,30 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <Button size="sm" className="hover:scale-105 transition-transform gap-1">
                   <User className="h-4 w-4" />
-                  {profile?.name || profile?.phone || 'Account'}
+                  {profile?.username || 'Account'}
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-2">
-                  <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
-                  <p className="text-xs text-muted-foreground">{profile?.email || profile?.phone}</p>
+                  <p className="text-sm font-semibold">{profile?.username || 'User'}</p>
+                  <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                  {profile?.role === 'admin' && (
+                    <p className="text-xs font-medium text-primary mt-1">Admin</p>
+                  )}
                 </div>
                 <DropdownMenuSeparator />
+                {profile?.role === 'admin' && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin/dashboard" className="cursor-pointer">
+                        <BarChart3 className="mr-2 h-4 w-4" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem asChild>
                   <Link to="/favorites" className="cursor-pointer">
                     My Favorites
@@ -320,16 +334,30 @@ export default function Header() {
                     <DropdownMenuTrigger asChild>
                       <Button className="w-full justify-start hover:scale-105 transition-transform gap-1">
                         <User className="h-4 w-4" />
-                        {profile?.name || profile?.phone || 'Account'}
+                        {profile?.username || 'Account'}
                         <ChevronDown className="h-3 w-3 ml-auto" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
                       <div className="px-2 py-2">
-                        <p className="text-sm font-semibold">{profile?.name || 'Guest'}</p>
-                        <p className="text-xs text-muted-foreground">{profile?.email || profile?.phone}</p>
+                        <p className="text-sm font-semibold">{profile?.username || 'User'}</p>
+                        <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                        {profile?.role === 'admin' && (
+                          <p className="text-xs font-medium text-primary mt-1">Admin</p>
+                        )}
                       </div>
                       <DropdownMenuSeparator />
+                      {profile?.role === 'admin' && (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link to="/admin/dashboard" className="cursor-pointer">
+                              <BarChart3 className="mr-2 h-4 w-4" />
+                              Admin Dashboard
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
                       <DropdownMenuItem asChild>
                         <Link to="/favorites" className="cursor-pointer">
                           My Favorites

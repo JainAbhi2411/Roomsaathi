@@ -257,3 +257,54 @@ export const getUserVisits = async (userId: string): Promise<PropertyVisit[]> =>
   if (error) throw error;
   return data || [];
 };
+
+// Blog Management
+export const getPublishedBlogs = async () => {
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .eq('published', true)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+export const getBlogBySlug = async (slug: string) => {
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+};
+
+// User Query Management
+export const createUserQuery = async (query: {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+  property_id?: string;
+  property_name?: string;
+}) => {
+  const { data, error } = await supabase
+    .from('user_queries')
+    .insert({
+      name: query.name,
+      email: query.email,
+      phone: query.phone || null,
+      message: query.message,
+      property_id: query.property_id || null,
+      property_name: query.property_name || null,
+      status: 'pending'
+    })
+    .select()
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+};

@@ -70,6 +70,9 @@ export default function CategoryBrowseSection() {
 
   useEffect(() => {
     loadCategoryProperties();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadCategoryProperties, 30000);
+    return () => clearInterval(interval);
   }, [selectedCategory]);
 
   const loadCategoryProperties = async () => {

@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import { createUserQuery } from '@/db/api';
 
 export default function ContactPage() {
   const { toast } = useToast();
@@ -36,15 +37,28 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      await createUserQuery({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        message: `Subject: ${formData.subject}\n\n${formData.message}`,
+      });
+
       toast({
         title: 'Message Sent Successfully!',
         description: 'We\'ll get back to you within 24 hours.',
       });
-      setIsSubmitting(false);
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {

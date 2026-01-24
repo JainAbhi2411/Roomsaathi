@@ -15,6 +15,9 @@ export default function FeaturedPropertiesSection() {
 
   useEffect(() => {
     loadFeaturedProperties();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadFeaturedProperties, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadFeaturedProperties = async () => {

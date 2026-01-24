@@ -5,7 +5,7 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities. The platform includes a dedicated admin panel for managing properties, blogs, and user queries.
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities. The platform includes a dedicated admin panel for managing properties, blogs, and user queries with real-time updates to the website.
 
 ### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
@@ -19,7 +19,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Hostels
 - RoomSaathi Verified (special verified properties category)
 - Short Term Stays
-\n### 2.2 Property Type Classifications
+
+### 2.2 Property Type Classifications
 - For Girls
 - For Boys
 - For Family\n- For Bachelors\n- For Students
@@ -77,7 +78,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Smooth scroll animations as users navigate down the page
 
 ### 3.4 Dedicated Property Browse Page
-- Create a separate dedicated page for browsing all properties\n- Display all property listings with preview cards
+- Create a separate dedicated page for browsing all properties
+- Display all property listings with preview cards
 - Show property thumbnail images with auto slider functionality for multiple property images
 - Display basic details and pricing on listing cards
 - **Display Amenities on Property Cards:**
@@ -94,7 +96,9 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Quick view option for property details without leaving the browse page
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
-\n#### 3.4.1 Advanced Filter Options
+- **Real-time property updates: New properties added by admin appear immediately without page refresh**
+
+#### 3.4.1 Advanced Filter Options
 - Comprehensive filter panel with the following options:
   - Property Type: Multi-select checkboxes for PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
   - **Property Type Classification: Multi-select checkboxes for For Girls, For Boys, For Family, For Bachelors, For Students**
@@ -136,8 +140,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Debounced search to optimize performance
 - Clear search button (X icon) in search bar
 - Search history with option to clear
-
-#### 3.4.3 Sticky Search Bar on Scroll
+\n#### 3.4.3 Sticky Search Bar on Scroll
 - Search bar becomes sticky and fixed to top of page when user scrolls down
 - Smooth transition animation when search bar becomes sticky
 - Compact sticky version with essential search and filter controls
@@ -196,7 +199,9 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Arrange property cards in column-wise layout
   - Enable vertical scrolling for property cards within the column
   - Update property cards dynamically based on category selection from left side
-\n### 3.6 Student Information Section
+  - **Real-time updates: Property cards refresh automatically when admin adds/updates properties**
+
+### 3.6 Student Information Section
 - Split layout design with left and right sections\n- Left side:
   - Display informational content about RoomSaathi services for students
   - Include text describing benefits and features
@@ -280,8 +285,7 @@ Each property should display complete information with the following advanced la
 
 - **Accommodation Type:**
   - Type of accommodation (PG/Flat/Apartment/Room/Hostel)
-  - Gender preference (Male/Female/Co-ed)
-  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
   - Property age (New/Recent/Established)
   - Total number of floors
   - Total number of rooms
@@ -331,7 +335,8 @@ Each property should display complete information with the following advanced la
     - Power outlets
     - Reading light
     - Mattress type
-  - Visual design approach:\n    - Use floor plan view with clickable room sections
+  - Visual design approach:
+    - Use floor plan view with clickable room sections
     - Color-coded availability status (Available/Occupied/Reserved)
     - Hover effect to show quick room details
     - Click on room to expand detailed view with images and amenities
@@ -371,8 +376,7 @@ Each property should display complete information with the following advanced la
   - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
     - Opens query form or chat interface
     - Quick response commitment display
-
-- **Payment Policies:**
+\n- **Payment Policies:**
   - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
   - Payment schedule (Monthly/Quarterly/Advance)
   - Due date for monthly payments
@@ -430,7 +434,9 @@ Each property should display complete information with the following advanced la
   - **Show amenities and accommodation type on similar property cards**
   - **Display property type classification badge on similar property cards**
   - Quick navigation to similar property detail pages
-\n### 3.10 User Actions\n- Login with mobile number and OTP verification
+  - **Real-time updates: Similar properties refresh when admin updates related properties**
+
+### 3.10 User Actions\n- Login with mobile number and OTP verification
 - Browse all properties on dedicated browse page
 - View detailed property information including room details and images
 - **Watch property videos in the property detail page**
@@ -439,14 +445,14 @@ Each property should display complete information with the following advanced la
 - Contact property owners\n- Share property listings\n- Compare multiple properties
 - Schedule property visits (requires login):\n  - Select date and time for visit
   - Name and phone number auto-filled from user profile
-  - View and manage scheduled visits in user profile\n- Read and view property reviews\n- Send queries about specific properties
+  - View and manage scheduled visits in user profile\n- Read and view property reviews
+- Send queries about specific properties
 - View floor plans and room layouts
 - Check short term stay availability
 - Review payment and cancellation policies
 - View property location on Google Map
 - Get directions to property location
-- Filter properties by amenities, accommodation type, and property type classification\n\n### 3.11 Property Comparison
-- Allow users to select multiple properties for side-by-side comparison
+- Filter properties by amenities, accommodation type, and property type classification\n\n### 3.11 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
 - **Include accommodation type comparison** (furnishing, gender preference, property age)
 - **Include property type classification comparison** (For Girls/For Boys/For Family/For Bachelors/For Students)
@@ -458,7 +464,9 @@ Each property should display complete information with the following advanced la
 - Highlight RoomSaathi Verified properties\n- **Display key amenities on featured property cards**
 - **Show accommodation type badges on featured properties**
 - **Display property type classification badges on featured properties**
-\n### 3.14 Cities We Serve Section
+- **Real-time updates: Featured properties refresh when admin updates them**
+
+### 3.14 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
 - Each city card should have:
@@ -492,14 +500,12 @@ Each property should display complete information with the following advanced la
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
-
-### 3.17 Why Choose RoomSaathi Section
+\n### 3.17 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
 - Use icons and visual elements to enhance presentation
-
-### 3.18 How It Works Section
+\n### 3.18 How It Works Section
 - Step-by-step guide on using the platform
 - Visual representation of the property search and booking process
 - Clear call-to-action at each step
@@ -529,11 +535,11 @@ Each property should display complete information with the following advanced la
 ### 3.22 Blog Section
 - Create a dedicated blog page with complete blog functionality
 - **Blog posts can only be created and published by RoomSaathi admin through the admin panel**
+- **Real-time blog updates: New blog posts published by admin appear on the website immediately without page refresh**
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image
-    - Blog title
+    - Featured image\n    - Blog title
     - Brief excerpt or summary
     - Author name and avatar
     - Publication date
@@ -546,6 +552,7 @@ Each property should display complete information with the following advanced la
   - Featured or trending blog posts section at the top
   - Recent posts sidebar widget
   - Popular posts section
+  - **Automatic refresh when admin publishes new blog posts**
 - Individual Blog Post Page:
   - Full blog post content with rich text formatting
   - Hero image at the top
@@ -749,8 +756,7 @@ Each property should display complete information with the following advanced la
   - Separate admin login page (e.g., /admin/login)
   - Password reset functionality for admin accounts
   - Role-based access control for different admin levels (if needed)
-
-- **Admin Dashboard:**
+\n- **Admin Dashboard:**
   - Centralized dashboard for managing all RoomSaathi operations
   - Overview statistics and analytics:\n    - Total properties listed
     - Total active users
@@ -759,7 +765,7 @@ Each property should display complete information with the following advanced la
     - Recent activities and updates
   - Quick access navigation to all management sections
   - Visual charts and graphs for key metrics
-  - Recent activity feed\n\n- **Property Management:**
+  - Recent activity feed\n\n- **Property Management with Real-Time Website Updates:**
   - **Property Listing Management:**
     - View all properties in a table/grid format
     - Search and filter properties by:\n      - City (Sikar, Jaipur, Kota)
@@ -785,16 +791,20 @@ Each property should display complete information with the following advanced la
     - Image preview before upload
     - Save as draft functionality
     - Publish immediately or schedule for later
-  \n  - **Edit Property:**
+    - **Real-time website update: New property appears on website immediately after publishing without requiring page refresh**
+  
+  - **Edit Property:**
     - Edit any existing property with pre-filled form\n    - Update property information, images, videos, pricing, availability
     - Version history or change log (optional)
     - Update verification status
+    - **Real-time website update: Property changes reflect on website immediately after saving**
   
   - **Delete Property:**
     - Soft delete with confirmation prompt
     - Option to permanently delete or archive
     - Bulk delete functionality
-\n- **Blog Management:**
+    - **Real-time website update: Deleted property is removed from website immediately**
+\n- **Blog Management with Real-Time Website Updates:**
   - **Blog Post Listing:**
     - View all blog posts in a table/grid format
     - Search and filter blogs by:
@@ -818,22 +828,22 @@ Each property should display complete information with the following advanced la
     - Image upload and management within blog content
     - Preview functionality before publishing
     - Save as draft\n    - Publish or schedule for future publication
+    - **Real-time website update: Published blog post appears on website blog section immediately without requiring page refresh**
   
-  - **Edit Blog Post:**
-    - Edit any existing blog post with pre-filled content
-    - Update content, images, categories, tags
-    - Change publication status (publish/unpublish)
+  - **Edit Blog Post:**\n    - Edit any existing blog post with pre-filled content
+    - Update content, images, categories, tags\n    - Change publication status (publish/unpublish)
     - Version history or revision tracking (optional)
+    - **Real-time website update: Blog post changes reflect on website immediately after saving**
   
   - **Delete Blog Post:**
     - Soft delete with confirmation prompt
     - Option to permanently delete or archive
     - Bulk delete functionality
-  
+    - **Real-time website update: Deleted blog post is removed from website immediately**\n  
   - **Blog Categories Management:**
     - Add, edit, delete blog categories
     - Assign categories to blog posts
-\n- **User Query Management:**
+\n- **User Query Management with Real-Time Updates:**
   - **View All Queries:**
     - Display all user queries in a table format
     - Query information:\n      - User name and contact details
@@ -843,10 +853,10 @@ Each property should display complete information with the following advanced la
       - Date and time submitted
       - Status (New/In Progress/Resolved)
     - Search and filter queries by:
-      - Status
-      - Date range
+      - Status\n      - Date range
       - Property\n      - User
-    - Sort queries by date, status, priority\n  
+    - Sort queries by date, status, priority\n    - **Real-time updates: New user queries appear in admin panel immediately when submitted**
+  
   - **Query Details View:**
     - View full query details\n    - User information and contact details
     - Query message and context
@@ -856,7 +866,8 @@ Each property should display complete information with the following advanced la
   - **Respond to Queries:**
     - Reply to user queries directly from admin panel
     - Send response via email or SMS
-    - Mark query as resolved\n    - Add internal notes for admin reference
+    - Mark query as resolved
+    - Add internal notes for admin reference
   
   - **Query Status Management:**
     - Update query status (New/In Progress/Resolved)
@@ -866,8 +877,7 @@ Each property should display complete information with the following advanced la
   - **Delete Queries:**
     - Delete resolved or spam queries
     - Bulk delete functionality
-
-- **Admin Panel UI/UX:**
+\n- **Admin Panel UI/UX:**
   - Clean and professional admin interface
   - Responsive design for desktop and tablet
   - Sidebar navigation with collapsible menu
@@ -878,7 +888,9 @@ Each property should display complete information with the following advanced la
   - Success/error notifications for actions
   - Loading indicators for async operations
   - Confirmation dialogs for destructive actions (delete, unpublish)
-\n- **Admin Panel Security:**
+  - **Real-time update indicators showing when changes are published to website**
+
+- **Admin Panel Security:**
   - Secure authentication and authorization
   - Session timeout and auto-logout
   - Activity logging for admin actions
@@ -936,8 +948,11 @@ Each property should display complete information with the following advanced la
   - Backdrop fade-in effect (0.3s)\n  - Modal slide-down from top with bounce effect (0.5s)
   - Scale animation from 0.9 to 1.0\n  - Smooth fade-out and slide-up when closing
   - Creative transition effects for opening and closing
-
-### 4.4 Images and Visual Content
+- **Real-time content update animations:**
+  - Smooth fade-in for new properties appearing on browse page
+  - Subtle highlight animation for newly added blog posts
+  - Notification badge animation for new content
+\n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
 - Lifestyle images depicting accommodation experiences

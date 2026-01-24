@@ -1,16 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { supabase } from '@/db/supabase';
 import type { User } from '@supabase/supabase-js';
-
-export interface Profile {
-  id: string;
-  email: string | null;
-  phone: string | null;
-  name: string | null;
-  role: 'user' | 'admin';
-  created_at: string;
-  updated_at: string;
-}
+import type { Profile } from '@/types';
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
@@ -30,8 +21,8 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  signInWithEmail: (email: string, phone?: string, name?: string) => Promise<{ error: Error | null }>;
-  verifyOtp: (email: string, otp: string) => Promise<{ error: Error | null }>;
+  signIn: (username: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (username: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -75,28 +66,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signInWithEmail = async (email: string, phone?: string, name?: string) => {
+  const signIn = async (username: string, password: string) => {
     try {
-      console.log('Sending OTP to email:', email);
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: true,
-          data: {
-            phone: phone || '',
-            name: name || '',
-          },
-        },
+      // Validate username format (only letters, digits, and underscore)
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        throw new Error('Username can only contain letters, digits, and underscore');
+      }
+
+      // Convert username to email format
+      const email = `${username}@miaoda.com`;
+      
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      console.log('OTP Response:', { data, error });
-
-      if (error) {
-        console.error('OTP Send Error:', error);
-        throw error;
-      }
-      
-      console.log('OTP sent successfully to:', email);
+      if (error) throw error;
       return { error: null };
     } catch (error) {
       console.error('SignIn Error:', error);
@@ -104,26 +89,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const verifyOtp = async (email: string, otp: string) => {
+  const signUp = async (username: string, password: string) => {
     try {
-      console.log('Verifying OTP for email:', email);
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: email,
-        token: otp,
-        type: 'email',
+      // Validate username format (only letters, digits, and underscore)
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        throw new Error('Username can only contain letters, digits, and underscore');
+      }
+
+      // Convert username to email format
+      const email = `${username}@miaoda.com`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
       });
 
-      console.log('Verify OTP Response:', { data, error });
-
-      if (error) {
-        console.error('OTP Verify Error:', error);
-        throw error;
-      }
-      
-      console.log('OTP verified successfully');
+      if (error) throw error;
       return { error: null };
     } catch (error) {
-      console.error('Verify Error:', error);
+      console.error('SignUp Error:', error);
       return { error: error as Error };
     }
   };
@@ -135,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithEmail, verifyOtp, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, signIn, signUp, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

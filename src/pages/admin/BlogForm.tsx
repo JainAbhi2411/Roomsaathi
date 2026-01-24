@@ -46,11 +46,11 @@ export default function BlogForm() {
       setFormData({
         title: blog.title,
         slug: blog.slug,
-        excerpt: blog.excerpt,
+        excerpt: blog.excerpt || '',
         content: blog.content,
         category: blog.category,
-        featured_image: blog.featured_image || '',
-        author: blog.author,
+        featured_image: blog.image_url || '',
+        author: blog.author_name,
         read_time: blog.read_time || 5,
         published: blog.published
       });

@@ -69,6 +69,45 @@ export interface PropertyWithDetails extends Property {
   is_favorite?: boolean;
 }
 
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  category: string;
+  author_id?: string;
+  author_name: string;
+  image_url?: string;
+  read_time: number;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserQuery {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+  property_id?: string;
+  property_name?: string;
+  status: 'pending' | 'in-progress' | 'resolved';
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Profile {
+  id: string;
+  email?: string;
+  username: string;
+  role: 'user' | 'admin';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface FilterOptions {
   city?: string;
   locality?: string;
@@ -80,22 +119,6 @@ export interface FilterOptions {
   amenities?: string[];
   suitable_for?: string;
   food_included?: boolean;
-}
-
-export interface Blog {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  category: string;
-  featured_image?: string;
-  author: string;
-  read_time?: number;
-  published: boolean;
-  admin_id?: string;
-  created_at: string;
-  updated_at?: string;
 }
 
 export interface User {

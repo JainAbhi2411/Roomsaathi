@@ -1,101 +1,52 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
-import { Mail, Phone, User, Lock, ArrowLeft } from 'lucide-react';
+import { User, Lock, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
-  const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'details' | 'otp'>('details');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signInWithEmail, verifyOtp } = useAuth();
+  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const { signIn, signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = (location.state as any)?.from || '/';
 
-  const handleSendOtp = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate email
-    if (!email || !email.includes('@')) {
+    if (!username || !password) {
       toast({
-        title: 'Invalid Email',
-        description: 'Please enter a valid email address',
+        title: 'Missing Fields',
+        description: 'Please enter both username and password',
         variant: 'destructive',
       });
       return;
     }
 
-    // Validate phone number (optional but recommended)
-    if (phone && phone.length < 10) {
-      toast({
-        title: 'Invalid Phone Number',
-        description: 'Please enter a valid 10-digit phone number',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    console.log('Sending OTP to:', email);
     setLoading(true);
-    const { error } = await signInWithEmail(email, phone, name);
+    const { error } = await signIn(username, password);
     setLoading(false);
 
     if (error) {
-      console.error('Failed to send OTP:', error);
       toast({
-        title: 'Error Sending OTP',
-        description: error.message || 'Failed to send OTP. Please try again.',
+        title: 'Login Failed',
+        description: error.message || 'Invalid username or password',
         variant: 'destructive',
       });
     } else {
-      console.log('OTP sent successfully');
-      toast({
-        title: 'OTP Sent Successfully! ✅',
-        description: 'Please check your email inbox (and spam folder) for the 6-digit verification code.',
-      });
-      setStep('otp');
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!otp || otp.length !== 6) {
-      toast({
-        title: 'Invalid OTP',
-        description: 'Please enter the 6-digit OTP sent to your email',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    console.log('Verifying OTP for:', email);
-    setLoading(true);
-    const { error } = await verifyOtp(email, otp);
-    setLoading(false);
-
-    if (error) {
-      console.error('Failed to verify OTP:', error);
-      toast({
-        title: 'Verification Failed',
-        description: error.message || 'Invalid OTP. Please check the code and try again.',
-        variant: 'destructive',
-      });
-    } else {
-      console.log('Login successful');
       toast({
         title: 'Success! 🎉',
         description: 'You have been logged in successfully.',
@@ -104,9 +55,45 @@ export default function LoginPage() {
     }
   };
 
-  const handleBack = () => {
-    setStep('details');
-    setOtp('');
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!username || !password) {
+      toast({
+        title: 'Missing Fields',
+        description: 'Please enter both username and password',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: 'Weak Password',
+        description: 'Password must be at least 6 characters long',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await signUp(username, password);
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: 'Signup Failed',
+        description: error.message || 'Failed to create account',
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Account Created! 🎉',
+        description: 'You can now login with your credentials.',
+      });
+      setActiveTab('login');
+      setPassword('');
+    }
   };
 
   return (
@@ -125,129 +112,115 @@ export default function LoginPage() {
                 Welcome to <span className="gradient-text">RoomSaathi</span>
               </CardTitle>
               <CardDescription>
-                {step === 'details' 
-                  ? 'Enter your details to get started'
-                  : 'Enter the OTP sent to your email'
-                }
+                Login or create an account to continue
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {step === 'details' ? (
-                <form onSubmit={handleSendOtp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your.email@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                        autoFocus
-                      />
+              <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'login' | 'signup')}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="login">Login</TabsTrigger>
+                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="login">
+                  <form onSubmit={handleLogin} className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="login-username">Username</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="login-username"
+                          type="text"
+                          placeholder="Enter your username"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="pl-10"
+                          required
+                          autoFocus
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your Name (Optional)</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="pl-10"
-                      />
+                    <div className="space-y-2">
+                      <Label htmlFor="login-password">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="login-password"
+                          type="password"
+                          placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number (Optional)</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="10-digit mobile number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                        className="pl-10"
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      We'll send a verification code to your email
-                    </p>
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                    {loading ? 'Sending OTP...' : 'Send OTP'}
-                  </Button>
-
-                  <div className="text-center text-sm text-muted-foreground">
-                    By continuing, you agree to our Terms of Service and Privacy Policy
-                  </div>
-                </form>
-              ) : (
-                <form onSubmit={handleVerifyOtp} className="space-y-4">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={handleBack}
-                    className="mb-4"
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Change Email
-                  </Button>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="otp">Verification Code</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      <Input
-                        id="otp"
-                        type="text"
-                        placeholder="Enter 6-digit OTP"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        className="pl-10 text-center text-2xl tracking-widest"
-                        required
-                        autoFocus
-                        maxLength={6}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      OTP sent to {email}
-                    </p>
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                    {loading ? 'Verifying...' : 'Verify & Login'}
-                  </Button>
-
-                  <div className="text-center">
-                    <Button
-                      type="button"
-                      variant="link"
-                      onClick={handleSendOtp}
-                      disabled={loading}
-                      className="text-sm"
-                    >
-                      Didn't receive OTP? Resend
+                    <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                      {loading ? 'Logging in...' : 'Login'}
                     </Button>
-                  </div>
-                </form>
-              )}
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup">
+                  <form onSubmit={handleSignup} className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-username">Username</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signup-username"
+                          type="text"
+                          placeholder="Choose a username"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Only letters, numbers, and underscore allowed
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signup-password"
+                          type="password"
+                          placeholder="Create a password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Minimum 6 characters
+                      </p>
+                    </div>
+
+                    <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                      {loading ? 'Creating Account...' : 'Create Account'}
+                    </Button>
+
+                    <div className="text-center text-sm text-muted-foreground">
+                      By signing up, you agree to our Terms of Service and Privacy Policy
+                    </div>
+                  </form>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Need help? Contact us at support@roomsaathi.com</p>
-            <p className="mt-2 text-xs">Check your spam folder if you don't see the email</p>
+            <p className="mt-2 text-xs">
+              {activeTab === 'signup' && 'First user will automatically become admin'}
+            </p>
           </div>
         </motion.div>
       </main>
