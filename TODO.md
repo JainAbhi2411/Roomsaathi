@@ -1597,12 +1597,20 @@ All features completed successfully with lint passing! 🎉
   - [x] Added column comments explaining optional contact methods
   - [x] Run lint check - PASSED ✅
 
+- [x] Step 31: Remove Instant WhatsApp Message from Quick Listing
+  - [x] Removed automatic WhatsApp window opening on form submission
+  - [x] Removed WhatsApp message with Google Form link
+  - [x] Updated toast message to simple "team will contact you soon" message
+  - [x] Improved user experience - no unexpected popups
+  - [x] Run lint check - PASSED ✅
+
 **Bug Fix Summary:**
 - Quick Listing form now works without user login
 - Removed unnecessary .select() call from database insert
 - Added missing property_name column to user_queries table
 - Made email field optional (nullable) to support phone-only forms
 - Updated API types to reflect optional email field
+- Removed instant WhatsApp message - shows simple success message instead
 - Follows Supabase best practice: "Prefer .insert() without .select()"
 - Anonymous users can now submit owner listing requests successfully
 - Supports both email-based and phone-based contact forms

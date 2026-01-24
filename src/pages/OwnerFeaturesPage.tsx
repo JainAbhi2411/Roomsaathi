@@ -85,17 +85,10 @@ export default function OwnerFeaturesPage() {
 
       // Show success message
       setShowSuccess(true);
-      
-      // Send WhatsApp message with Google Form
-      const whatsappMessage = encodeURIComponent(
-        `Hi ${quickListingForm.name}! 👋\n\nThank you for your interest in listing your property with RoomSaathi!\n\nOur team will contact you soon. Meanwhile, please fill out this form with your property details:\n\nhttps://forms.gle/your-google-form-link\n\nThis will help us serve you better! 🏠`
-      );
-      const whatsappUrl = `https://wa.me/91${quickListingForm.phone}?text=${whatsappMessage}`;
-      window.open(whatsappUrl, '_blank');
 
       toast({
         title: 'Request Submitted! 🎉',
-        description: 'Our team will contact you soon. Check WhatsApp for the property details form.',
+        description: 'Thank you for your interest! Our team will contact you soon to help you list your property.',
       });
 
       // Reset form after 3 seconds
