@@ -1,16 +1,17 @@
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router';
-import { useState, useEffect } from 'react';
 import type { Property } from '@/types/index';
 import { getProperties } from '@/db/api';
-import PropertyCard from '@/components/property/PropertyCard';
+import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FeaturedPropertiesSection() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadFeaturedProperties();
@@ -20,11 +21,22 @@ export default function FeaturedPropertiesSection() {
     setLoading(true);
     try {
       const data = await getProperties({ verified: true });
-      setProperties(data.slice(0, 3));
+      setProperties(data.slice(0, 8));
     } catch (error) {
       console.error('Failed to load featured properties:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      const newScrollLeft = scrollContainerRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
+      scrollContainerRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -36,7 +48,7 @@ export default function FeaturedPropertiesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-12 gap-4"
+          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-8 gap-4"
         >
           <div>
             <h2 className="text-3xl xl:text-4xl font-bold mb-2">
@@ -46,29 +58,60 @@ export default function FeaturedPropertiesSection() {
               Handpicked verified properties just for you
             </p>
           </div>
-          <Button asChild variant="outline">
-            <Link to="/browse">
-              View All Properties
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll('left')}
+              className="h-9 w-9"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll('right')}
+              className="h-9 w-9"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button asChild variant="outline" className="ml-2">
+              <Link to="/browse">
+                View All
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </motion.div>
 
         {loading ? (
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="space-y-4">
-                <Skeleton className="h-48 w-full bg-muted" />
-                <Skeleton className="h-6 w-3/4 bg-muted" />
-                <Skeleton className="h-4 w-full bg-muted" />
-                <Skeleton className="h-4 w-2/3 bg-muted" />
+          <div className="flex gap-4 overflow-hidden">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-64 space-y-3">
+                <Skeleton className="h-40 w-full bg-muted" />
+                <Skeleton className="h-4 w-3/4 bg-muted" />
+                <Skeleton className="h-3 w-full bg-muted" />
+                <Skeleton className="h-3 w-1/2 bg-muted" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} onFavoriteToggle={loadFeaturedProperties} />
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {properties.map((property, index) => (
+              <motion.div
+                key={property.id}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="flex-shrink-0 w-64"
+              >
+                <PropertyCardSmall property={property} onFavoriteToggle={loadFeaturedProperties} />
+              </motion.div>
             ))}
           </div>
         )}

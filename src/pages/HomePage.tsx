@@ -7,6 +7,7 @@ import HowItWorksSection from '@/components/home/HowItWorksSection';
 import PropertyTypesSection from '@/components/home/PropertyTypesSection';
 import CitiesSection from '@/components/home/CitiesSection';
 import FeaturedPropertiesSection from '@/components/home/FeaturedPropertiesSection';
+import CategoryPropertiesSection from '@/components/home/CategoryPropertiesSection';
 import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import StatsSection from '@/components/home/StatsSection';
@@ -20,6 +21,8 @@ export default function HomePage() {
       <main className="flex-1">
         <HeroSection />
         <FeaturedPropertiesSection />
+        <Separator />
+        <CategoryPropertiesSection />
         <Separator />
         <PropertyTypesSection />
         <Separator />

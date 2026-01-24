@@ -14,10 +14,14 @@
 - [x] Step 11: Create separate Browse Properties page with advanced functionalities
 - [x] Step 12: Add hanging hook animation with image transitions in hero section
 - [x] Step 13: Enhance header with dropdown menus and action buttons
-  - [x] Add RoomSaathi Properties dropdown with verified property filters
-  - [x] Add For Owners dropdown with management solutions
-  - [x] Add right-side action buttons (Support, List Your Property, Login)
-  - [x] Update mobile navigation with all new sections
+- [x] Step 14: Update header and create horizontal scrollable sections
+  - [x] Remove Home and Favorites from header navigation
+  - [x] Add hover effects to all header items
+  - [x] Create PropertyCardSmall component for horizontal scrolling
+  - [x] Update FeaturedPropertiesSection with horizontal scroll
+  - [x] Create CategoryPropertiesSection with dropdown and horizontal scroll
+  - [x] Add scrollbar-hide utility to index.css
+  - [x] Update HomePage with new CategoryPropertiesSection
   - [x] Run lint and fix issues
 
 ## Notes
@@ -32,48 +36,66 @@
 **Header Navigation Structure:**
 
 Left Side (with Logo):
-- Logo with hanging animation
-- RoomSaathi Properties dropdown:
+- Logo with hanging animation and hover effects
+- RoomSaathi Properties dropdown (with hover effects):
   - All Verified Properties
   - Verified PG
   - Verified Hostels
   - Verified Apartments
-- For Owners dropdown:
+- For Owners dropdown (with hover effects):
   - Website Listing
   - Management Software
   - Verification Service
   - Learn More link
-- Home link
-- Browse Properties link
-- Favorites link
+- Browse Properties link (with hover effects)
 
 Right Side:
-- Support button
-- List Your Property button
-- Login button (UI only, no functionality yet)
+- Support button (with hover effects)
+- List Your Property button (with hover effects)
+- Login button (UI only, with scale hover effect)
 
 Mobile Navigation:
 - Hamburger menu with sheet
 - All navigation sections organized by category
 - Action buttons at bottom
+- Hover effects on all items
 
 **Homepage Sections (Landing Page):**
 1. Animated hero section with hanging hook image carousel
-   - Hook SVG element with realistic design
-   - Hanging rope with continuous swing animation
-   - 4 rotating images: Students studying, PG accommodation, College students, Affordable rooms
-   - Smooth fade transitions every 4 seconds
-   - Image container swings like hanging from hook
-   - Interactive image indicators
-   - Category labels for each image type
-2. Featured properties (verified only)
-3. Property types showcase (6 categories)
-4. How it works (4-step process)
-5. Cities we serve (3 cities with details)
-6. Why choose us (6 features)
-7. Statistics section (impact metrics)
-8. Customer testimonials (3 reviews)
-9. Call-to-action section
+2. Featured properties - horizontal scrollable with navigation arrows
+   - Small property cards (w-64)
+   - Scroll buttons (left/right)
+   - View All button
+   - 8 verified properties displayed
+3. Category properties section - horizontal scrollable with dropdown
+   - Category dropdown selector (6 categories)
+   - Small property cards (w-64)
+   - Scroll buttons (left/right)
+   - Mobile scroll buttons at bottom
+   - 10 properties per category
+4. Property types showcase (6 categories)
+5. How it works (4-step process)
+6. Cities we serve (3 cities with details)
+7. Why choose us (6 features)
+8. Statistics section (impact metrics)
+9. Customer testimonials (3 reviews)
+10. Call-to-action section
+
+**PropertyCardSmall Component:**
+- Compact design (w-64, h-40 image)
+- Favorite button (top-right)
+- Verified badge (top-left)
+- Property type badge (bottom-left)
+- Property name, location, price
+- Hover effects (scale, shadow, text color)
+- Responsive and consistent styling
+
+**Horizontal Scroll Features:**
+- Smooth scroll behavior
+- Hidden scrollbar (scrollbar-hide utility)
+- Navigation arrows for desktop
+- Mobile-friendly scroll buttons
+- Responsive card sizing
 
 **Browse Properties Page Features:**
 - Desktop: Sidebar filters (sticky) with all filter options
