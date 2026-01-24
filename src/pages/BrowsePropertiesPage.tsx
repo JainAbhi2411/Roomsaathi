@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSearchParams } from 'react-router';
-import { Grid3x3, List, SlidersHorizontal, Search, X } from 'lucide-react';
+import { Grid3x3, List, SlidersHorizontal, Search, X, Filter } from 'lucide-react';
 import type { PropertyWithDetails } from '@/types/index';
 import type { FilterOptions } from '@/types/index';
 import { getProperties } from '@/db/api';
@@ -16,16 +16,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { useSearchFilter } from '@/contexts/SearchFilterContext';
 
 type SortOption = 'newest' | 'price_low' | 'price_high' | 'name_az' | 'name_za';
 type ViewMode = 'grid' | 'list';
 
 export default function BrowsePropertiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { filters: contextFilters, updateFilter, clearFilters: clearContextFilters, activeFilterCount } = useSearchFilter();
   const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<FilterOptions>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -34,36 +35,12 @@ export default function BrowsePropertiesPage() {
   const searchBarRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<number | undefined>(undefined);
 
-  // Initialize filters from URL
+  // Initialize search query from context filters
   useEffect(() => {
-    const urlFilters: FilterOptions = {};
-    const city = searchParams.get('city');
-    const locality = searchParams.get('locality');
-    const type = searchParams.get('type');
-    const search = searchParams.get('search');
-    const verified = searchParams.get('verified');
-    const priceMin = searchParams.get('price_min');
-    const priceMax = searchParams.get('price_max');
-    const amenities = searchParams.get('amenities');
-    const suitableFor = searchParams.get('suitable_for');
-    const foodIncluded = searchParams.get('food_included');
-
-    if (city) urlFilters.city = city;
-    if (locality) urlFilters.locality = locality;
-    if (type) urlFilters.type = type;
-    if (search) {
-      urlFilters.search = search;
-      setSearchQuery(search);
+    if (contextFilters.search) {
+      setSearchQuery(contextFilters.search);
     }
-    if (verified === 'true') urlFilters.verified = true;
-    if (priceMin) urlFilters.price_min = parseInt(priceMin);
-    if (priceMax) urlFilters.price_max = parseInt(priceMax);
-    if (amenities) urlFilters.amenities = amenities.split(',');
-    if (suitableFor) urlFilters.suitable_for = suitableFor;
-    if (foodIncluded === 'true') urlFilters.food_included = true;
-
-    setFilters(urlFilters);
-  }, [searchParams]);
+  }, [contextFilters.search]);
 
   // Sticky search bar on scroll
   useEffect(() => {
@@ -84,7 +61,7 @@ export default function BrowsePropertiesPage() {
     // Poll for updates every 30 seconds
     const interval = setInterval(loadProperties, 30000);
     return () => clearInterval(interval);
-  }, [filters]);
+  }, [contextFilters]);
 
   // Sort properties when sort option changes
   useEffect(() => {
@@ -98,8 +75,9 @@ export default function BrowsePropertiesPage() {
     }
 
     searchTimeoutRef.current = window.setTimeout(() => {
-      if (searchQuery !== (filters.search || '')) {
-        updateFilters({ ...filters, search: searchQuery || undefined });
+      if (searchQuery !== (contextFilters.search || '')) {
+        updateFilter('search', searchQuery || undefined);
+        updateUrlParams();
       }
     }, 500); // 500ms debounce
 
@@ -113,7 +91,7 @@ export default function BrowsePropertiesPage() {
   const loadProperties = async () => {
     setLoading(true);
     try {
-      const data = await getProperties(filters);
+      const data = await getProperties(contextFilters);
       setProperties(data);
       setFilteredProperties(data);
     } catch (error) {
@@ -146,56 +124,45 @@ export default function BrowsePropertiesPage() {
     setFilteredProperties(sorted);
   };
 
-  const updateFilters = useCallback((newFilters: FilterOptions) => {
-    // Update URL params
+  const updateUrlParams = useCallback(() => {
     const params = new URLSearchParams();
-    if (newFilters.city) params.set('city', newFilters.city);
-    if (newFilters.locality) params.set('locality', newFilters.locality);
-    if (newFilters.type) params.set('type', newFilters.type);
-    if (newFilters.search) params.set('search', newFilters.search);
-    if (newFilters.verified) params.set('verified', 'true');
-    if (newFilters.price_min) params.set('price_min', newFilters.price_min.toString());
-    if (newFilters.price_max) params.set('price_max', newFilters.price_max.toString());
-    if (newFilters.amenities && newFilters.amenities.length > 0) {
-      params.set('amenities', newFilters.amenities.join(','));
+    if (contextFilters.city) params.set('city', contextFilters.city);
+    if (contextFilters.locality) params.set('locality', contextFilters.locality);
+    if (contextFilters.type) params.set('type', contextFilters.type);
+    if (contextFilters.search) params.set('search', contextFilters.search);
+    if (contextFilters.verified) params.set('verified', 'true');
+    if (contextFilters.price_min) params.set('price_min', contextFilters.price_min.toString());
+    if (contextFilters.price_max) params.set('price_max', contextFilters.price_max.toString());
+    if (contextFilters.amenities && contextFilters.amenities.length > 0) {
+      params.set('amenities', contextFilters.amenities.join(','));
     }
-    if (newFilters.suitable_for) params.set('suitable_for', newFilters.suitable_for);
-    if (newFilters.food_included) params.set('food_included', 'true');
+    if (contextFilters.suitable_for) params.set('suitable_for', contextFilters.suitable_for);
+    if (contextFilters.food_included) params.set('food_included', 'true');
 
     setSearchParams(params);
-    setFilters(newFilters);
-    setMobileFiltersOpen(false);
-  }, [setSearchParams]);
+  }, [contextFilters, setSearchParams]);
 
   const handleFilterChange = (newFilters: FilterOptions) => {
-    updateFilters(newFilters);
+    // Update each filter in context
+    Object.keys(newFilters).forEach(key => {
+      updateFilter(key as keyof FilterOptions, newFilters[key as keyof FilterOptions]);
+    });
+    updateUrlParams();
+    setMobileFiltersOpen(false);
   };
 
   const clearAllFilters = () => {
     setSearchQuery('');
-    updateFilters({});
+    clearContextFilters();
   };
 
   const removeFilter = (key: keyof FilterOptions) => {
-    const newFilters = { ...filters };
-    delete newFilters[key];
     if (key === 'search') {
       setSearchQuery('');
     }
-    updateFilters(newFilters);
+    updateFilter(key, undefined);
+    updateUrlParams();
   };
-
-  const activeFilterCount = [
-    filters.city,
-    filters.locality,
-    filters.type,
-    filters.verified,
-    filters.price_min !== undefined || filters.price_max !== undefined,
-    filters.search,
-    filters.amenities && filters.amenities.length > 0,
-    filters.suitable_for,
-    filters.food_included,
-  ].filter(Boolean).length;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -263,7 +230,7 @@ export default function BrowsePropertiesPage() {
                     <SheetTitle>Filter Properties</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6">
-                    <AdvancedFilterBar filters={filters} onFilterChange={handleFilterChange} />
+                    <AdvancedFilterBar filters={contextFilters} onFilterChange={handleFilterChange} />
                   </div>
                 </SheetContent>
               </Sheet>
@@ -272,71 +239,69 @@ export default function BrowsePropertiesPage() {
             {/* Active Filter Chips */}
             {activeFilterCount > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
-                {filters.city && (
+                {contextFilters.city && (
                   <Badge variant="secondary" className="gap-1">
-                    City: {filters.city}
-                    <button onClick={() => removeFilter('city')} className="ml-1 hover:text-destructive">
+                    City: {contextFilters.city}
+                    <button type="button" onClick={() => removeFilter('city')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.locality && (
+                {contextFilters.locality && (
                   <Badge variant="secondary" className="gap-1">
-                    Locality: {filters.locality}
-                    <button onClick={() => removeFilter('locality')} className="ml-1 hover:text-destructive">
+                    Locality: {contextFilters.locality}
+                    <button type="button" onClick={() => removeFilter('locality')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.type && (
+                {contextFilters.type && (
                   <Badge variant="secondary" className="gap-1">
-                    Type: {filters.type}
-                    <button onClick={() => removeFilter('type')} className="ml-1 hover:text-destructive">
+                    Type: {contextFilters.type}
+                    <button type="button" onClick={() => removeFilter('type')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.verified && (
+                {contextFilters.verified && (
                   <Badge variant="secondary" className="gap-1">
                     Verified Only
-                    <button onClick={() => removeFilter('verified')} className="ml-1 hover:text-destructive">
+                    <button type="button" onClick={() => removeFilter('verified')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {(filters.price_min || filters.price_max) && (
+                {(contextFilters.price_min || contextFilters.price_max) && (
                   <Badge variant="secondary" className="gap-1">
-                    Price: ₹{filters.price_min || 0} - ₹{filters.price_max || '∞'}
-                    <button onClick={() => {
-                      const newFilters = { ...filters };
-                      delete newFilters.price_min;
-                      delete newFilters.price_max;
-                      updateFilters(newFilters);
+                    Price: ₹{contextFilters.price_min || 0} - ₹{contextFilters.price_max || '∞'}
+                    <button type="button" onClick={() => {
+                      updateFilter('price_min', undefined);
+                      updateFilter('price_max', undefined);
                     }} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.suitable_for && (
+                {contextFilters.suitable_for && (
                   <Badge variant="secondary" className="gap-1">
-                    Suitable for: {filters.suitable_for}
-                    <button onClick={() => removeFilter('suitable_for')} className="ml-1 hover:text-destructive">
+                    Suitable for: {contextFilters.suitable_for}
+                    <button type="button" onClick={() => removeFilter('suitable_for')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.food_included && (
+                {contextFilters.food_included && (
                   <Badge variant="secondary" className="gap-1">
                     Food Included
-                    <button onClick={() => removeFilter('food_included')} className="ml-1 hover:text-destructive">
+                    <button type="button" onClick={() => removeFilter('food_included')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
-                {filters.amenities && filters.amenities.length > 0 && (
+                {contextFilters.amenities && contextFilters.amenities.length > 0 && (
                   <Badge variant="secondary" className="gap-1">
-                    {filters.amenities.length} Amenities
-                    <button onClick={() => removeFilter('amenities')} className="ml-1 hover:text-destructive">
+                    {contextFilters.amenities.length} Amenities
+                    <button type="button" onClick={() => removeFilter('amenities')} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -361,7 +326,7 @@ export default function BrowsePropertiesPage() {
               <div className="sticky top-32">
                 <div className="bg-card border border-border rounded-lg p-6">
                   <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <SlidersHorizontal className="h-5 w-5" />
+                    <Filter className="h-5 w-5" />
                     Advanced Filters
                     {activeFilterCount > 0 && (
                       <Badge variant="default" className="ml-auto">
@@ -369,7 +334,7 @@ export default function BrowsePropertiesPage() {
                       </Badge>
                     )}
                   </h3>
-                  <AdvancedFilterBar filters={filters} onFilterChange={handleFilterChange} />
+                  <AdvancedFilterBar filters={contextFilters} onFilterChange={handleFilterChange} />
                 </div>
               </div>
             </aside>

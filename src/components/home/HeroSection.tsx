@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useSearchFilter } from '@/contexts/SearchFilterContext';
 
 const heroImages = [
   {
@@ -32,6 +33,7 @@ export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
+  const { updateFilter, applyFiltersToUrl } = useSearchFilter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,7 +45,8 @@ export default function HeroSection() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      navigate(`/browse?search=${encodeURIComponent(searchQuery)}`);
+      updateFilter('search', searchQuery.trim());
+      navigate(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
     } else {
       navigate('/browse');
     }

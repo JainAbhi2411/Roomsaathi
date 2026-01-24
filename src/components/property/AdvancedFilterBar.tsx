@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
+import { Sparkles, DollarSign, GraduationCap, Home } from 'lucide-react';
 
 interface AdvancedFilterBarProps {
   filters: FilterOptions;
@@ -42,10 +44,15 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
   const [localFilters, setLocalFilters] = useState<FilterOptions>(filters);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(filters.amenities || []);
   const [availableLocalities, setAvailableLocalities] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    filters.price_min || 0,
+    filters.price_max || 50000
+  ]);
 
   useEffect(() => {
     setLocalFilters(filters);
     setSelectedAmenities(filters.amenities || []);
+    setPriceRange([filters.price_min || 0, filters.price_max || 50000]);
   }, [filters]);
 
   useEffect(() => {
@@ -78,12 +85,57 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
   };
 
   const handlePriceChange = (type: 'min' | 'max', value: string) => {
-    const numValue = value ? parseInt(value) : undefined;
+    const numValue = value ? Number.parseInt(value) : undefined;
     if (type === 'min') {
       handleChange('price_min', numValue);
+      setPriceRange([numValue || 0, priceRange[1]]);
     } else {
       handleChange('price_max', numValue);
+      setPriceRange([priceRange[0], numValue || 50000]);
     }
+  };
+
+  const handlePriceSliderChange = (values: number[]) => {
+    setPriceRange([values[0], values[1]]);
+    handleChange('price_min', values[0] > 0 ? values[0] : undefined);
+    handleChange('price_max', values[1] < 50000 ? values[1] : undefined);
+  };
+
+  const applyQuickFilter = (preset: 'budget' | 'premium' | 'student') => {
+    let presetFilters: Partial<FilterOptions> = {};
+    
+    if (preset === 'budget') {
+      presetFilters = {
+        price_min: 0,
+        price_max: 8000,
+        suitable_for: 'Students',
+      };
+    } else if (preset === 'premium') {
+      presetFilters = {
+        price_min: 15000,
+        price_max: 50000,
+        verified: true,
+        amenities: ['WiFi', 'AC', 'Security'],
+      };
+    } else if (preset === 'student') {
+      presetFilters = {
+        suitable_for: 'Students',
+        food_included: true,
+        amenities: ['WiFi', 'Mess/Kitchen'],
+      };
+    }
+
+    const updated = { ...localFilters, ...presetFilters };
+    
+    if (presetFilters.amenities) {
+      setSelectedAmenities(presetFilters.amenities);
+    }
+    if (presetFilters.price_min !== undefined || presetFilters.price_max !== undefined) {
+      setPriceRange([presetFilters.price_min || 0, presetFilters.price_max || 50000]);
+    }
+    
+    setLocalFilters(updated);
+    onFilterChange(updated);
   };
 
   const clearFilters = () => {
@@ -94,6 +146,41 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
 
   return (
     <div className="space-y-6">
+      {/* Quick Filter Presets */}
+      <div className="space-y-3">
+        <Label className="text-sm font-semibold">Quick Filters</Label>
+        <div className="grid grid-cols-3 gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => applyQuickFilter('budget')}
+            className="flex flex-col items-center gap-1 h-auto py-3"
+          >
+            <DollarSign className="h-4 w-4 text-green-500" />
+            <span className="text-xs">Budget</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => applyQuickFilter('premium')}
+            className="flex flex-col items-center gap-1 h-auto py-3"
+          >
+            <Sparkles className="h-4 w-4 text-amber-500" />
+            <span className="text-xs">Premium</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => applyQuickFilter('student')}
+            className="flex flex-col items-center gap-1 h-auto py-3"
+          >
+            <GraduationCap className="h-4 w-4 text-blue-500" />
+            <span className="text-xs">Student</span>
+          </Button>
+        </div>
+      </div>
+
+      <Separator />
       {/* City Filter */}
       <div className="space-y-2">
         <Label>City</Label>
@@ -163,25 +250,39 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
 
       <Separator />
 
-      {/* Price Range Filter */}
-      <div className="space-y-3">
+      {/* Price Range Filter with Slider */}
+      <div className="space-y-4">
         <Label>Price Range (₹/month)</Label>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Input
-              type="number"
-              placeholder="Min"
-              value={localFilters.price_min || ''}
-              onChange={(e) => handlePriceChange('min', e.target.value)}
-            />
+        <div className="space-y-4">
+          <Slider
+            min={0}
+            max={50000}
+            step={500}
+            value={priceRange}
+            onValueChange={handlePriceSliderChange}
+            className="w-full"
+          />
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>₹{priceRange[0].toLocaleString()}</span>
+            <span>₹{priceRange[1].toLocaleString()}</span>
           </div>
-          <div>
-            <Input
-              type="number"
-              placeholder="Max"
-              value={localFilters.price_max || ''}
-              onChange={(e) => handlePriceChange('max', e.target.value)}
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Input
+                type="number"
+                placeholder="Min"
+                value={localFilters.price_min || ''}
+                onChange={(e) => handlePriceChange('min', e.target.value)}
+              />
+            </div>
+            <div>
+              <Input
+                type="number"
+                placeholder="Max"
+                value={localFilters.price_max || ''}
+                onChange={(e) => handlePriceChange('max', e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -239,8 +340,15 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
 
       {/* Amenities Filter */}
       <div className="space-y-3">
-        <Label>Amenities</Label>
-        <div className="space-y-2 max-h-64 overflow-y-auto">
+        <Label className="flex items-center justify-between">
+          <span>Amenities</span>
+          {selectedAmenities.length > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {selectedAmenities.length} selected
+            </Badge>
+          )}
+        </Label>
+        <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
           {amenitiesList.map((amenity) => (
             <div key={amenity} className="flex items-center space-x-2">
               <Checkbox
@@ -248,17 +356,24 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
                 checked={selectedAmenities.includes(amenity)}
                 onCheckedChange={() => handleAmenityToggle(amenity)}
               />
-              <Label htmlFor={amenity} className="cursor-pointer text-sm">
+              <Label htmlFor={amenity} className="cursor-pointer text-sm font-normal">
                 {amenity}
               </Label>
             </div>
           ))}
         </div>
         {selectedAmenities.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
+          <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-border">
             {selectedAmenities.map((amenity) => (
-              <Badge key={amenity} variant="secondary" className="text-xs">
+              <Badge key={amenity} variant="secondary" className="text-xs gap-1">
                 {amenity}
+                <button
+                  type="button"
+                  onClick={() => handleAmenityToggle(amenity)}
+                  className="ml-0.5 hover:text-destructive"
+                >
+                  ×
+                </button>
               </Badge>
             ))}
           </div>
@@ -266,6 +381,39 @@ export default function AdvancedFilterBar({ filters, onFilterChange }: AdvancedF
       </div>
 
       <Separator />
+
+      {/* Filter Summary */}
+      {(localFilters.city || localFilters.type || localFilters.verified || selectedAmenities.length > 0) && (
+        <div className="space-y-2 p-3 bg-muted/50 rounded-lg border border-border">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">Active Filters</Label>
+          <div className="space-y-1 text-sm">
+            {localFilters.city && (
+              <div className="flex items-center gap-2">
+                <Home className="h-3 w-3 text-muted-foreground" />
+                <span>{localFilters.city}</span>
+              </div>
+            )}
+            {localFilters.type && (
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Type:</span>
+                <span>{localFilters.type}</span>
+              </div>
+            )}
+            {localFilters.verified && (
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-3 w-3 text-amber-500" />
+                <span>Verified Only</span>
+              </div>
+            )}
+            {selectedAmenities.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Amenities:</span>
+                <span>{selectedAmenities.length}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Clear Filters Button */}
       <Button
