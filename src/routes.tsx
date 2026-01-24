@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import HomePage from './pages/HomePage';
 import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import OwnerFeaturesPage from './pages/OwnerFeaturesPage';
 import BlogsPage from './pages/BlogsPage';
-import BlogPostPage from './pages/BlogPostPage';
 import AboutUsPage from './pages/AboutUsPage';
 import OurStoryPage from './pages/OurStoryPage';
 import FAQsPage from './pages/FAQsPage';
@@ -15,6 +14,16 @@ import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import TestAuthPage from './pages/TestAuthPage';
 import type { ReactNode } from 'react';
+
+// Lazy load BlogPostPage to avoid react-markdown loading issues
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+
+// Loading component for lazy-loaded routes
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
 
 interface RouteConfig {
   name: string;
@@ -60,7 +69,11 @@ const routes: RouteConfig[] = [
   {
     name: 'Blog Post',
     path: '/blog/:id',
-    element: <BlogPostPage />,
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <BlogPostPage />
+      </Suspense>
+    ),
     visible: false
   },
   {
