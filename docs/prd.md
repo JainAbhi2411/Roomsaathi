@@ -12,31 +12,25 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats
-- Apartments
+- Flats\n- Apartments
 - Rooms
-- Hostels
-- RoomSaathi Verified (special verified properties category)
+- Hostels\n- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
 
 ## 3. Core Features and Functionality
 
 ### 3.1 Header Navigation
 - Left side: Logo with hanging animation effect
-- Left side navigation items:
-  - RoomSaathi Properties: On click, display RoomSaathi Verified properties
-  - For Owner: On click, show Learn More button that navigates to dedicated Owner Features section
+- Left side navigation items:\n  - RoomSaathi Properties: On click, display RoomSaathi Verified properties\n  - For Owner: On click, show Learn More button that navigates to dedicated Owner Features section
 - Right side navigation items:
-  - Support: On click, display dropdown menu with transition effect showing:
-    - WhatsApp Support
+  - Support: On click, display dropdown menu with transition effect showing:\n    - WhatsApp Support
     - Contact Support
     - Call\n    - Help Center
-    - How to Use\n  - List Your Property
-  - Login (display button only, no login functionality implementation for now)
+    - How to Use
+  - List Your Property\n  - Login (display button only, no login functionality implementation for now)
 
 ### 3.2 Animated Home Screen
-- Hero section with split layout: one side featuring animated images that transition with a hanging hook effect, displaying images of hostels, PG accommodations, and students
-- Images should appear as if hanging from a hook and smoothly transition between different property types and student lifestyle scenes
+- Hero section with split layout: one side featuring animated images that transition with a hanging hook effect, displaying images of hostels, PG accommodations, and students\n- Images should appear as if hanging from a hook and smoothly transition between different property types and student lifestyle scenes
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
@@ -89,8 +83,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Locality name
   - Landmark names
   - Property features
-  - Amenities
-- Display search suggestions dropdown with autocomplete
+  - Amenities\n- Display search suggestions dropdown with autocomplete
 - Highlight matching text in search results
 - Show recent searches for quick access
 - Display search result count in real-time
@@ -136,22 +129,24 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Newest First
   - Most Popular
   - Distance (when location is specified)
-- No results found state with suggestions:\n  - Relax some filters\n  - Try different keywords
-  - Browse all properties
-  - Contact support for assistance
+- No results found state with suggestions:\n  - Relax some filters
+  - Try different keywords
+  - Browse all properties\n  - Contact support for assistance
 
 ### 3.4 Browse by Category Section
 - Split layout design with left and right sections
-- Left side:\n  - Display category images with cutout design effect\n  - Implement hover effects on category images
+- Left side:
+  - Display category images with cutout design effect\n  - Implement hover effects on category images
   - Show category icons for selection
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
   - On category click, navigate to Browse Property page with selected category pre-filtered
-- Right side:\n  - Display property cards with small and minimal design
+- Right side:
+  - Display property cards with small and minimal design
   - Arrange property cards in column-wise layout
-  - Enable vertical scrolling for property cards within the column
-  - Update property cards dynamically based on category selection from left side
+  - Enable vertical scrolling for property cards within the column\n  - Update property cards dynamically based on category selection from left side
 \n### 3.5 Student Information Section
-- Split layout design with left and right sections\n- Left side:
+- Split layout design with left and right sections
+- Left side:
   - Display informational content about RoomSaathi services for students
   - Include text describing benefits and features
 - Right side:
@@ -185,26 +180,55 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Search by property name or keywords with autocomplete
 - Advanced search options with multiple criteria
 - Save search preferences for future visits
-- Recent searches display
+- Recent searches display\n\n### 3.8 Property Detail Page
+Each property should display complete information with the following layout:
+\n**Left Side:**
+- Property images gallery with multiple high-quality images
+- Image slider/carousel functionality\n- Thumbnail navigation for quick image browsing
+- Full-screen image view option
+\n**Right Side:**
+- **Neighborhood Highlights:**
+  - Nearby landmarks and facilities
+  - Distance to key locations (colleges, hospitals, markets, etc.)
+  - Transportation connectivity information
+  - Area description and locality benefits
+\n- **Property Details:**
+  - Property name\n  - Property type and category
+  - RoomSaathi Verified badge (if applicable)
+  - Complete address\n  - Location (city and locality)
+  - Detailed description
+  - Property owner/manager details
+  - Availability status
+\n- **Accommodation Type:**
+  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities:**
+  - Complete list of available amenities with icons
+  - WiFi, AC, Parking, Laundry, Meals, Security, Power Backup, Water Supply, Gym, Common Area, etc.
 
-### 3.8 Property Detail Page
-Each property should display complete information including:
-- Property name\n- Property type and category
-- RoomSaathi Verified badge (if applicable)
-- Price and pricing details
-- Location (city and locality)
-- Complete address
-- Property images gallery
-- Detailed description
-- Amenities list\n- Room specifications with detailed information about each room type
-- Room images for each room category
-- Availability status
-- Contact information
-- Property owner/manager details
+- **Rooms Information:**
+  - Detailed information about each room type available
+  - Room images for each room category
+  - Room specifications (size, furnishing, attached bathroom, etc.)
+\n- **Rent According to Room Type:**
+  - Single Sharing: Price per month
+  - Double Sharing: Price per month
+  - Triple Sharing: Price per month
+  - Any other sharing options with respective pricing
+  - Security deposit information
+  - Additional charges (if any)
+
+- **Action Buttons:**
+  - Schedule Visit button: Allow users to request a property visit
+  - See Rooms button: Navigate to detailed room information section or modal
+  - Contact Owner button\n  - Share Property button
+  - Save to Favorites button
+\n**Additional Sections on Property Detail Page:**
 - Virtual tour option (if available)
-- Nearby facilities and landmarks
-- Transportation connectivity information
-\n### 3.9 User Actions\n- Browse all properties on dedicated browse page
+- Reviews and Ratings section
+- Similar Properties section:\n  - Display 3-4 similar properties based on location, price range, and property type
+  - Property cards with basic information and images
+  - Quick navigation to similar property detail pages
+
+### 3.9 User Actions\n- Browse all properties on dedicated browse page
 - View detailed property information including room details and images
 - Filter and search properties with advanced options
 - Save favorite properties\n- Contact property owners\n- Share property listings
@@ -217,15 +241,16 @@ Each property should display complete information including:
 - Visual comparison interface with clear distinctions
 \n### 3.11 Reviews and Ratings
 - Display user reviews and ratings for properties
-- Show overall rating scores\n- Filter reviews by rating level\n- Display review highlights\n\n### 3.12 Featured Properties Section
+- Show overall rating scores
+- Filter reviews by rating level\n- Display review highlights\n\n### 3.12 Featured Properties Section
 - Showcase premium or featured listings
-- Highlight RoomSaathi Verified properties
-- Display special offers or deals
+- Highlight RoomSaathi Verified properties\n- Display special offers or deals
 
 ### 3.13 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
-- Each city card should have:\n  - Same size dimensions for uniformity
+- Each city card should have:
+  - Same size dimensions for uniformity
   - High-quality city image or illustration
   - City name prominently displayed
   - Number of available properties in that city
@@ -252,10 +277,12 @@ Each property should display complete information including:
 - Display area-specific property statistics
 - Include city-specific accommodation tips
 
-### 3.15 Testimonials Section\n- Display user testimonials and success stories
+### 3.15 Testimonials Section
+- Display user testimonials and success stories
 - Include photos or avatars of satisfied users
 - Animated carousel for testimonial display
-\n### 3.16 Why Choose RoomSaathi Section
+
+### 3.16 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
@@ -263,21 +290,20 @@ Each property should display complete information including:
 
 ### 3.17 How It Works Section
 - Step-by-step guide on using the platform
-- Visual representation of the property search and booking process\n- Clear call-to-action at each step
-
-### 3.18 Popular Localities Section
+- Visual representation of the property search and booking process
+- Clear call-to-action at each step
+\n### 3.18 Popular Localities Section
 - Display trending or popular localities in each city
 - Show number of available properties per locality
 - Quick access links to locality-specific listings
 - On click, navigate to Browse Property page with selected locality pre-filtered
 
 ### 3.19 Property Owner Section
-- Information for property owners wanting to list their properties
-- Benefits of listing on RoomSaathi
-- Call-to-action for property listing
+- Information for property owners wanting to list their properties\n- Benefits of listing on RoomSaathi\n- Call-to-action for property listing
 - Display functionalities provided for owners: management software, website listing services, etc.
 
-### 3.20 Owner Features Section\n- Dedicated section accessible via Learn More button from For Owner navigation item
+### 3.20 Owner Features Section
+- Dedicated section accessible via Learn More button from For Owner navigation item
 - Display comprehensive owner features with informational content and images
 - Feature 1: In-App Quick Listing
   - Description of quick listing functionality
@@ -327,7 +353,8 @@ Each property should display complete information including:
   - Clean and readable typography
   - Responsive image galleries within blog posts
   - Smooth transitions and hover effects on blog cards
-  - Breadcrumb navigation\n  - Newsletter subscription prompt within blog posts
+  - Breadcrumb navigation
+  - Newsletter subscription prompt within blog posts
   - Related articles recommendation engine
 \n### 3.22 About Us Section
 - Create a comprehensive About Us page with the following elements:
@@ -339,14 +366,14 @@ Each property should display complete information including:
   - Key team members with their roles and brief bios
   - Team photos showcasing company culture\n- Company Milestones:
   - Timeline of key achievements and growth
-  - Number of properties listed\n  - Number of satisfied users
+  - Number of properties listed
+  - Number of satisfied users
   - Cities covered and expansion plans
 - Why We Started:
   - Story behind the founding of RoomSaathi
   - Problem statement that RoomSaathi aims to solve
   - Impact on students and property owners
-- Our Commitment:
-  - Quality assurance and verification process
+- Our Commitment:\n  - Quality assurance and verification process
   - Customer support commitment
   - Transparency and trust-building measures
 - Visual Elements:
@@ -389,8 +416,7 @@ Each property should display complete information including:
   - Searching and Browsing Properties
   - Property Details and Verification
   - Contacting Property Owners
-  - RoomSaathi Verified Properties\n  - For Property Owners
-  - Safety and Security
+  - RoomSaathi Verified Properties\n  - For Property Owners\n  - Safety and Security
   - Policies and Terms
 - FAQ Format:
   - Expandable/collapsible accordion interface for each question
@@ -417,7 +443,8 @@ Each property should display complete information including:
   - Recently updated FAQs indicator
 
 ### 3.25 Contact Section
-- Contact form for inquiries\n- Display contact information (email, phone)\n- Office locations in Sikar, Jaipur, and Kota
+- Contact form for inquiries
+- Display contact information (email, phone)\n- Office locations in Sikar, Jaipur, and Kota
 - Social media links\n\n### 3.26 Newsletter Subscription
 - Email subscription form for updates and offers
 - Promotional messaging about benefits of subscribing
