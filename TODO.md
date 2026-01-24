@@ -657,3 +657,147 @@ All features implemented successfully with lint passing!
 - Various facilities per room
 
 All features implemented successfully with lint passing!
+
+- [x] Step 26: Integrate Google Maps for property location display
+  - [x] Install @types/google.maps package for TypeScript support
+  - [x] Create GoogleMap component with full functionality
+  - [x] Add interactive map with zoom, pan, street view controls
+  - [x] Implement property marker with custom red pin icon
+  - [x] Create info window with property name and address
+  - [x] Add "Get Directions" link to Google Maps
+  - [x] Implement loading state with spinner animation
+  - [x] Add error handling for missing/invalid API key
+  - [x] Add error handling for script loading failures
+  - [x] Make component responsive and customizable
+  - [x] Add props for latitude, longitude, propertyName, address, zoom, height
+  - [x] Integrate GoogleMap into PropertyDetailsPage Details tab
+  - [x] Add map after Contact Owner section
+  - [x] Set default coordinates for Sikar (27.6094, 75.1394)
+  - [x] Configure map with 16 zoom level and 450px height
+  - [x] Update .env file with VITE_GOOGLE_MAPS_API_KEY placeholder
+  - [x] Create .env.example with Google Maps configuration
+  - [x] Create comprehensive GOOGLE_MAPS_SETUP.md documentation
+  - [x] Add setup instructions for getting API key
+  - [x] Add security best practices for API key restrictions
+  - [x] Add troubleshooting guide for common issues
+  - [x] Add billing information and usage limits
+  - [x] Add example coordinates for all 3 cities
+  - [x] Run lint and verify all code passes
+
+**Google Maps Integration Features:**
+
+**1. GoogleMap Component:**
+- **Interactive Map Display**:
+  * Full Google Maps JavaScript API integration
+  * Map controls: zoom, pan, street view, fullscreen
+  * Custom map styling with POI labels visible
+  * Responsive design adapting to container size
+  * Configurable height (default 400px, set to 450px in details page)
+  * Adjustable zoom level (default 15, set to 16 for closer view)
+
+- **Property Marker**:
+  * Custom red pin icon (40x40px)
+  * Drop animation when marker appears
+  * Clickable marker opening info window
+  * Positioned at exact property coordinates
+
+- **Info Window**:
+  * Displays property name (bold, 16px)
+  * Shows full address below name
+  * "Get Directions" link opening Google Maps in new tab
+  * Opens automatically on page load
+  * Reopens on marker click
+  * Styled with proper padding and max-width
+
+- **Loading States**:
+  * Spinner animation with "Loading map..." text
+  * Backdrop blur effect during loading
+  * Smooth transition when map loads
+
+- **Error Handling**:
+  * Clear error message if API key missing
+  * Error alert if script fails to load
+  * Error alert if map initialization fails
+  * Helpful instructions in error messages
+
+- **Card Wrapper** (optional):
+  * Card component with "Property Location" title
+  * MapPin icon in header
+  * Address display below map with icon
+  * Can be disabled with showCard={false} prop
+
+**2. Integration in PropertyDetailsPage:**
+- Added in Details tab after Contact Owner section
+- Uses property name and address from database
+- Default coordinates set to Sikar city center (27.6094, 75.1394)
+- In production, coordinates should come from property database
+- Map height set to 450px for better visibility
+- Zoom level 16 for detailed street view
+
+**3. Environment Configuration:**
+- **VITE_GOOGLE_MAPS_API_KEY** added to .env file
+- Placeholder value: YOUR_GOOGLE_MAPS_API_KEY
+- User must replace with actual API key from Google Cloud Console
+- .env.example created with all configuration options
+- Instructions included in comments
+
+**4. Documentation (GOOGLE_MAPS_SETUP.md):**
+- **Setup Instructions**:
+  * Step-by-step guide to get API key
+  * How to enable required APIs (Maps JavaScript API, Places API)
+  * How to secure API key with restrictions
+  * How to add API key to project
+
+- **Features Overview**:
+  * Complete list of GoogleMap component features
+  * Usage examples with code snippets
+  * Props table with descriptions and defaults
+
+- **Getting Coordinates**:
+  * Method 1: Using Google Maps website
+  * Method 2: Extracting from Google Maps URL
+  * Method 3: Using Geocoding API programmatically
+
+- **Troubleshooting Guide**:
+  * Map not showing solutions
+  * API key configuration errors
+  * Script loading failures
+  * Marker visibility issues
+
+- **Billing Information**:
+  * $200 free credit per month
+  * $7 per 1,000 map loads pricing
+  * ~28,500 free loads per month calculation
+  * Usage monitoring recommendations
+
+- **Best Practices**:
+  * Always restrict API keys
+  * Monitor usage regularly
+  * Cache coordinates in database
+  * Use lazy loading for multiple maps
+  * Implement error boundaries
+
+- **Security Notes**:
+  * Never commit API keys to version control
+  * Use environment variables
+  * Set up domain restrictions
+  * Rotate keys if compromised
+
+**5. Example Coordinates Provided:**
+- Sikar, Rajasthan: 27.6094, 75.1394
+- Jaipur, Rajasthan: 26.9124, 75.7873
+- Kota, Rajasthan: 25.2138, 75.8648
+
+**6. TypeScript Support:**
+- Installed @types/google.maps package
+- Full type safety for Google Maps API
+- Proper typing for map, marker, and info window objects
+
+**Next Steps for Production:**
+1. Add latitude and longitude fields to properties table in database
+2. Update property forms to capture coordinates
+3. Implement geocoding to auto-convert addresses to coordinates
+4. Replace hardcoded coordinates with database values
+5. Add user's actual Google Maps API key to .env file
+
+All features implemented successfully with lint passing!

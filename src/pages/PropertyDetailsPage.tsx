@@ -23,6 +23,7 @@ import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
 import FloorPlanView from '@/components/property/FloorPlanView';
 import SendQueryDialog from '@/components/property/SendQueryDialog';
+import GoogleMap from '@/components/common/GoogleMap';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
@@ -407,6 +408,16 @@ export default function PropertyDetailsPage() {
                         </CardContent>
                       </Card>
                     )}
+
+                    {/* Google Map */}
+                    <GoogleMap
+                      latitude={27.6094}
+                      longitude={75.1394}
+                      propertyName={property.name}
+                      address={property.address}
+                      zoom={16}
+                      height="450px"
+                    />
                   </TabsContent>
 
                   {/* Rooms Tab */}

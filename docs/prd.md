@@ -12,18 +12,16 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats
-- Apartments
+- Flats\n- Apartments
 - Rooms
-- Hostels
-- RoomSaathi Verified (special verified properties category)
+- Hostels\n- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
-
-## 3. Core Features and Functionality
+\n## 3. Core Features and Functionality
 
 ### 3.1 Header Navigation
 - Left side: Logo with hanging animation effect
-- Left side navigation items:\n  - RoomSaathi Properties: On click, display RoomSaathi Verified properties\n  - For Owner: On click, show Learn More button that navigates to dedicated Owner Features section
+- Left side navigation items:\n  - RoomSaathi Properties: On click, display RoomSaathi Verified properties
+  - For Owner: On click, show Learn More button that navigates to dedicated Owner Features section
 - Right side navigation items:
   - Support: On click, display dropdown menu with transition effect showing:\n    - WhatsApp Support
     - Contact Support
@@ -86,7 +84,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Locality name
   - Landmark names
   - Property features
-  - Amenities\n- Display search suggestions dropdown with autocomplete
+  - Amenities
+- Display search suggestions dropdown with autocomplete
 - Highlight matching text in search results
 - Show recent searches for quick access
 - Display search result count in real-time
@@ -204,8 +203,24 @@ Each property should display complete information with the following advanced la
   - Detailed description
   - Property owner/manager details
   - Availability status
-\n- **Accommodation Type:**
-  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities with Icons:**
+\n- **Google Map Integration:**
+  - Display interactive Google Map showing the exact property location
+  - Use user-provided Google Maps API for map integration
+  - Map should display a marker at the property's precise location
+  - Map features:
+    - Zoom in/out controls
+    - Street view option (if available)
+    - Satellite view toggle
+    - Full-screen map view option
+    - Nearby landmarks and points of interest visible on the map
+    - Distance calculation from user's current location (optional)
+  - Map should be responsive and work seamlessly on all devices
+  - Display property address below or above the map for reference
+  - Get Directions button that opens the location in Google Maps app or browser
+
+- **Accommodation Type:**
+  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)
+  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities with Icons:**
   - Display complete list of available amenities with corresponding icons
   - Each amenity should have a clear icon representation
   - Amenities include: WiFi, AC, Parking, Laundry, Meals, Security, Power Backup, Water Supply, Gym, Common Area, etc.
@@ -232,7 +247,8 @@ Each property should display complete information with the following advanced la
     - Power outlets
     - Reading light
     - Mattress type
-  - Visual design approach:\n    - Use floor plan view with clickable room sections
+  - Visual design approach:
+    - Use floor plan view with clickable room sections
     - Color-coded availability status (Available/Occupied/Reserved)
     - Hover effect to show quick room details
     - Click on room to expand detailed view with images and amenities
@@ -252,8 +268,7 @@ Each property should display complete information with the following advanced la
     - WiFi charges (included/extra)
     - Meal charges (if applicable)
     - Parking charges (if applicable)
-  - Short term stay pricing:
-    - Per day rate for short term stays
+  - Short term stay pricing:\n    - Per day rate for short term stays
     - Minimum stay duration for short term\n    - Short term availability indicator
     - Separate pricing for different room types on per-day basis
   - Pricing comparison table for easy understanding
@@ -330,6 +345,8 @@ Each property should display complete information with the following advanced la
 - View floor plans and room layouts
 - Check short term stay availability
 - Review payment and cancellation policies
+- View property location on Google Map
+- Get directions to property location
 \n### 3.10 Property Comparison
 - Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
@@ -413,8 +430,8 @@ Each property should display complete information with the following advanced la
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image
-    - Blog title\n    - Brief excerpt or summary
+    - Featured image\n    - Blog title
+    - Brief excerpt or summary
     - Author name and avatar
     - Publication date
     - Category tags
@@ -610,6 +627,7 @@ Each property should display complete information with the following advanced la
 - Interactive floor plan animations for room layout visualization
 - Hover effects on room sections in floor plan
 - Smooth transitions when expanding room details
+- Google Map loading animation and smooth zoom transitions
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
