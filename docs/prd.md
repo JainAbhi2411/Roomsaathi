@@ -48,17 +48,29 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Map view toggle to see properties on an interactive map
 - List/Grid view toggle for different browsing preferences
 
-### 3.4 Search and Filter System (on Browse Page)
-- City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
-- Locality Selector: Dropdown menu for specific localities within selected city\n- Filter by property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
-- Filter by RoomSaathi Verified properties\n- Filter by price range with slider or input fields
+### 3.4 Browse by Category Section
+- Split layout design with left and right sections
+- Left side:\n  - Display category images with cutout design effect
+  - Implement hover effects on category images
+  - Show category icons for selection
+  - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
+- Right side:
+  - Display property cards according to selected category
+  - Arrange property cards in column-wise layout
+  - Enable vertical scrolling for property cards within the column
+  - Update property cards dynamically based on category selection from left side
+\n### 3.5 Search and Filter System (on Browse Page)\n- City Selector: Dropdown menu with options for Sikar, Jaipur, and Kota
+- Locality Selector: Dropdown menu for specific localities within selected city
+- Filter by property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
+- Filter by RoomSaathi Verified properties
+- Filter by price range with slider or input fields
 - Filter by amenities with checkbox options
 - Search by property name or keywords with autocomplete
 - Advanced search options with multiple criteria
 - Save search preferences for future visits
 - Recent searches display
 
-### 3.5 Property Detail Page
+### 3.6 Property Detail Page
 Each property should display complete information including:
 - Property name
 - Property type and category
@@ -77,74 +89,71 @@ Each property should display complete information including:
 - Virtual tour option (if available)
 - Nearby facilities and landmarks
 - Transportation connectivity information
-\n### 3.6 User Actions
+
+### 3.7 User Actions
 - Browse all properties on dedicated browse page
-- View detailed property information including room details and images\n- Filter and search properties with advanced options
-- Save favorite properties\n- Contact property owners
+- View detailed property information including room details and images
+- Filter and search properties with advanced options
+- Save favorite properties
+- Contact property owners
 - Share property listings
 - Compare multiple properties
-- Request property visits\n- Read and view property reviews\n
-### 3.7 Property Comparison
-- Allow users to select multiple properties for side-by-side comparison
-- Compare key features, amenities, pricing, and locations
-- Visual comparison interface with clear distinctions
+- Request property visits
+- Read and view property reviews
 
-### 3.8 Reviews and Ratings
-- Display user reviews and ratings for properties
-- Show overall rating scores
+### 3.8 Property Comparison\n- Allow users to select multiple properties for side-by-side comparison\n- Compare key features, amenities, pricing, and locations
+- Visual comparison interface with clear distinctions\n
+### 3.9 Reviews and Ratings
+- Display user reviews and ratings for properties\n- Show overall rating scores
 - Filter reviews by rating level
 - Display review highlights
 
-### 3.9 Featured Properties Section
-- Showcase premium or featured listings\n- Highlight RoomSaathi Verified properties
-- Display special offers or deals
-
-### 3.10 City Guides Section
+### 3.10 Featured Properties Section
+- Showcase premium or featured listings
+- Highlight RoomSaathi Verified properties\n- Display special offers or deals\n
+### 3.11 City Guides Section
 - Provide information about Sikar, Jaipur, and Kota
 - Highlight popular localities in each city
 - Display area-specific property statistics
 - Include city-specific accommodation tips
-
-### 3.11 Testimonials Section
+\n### 3.12 Testimonials Section
 - Display user testimonials and success stories
 - Include photos or avatars of satisfied users
-- Animated carousel for testimonial display\n
-### 3.12 Why Choose RoomSaathi Section
+- Animated carousel for testimonial display
+
+### 3.13 Why Choose RoomSaathi Section
 - Highlight unique value propositions
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
-- Use icons and visual elements to enhance presentation
+- Use icons and visual elements to enhance presentation\n
+### 3.14 How It Works Section
+- Step-by-step guide on using the platform
+- Visual representation of the property search and booking process
+- Clear call-to-action at each step
 
-### 3.13 How It Works Section
-- Step-by-step guide on using the platform\n- Visual representation of the property search and booking process
-- Clear call-to-action at each step\n
-### 3.14 Popular Localities Section
+### 3.15 Popular Localities Section
 - Display trending or popular localities in each city
 - Show number of available properties per locality
 - Quick access links to locality-specific listings
-\n### 3.15 Property Owner Section
+
+### 3.16 Property Owner Section
 - Information for property owners wanting to list their properties
 - Benefits of listing on RoomSaathi
 - Call-to-action for property listing
-- Display functionalities provided for owners: management software, website listing services, etc.\n
-### 3.16 Blog/Resources Section
-- Articles about accommodation tips
-- City guides and locality information
-- Student accommodation advice
+- Display functionalities provided for owners: management software, website listing services, etc.
+
+### 3.17 Blog/Resources Section
+- Articles about accommodation tips\n- City guides and locality information\n- Student accommodation advice
 - Property hunting tips
 
-### 3.17 FAQ Section
-- Common questions and answers
-- Categorized by topic (searching, booking, payments, etc.)
-- Expandable/collapsible accordion interface
+### 3.18 FAQ Section\n- Common questions and answers
+- Categorized by topic (searching, booking, payments, etc.)\n- Expandable/collapsible accordion interface
 
-### 3.18 Contact Section
-- Contact form for inquiries
-- Display contact information (email, phone)
+### 3.19 Contact Section\n- Contact form for inquiries\n- Display contact information (email, phone)
 - Office locations in Sikar, Jaipur, and Kota
-- Social media links\n
-### 3.19 Newsletter Subscription
-- Email subscription form for updates and offers
+- Social media links
+
+### 3.20 Newsletter Subscription\n- Email subscription form for updates and offers
 - Promotional messaging about benefits of subscribing
 
 ## 4. Design Requirements
@@ -156,19 +165,24 @@ Each property should display complete information including:
 - Thoughtful color scheme that reflects the brand identity
 - Incorporate relevant property and accommodation-related images for enhanced visual appeal
 - Consistent visual hierarchy across all sections
-- Responsive design for all device sizes\n
+- Responsive design for all device sizes
+
 ### 4.2 Design References
 - Take inspiration from orooms.in
 - Take inspiration from https://www.homversity.com/
-\n### 4.3 Special Animations
-- Logo hanging animation: Create a string-hanging effect with subtle swinging motion for the RoomSaathi logo
-- Hero section animated images with hanging hook transition effect: Images of hostels, PG accommodations, and students should appear as if hanging from a hook and smoothly change between different scenes
-- Auto slider for property images in listing cards\n- Smooth page transitions
-- Interactive hover effects on property cards\n- Animated filter and search interactions
+
+### 4.3 Special Animations
+- Logo hanging animation: Create a string-hanging effect with subtle swinging motion for the RoomSaathi logo\n- Hero section animated images with hanging hook transition effect: Images of hostels, PG accommodations, and students should appear as if hanging from a hook and smoothly change between different scenes\n- Auto slider for property images in listing cards
+- Smooth page transitions
+- Interactive hover effects on property cards
+- Animated filter and search interactions
 - Scroll-triggered animations for section reveals
 - Parallax effects on hero sections
 - Animated statistics counters
-- Smooth carousel transitions for testimonials\n\n### 4.4 Images and Visual Content
+- Smooth carousel transitions for testimonials
+- Cutout design effect with hover animations for category images in Browse by Category section
+
+### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
 - Lifestyle images depicting accommodation experiences
@@ -176,8 +190,10 @@ Each property should display complete information including:
 - Icons for amenities and features
 - Infographics for statistics and processes
 - Background images with overlay effects where appropriate
+- Category images with cutout design for Browse by Category section
 
-## 5. Primary Operating Locations\n- Sikar
+## 5. Primary Operating Locations
+- Sikar
 - Jaipur
 - Kota
 
