@@ -28,7 +28,9 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 ## 3. Core Features and Functionality
 
 ### 3.1 User Authentication System
-- **Login with Mobile Number and OTP Verification:**
+- **Login with Mobile Number and OTP Verification (Users Only):**
+  - All login functionality is exclusively for regular users (property seekers)
+  - Property owners do not have login access to the platform
   - Users must login using their mobile number\n  - OTP (One-Time Password) verification system for secure authentication
   - **SMS Provider Configuration:**
     - Integrate with a reliable SMS gateway service for OTP delivery
@@ -39,8 +41,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
     - Display alternative contact options if SMS delivery fails (e.g., Contact Support)
     - Log SMS delivery status for debugging and monitoring purposes
   - Login flow:
-    - User enters mobile number
-    - System sends OTP to the provided mobile number via configured SMS provider
+    - User enters mobile number\n    - System sends OTP to the provided mobile number via configured SMS provider
     - Display loading state while OTP is being sent
     - Show success message when OTP is sent successfully
     - Show error message with retry option if OTP sending fails
@@ -54,8 +55,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
     - Implement rate limiting to prevent SMS spam
     - Add Contact Support button in error state for immediate assistance
     - Log all SMS provider errors for technical team review
-
-### 3.2 Header Navigation
+\n### 3.2 Header Navigation
 - Left side: Logo with hanging animation effect
 - Left side navigation items:
   - RoomSaathi Properties: On click, display RoomSaathi Verified properties
@@ -86,8 +86,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Show key amenities with icons on each property card (e.g., WiFi, AC, Parking, Meals)\n  - Display 3-5 most important amenities for quick reference
   - Use compact icon representation to maintain card design\n- **Display Accommodation Type on Property Cards:**
   - Show accommodation type badge (PG/Flat/Apartment/Room/Hostel)\n  - Display gender preference indicator (Male/Female/Co-ed)
-  - Show furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
-  - **Display property type classification badge (For Girls/For Boys/For Family/For Bachelors/For Students)**
+  - Show furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n  - **Display property type classification badge (For Girls/For Boys/For Family/For Bachelors/For Students)**
 - Support infinite scroll or pagination for property listings
 - Provide comprehensive search and filter functionalities on this page
 - Include sorting options (by price, date added, popularity, etc.)
@@ -170,8 +169,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Amenities Search: Multi-criteria matching (AND/OR logic options)
 - Keyword Search: Full-text search across property descriptions
 - Combined Search: Support for multiple simultaneous search parameters
-- Search ranking algorithm prioritizing:\n  - Exact matches
-  - RoomSaathi Verified properties\n  - Recently added properties
+- Search ranking algorithm prioritizing:\n  - Exact matches\n  - RoomSaathi Verified properties\n  - Recently added properties
   - Properties with complete information
 - Search result sorting options:
   - Relevance (default)
@@ -209,7 +207,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Display images of students in accommodation settings
   - Show student lifestyle and accommodation experiences
 \n### 3.7 What RoomSaathi Students Get Section
-- Split layout design with left and right sections\n- Left side:
+- Split layout design with left and right sections
+- Left side:
   - Display 4 to 5 key features and benefits for students that impress and attract them
   - Include benefits such as:
     - Welcome kits upon booking
@@ -285,7 +284,8 @@ Each property should display complete information with the following advanced la
 
 - **Accommodation Type:**
   - Type of accommodation (PG/Flat/Apartment/Room/Hostel)
-  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - Gender preference (Male/Female/Co-ed)
+  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
   - Property age (New/Recent/Established)
   - Total number of floors
   - Total number of rooms
@@ -505,7 +505,8 @@ Each property should display complete information with the following advanced la
 - Display key benefits and features
 - Include statistics (number of properties, satisfied users, etc.)
 - Use icons and visual elements to enhance presentation
-\n### 3.18 How It Works Section
+
+### 3.18 How It Works Section
 - Step-by-step guide on using the platform
 - Visual representation of the property search and booking process
 - Clear call-to-action at each step
@@ -523,23 +524,100 @@ Each property should display complete information with the following advanced la
 ### 3.21 Owner Features Section
 - Dedicated section accessible via Learn More button from For Owner navigation item
 - Display comprehensive owner features with informational content and images
-- Feature 1: In-App Quick Listing
-  - Description of quick listing functionality
-  - Mobile app images showing the quick listing interface
-- Feature 2: Listing with Management Software
-  - Description of management software capabilities
-  - Mobile app images demonstrating management software features
-- Additional owner features with relevant descriptions and visual demonstrations
-- Use split layout or card-based design to present features effectively
+\n**Feature 1: In-App Quick Listing**
+- **Interactive Banner with Transition and Effects:**
+  - Display an attractive banner with smooth transition animations
+  - Banner should have creative opening effect (fade-in, slide-in, or scale animation)
+  - Professional design showcasing quick listing benefits
+\n- **Owner Details Form:**
+  - Form fields within the banner:\n    - Name (text input field)
+    - Phone Number (text input field with validation)
+    - Submit button
+  - Form validation:\n    - Ensure name is not empty
+    - Validate phone number format (10 digits)
+    - Display error messages for invalid inputs
+  - Form styling:
+    - Clean and modern input fields
+    - Clear labels and placeholders
+    - Responsive design for all devices
 
-### 3.22 Blog Section
+- **On Submit Actions:**
+  - Display success message: Our team will contact you soon about your listing
+  - Success message should appear with smooth animation
+  - Automatically send WhatsApp message to the owner's provided phone number
+  - WhatsApp message content:
+    - Greeting message\n    - Google Form link containing all property listing fields
+    - Instructions to fill the form
+  - Google Form should include comprehensive property listing fields:\n    - Property basic information\n    - Location details
+    - Property type and classification
+    - Room details and pricing
+    - Amenities\n    - Images upload option
+    - Contact information
+    - Any additional requirements
+  - After successful submission, clear the form fields
+  - Option to submit another listing request
+
+- **Mobile App Images:**
+  - Display mobile app interface images showing the quick listing feature
+  - Showcase how owners can list properties through the mobile app
+  - Use carousel or slider to show multiple app screens
+
+**Feature 2: Listing with Management Software**
+- **Interactive Banner with Transition:**
+  - Display an attractive banner with smooth transition animations
+  - Banner should have creative opening effect similar to Quick Listing banner
+  - Professional design highlighting management software benefits
+
+- **Management Software Details:**
+  - Comprehensive description of management software features:\n    - Property management capabilities
+    - Tenant management\n    - Rent collection and tracking
+    - Maintenance request handling
+    - Financial reporting
+    - Automated notifications
+    - Dashboard analytics
+    - Multi-property management
+  - Benefits of using the management software:
+    - Streamlined operations
+    - Time-saving automation
+    - Better tenant communication
+    - Financial transparency
+    - Real-time updates
+    - Mobile accessibility
+\n- **Mobile App Showcase:**
+  - Display mobile app images demonstrating management software interface
+  - Show key features through app screenshots:\n    - Dashboard view
+    - Property listing management
+    - Tenant management screen
+    - Financial reports
+    - Notification center
+  - Use carousel or slider for multiple app screens
+  - Highlight mobile app availability for iOS and Android
+
+- **Software Access Link:**
+  - Prominent button or link to access the management software
+  - Link: https://rosamanage.netlify.app/
+  - Button text: Access Management Software or Try Now
+  - Button should have hover effect and smooth transition
+  - Opens in new tab when clicked
+  - Display software logo or icon alongside the link
+
+- **Call-to-Action:**
+  - Encourage owners to try the management software
+  - Display contact information for software support
+  - Option to request a demo or tutorial
+\n**Additional Owner Features:**
+- Display other owner features with relevant descriptions and visual demonstrations
+- Use split layout or card-based design to present features effectively
+- Maintain consistent design language across all feature sections
+\n### 3.22 Blog Section
 - Create a dedicated blog page with complete blog functionality
 - **Blog posts can only be created and published by RoomSaathi admin through the admin panel**
 - **Real-time blog updates: New blog posts published by admin appear on the website immediately without page refresh**
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
-    - Featured image\n    - Blog title
+    - Featured image
+    - Blog title
     - Brief excerpt or summary
     - Author name and avatar
     - Publication date
@@ -756,7 +834,8 @@ Each property should display complete information with the following advanced la
   - Separate admin login page (e.g., /admin/login)
   - Password reset functionality for admin accounts
   - Role-based access control for different admin levels (if needed)
-\n- **Admin Dashboard:**
+
+- **Admin Dashboard:**
   - Centralized dashboard for managing all RoomSaathi operations
   - Overview statistics and analytics:\n    - Total properties listed
     - Total active users
@@ -792,8 +871,7 @@ Each property should display complete information with the following advanced la
     - Save as draft functionality
     - Publish immediately or schedule for later
     - **Real-time website update: New property appears on website immediately after publishing without requiring page refresh**
-  
-  - **Edit Property:**
+  \n  - **Edit Property:**
     - Edit any existing property with pre-filled form\n    - Update property information, images, videos, pricing, availability
     - Version history or change log (optional)
     - Update verification status
@@ -938,20 +1016,28 @@ Each property should display complete information with the following advanced la
 - Smooth transitions when expanding room details
 - Google Map loading animation and smooth zoom transitions
 - Login modal animations with smooth fade-in effect
-- OTP input field animations
-- Schedule Visit form animations
+- OTP input field animations\n- Schedule Visit form animations
 - **Amenity icon hover effects and tooltips**
 - **Accommodation type badge animations on property cards**
 - **Property type classification badge animations on property cards**
 - **Video player loading animations and smooth transitions between media items**
 - **Legal policy modal animations:**
-  - Backdrop fade-in effect (0.3s)\n  - Modal slide-down from top with bounce effect (0.5s)
+  - Backdrop fade-in effect (0.3s)
+  - Modal slide-down from top with bounce effect (0.5s)
   - Scale animation from 0.9 to 1.0\n  - Smooth fade-out and slide-up when closing
   - Creative transition effects for opening and closing
 - **Real-time content update animations:**
   - Smooth fade-in for new properties appearing on browse page
   - Subtle highlight animation for newly added blog posts
   - Notification badge animation for new content
+- **Owner Features Section Animations:**
+  - Banner transition effects for Quick Listing feature
+  - Smooth fade-in and slide-in animations for banner appearance
+  - Form field focus animations
+  - Success message animation after form submission
+  - Banner transition effects for Management Software feature
+  - Carousel/slider animations for mobile app images
+  - Hover effects on Access Management Software button
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
@@ -966,7 +1052,12 @@ Each property should display complete information with the following advanced la
 - Category images with cutout design for Browse by Category section
 - Student images for Student Information Section
 - Feature-specific images for What RoomSaathi Students Get section
-- Mobile app images for Owner Features section showing in-app quick listing and management software interfaces
+- Mobile app images for Owner Features section showing:\n  - In-app quick listing interface
+  - Management software features and dashboard
+  - Property management screens
+  - Tenant management interface
+  - Financial reporting screens
+  - Multiple app screens in carousel format
 - Blog featured images for each blog post
 - Author avatars for blog posts
 - Team photos for About Us section
@@ -982,3 +1073,4 @@ Each property should display complete information with the following advanced la
 - Kota
 \n## 6. Reference Files
 1. Logo image: Use the uploaded logo file for branding throughout the website
+2. Management Software Link: https://rosamanage.netlify.app/

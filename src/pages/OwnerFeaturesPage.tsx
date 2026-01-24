@@ -1,11 +1,15 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Smartphone, BarChart3, Zap, Shield, Clock, TrendingUp, CheckCircle2, Users } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Smartphone, BarChart3, Zap, Shield, Clock, TrendingUp, CheckCircle2, Users, Send, ExternalLink, Phone, User as UserIcon } from 'lucide-react';
 import { Link } from 'react-router';
+import { useToast } from '@/hooks/use-toast';
+import { createUserQuery } from '@/db/api';
 
 const features = [
   {
@@ -60,6 +64,56 @@ const benefits = [
 ];
 
 export default function OwnerFeaturesPage() {
+  const [quickListingForm, setQuickListingForm] = useState({ name: '', phone: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { toast } = useToast();
+
+  const handleQuickListingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Save to database
+      await createUserQuery({
+        name: quickListingForm.name,
+        email: `${quickListingForm.phone}@owner.roomsaathi.com`,
+        phone: quickListingForm.phone,
+        message: 'Quick Listing Request - Owner wants to list property',
+        property_name: 'Owner Listing Request',
+      });
+
+      // Show success message
+      setShowSuccess(true);
+      
+      // Send WhatsApp message with Google Form
+      const whatsappMessage = encodeURIComponent(
+        `Hi ${quickListingForm.name}! 👋\n\nThank you for your interest in listing your property with RoomSaathi!\n\nOur team will contact you soon. Meanwhile, please fill out this form with your property details:\n\nhttps://forms.gle/your-google-form-link\n\nThis will help us serve you better! 🏠`
+      );
+      const whatsappUrl = `https://wa.me/91${quickListingForm.phone}?text=${whatsappMessage}`;
+      window.open(whatsappUrl, '_blank');
+
+      toast({
+        title: 'Request Submitted! 🎉',
+        description: 'Our team will contact you soon. Check WhatsApp for the property details form.',
+      });
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setQuickListingForm({ name: '', phone: '' });
+        setShowSuccess(false);
+      }, 3000);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to submit request. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -124,7 +178,7 @@ export default function OwnerFeaturesPage() {
           </div>
         </section>
 
-        {/* Main Features */}
+        {/* Main Features - Enhanced Interactive Banners */}
         <section className="py-16 xl:py-24">
           <div className="container mx-auto px-4">
             <motion.div
@@ -142,72 +196,254 @@ export default function OwnerFeaturesPage() {
               </p>
             </motion.div>
 
-            <div className="space-y-24">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className={`grid xl:grid-cols-2 gap-12 items-center ${
-                    index % 2 === 1 ? 'xl:flex-row-reverse' : ''
-                  }`}
-                >
-                  {/* Content */}
-                  <div className={index % 2 === 1 ? 'xl:order-2' : ''}>
-                    <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${feature.color} mb-6`}>
-                      <feature.icon className="h-7 w-7" />
-                    </div>
-                    <h3 className="text-2xl xl:text-3xl font-bold mb-4">{feature.title}</h3>
-                    <p className="text-lg text-muted-foreground mb-6">{feature.description}</p>
+            <div className="space-y-16">
+              {/* Quick Listing Banner */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500/10 via-primary/5 to-purple-500/10 border-2 border-primary/20"
+              >
+                <div className="absolute inset-0 bg-grid-white/5" />
+                <div className="relative grid xl:grid-cols-2 gap-8 p-8 xl:p-12">
+                  {/* Left: Content & Form */}
+                  <div className="space-y-6">
+                    <motion.div
+                      initial={{ scale: 0.9 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5 }}
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/20 text-blue-500 mb-4"
+                    >
+                      <Smartphone className="h-8 w-8" />
+                    </motion.div>
                     
-                    <div className="space-y-3 mb-6">
-                      {feature.benefits.map((benefit, idx) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-3xl xl:text-4xl font-bold mb-4">
+                        Quick Listing in <span className="gradient-text">Minutes</span>
+                      </h3>
+                      <p className="text-lg text-muted-foreground mb-6">
+                        List your property quickly and easily. Our team will guide you through the entire process.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {[
+                        'Fast & Easy Setup',
+                        'Professional Photography Support',
+                        'Instant Online Visibility',
+                        'Dedicated Account Manager',
+                      ].map((benefit, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: idx * 0.1 }}
+                          className="flex items-center gap-3"
+                        >
+                          <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                           <span className="text-muted-foreground">{benefit}</span>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
 
-                    <Button asChild>
-                      <Link to="/list-property">
-                        Get Started
-                      </Link>
-                    </Button>
+                    {/* Quick Listing Form */}
+                    <AnimatePresence mode="wait">
+                      {!showSuccess ? (
+                        <motion.form
+                          key="form"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          onSubmit={handleQuickListingSubmit}
+                          className="space-y-4 bg-background/50 backdrop-blur-sm p-6 rounded-2xl border border-border"
+                        >
+                          <div className="space-y-2">
+                            <Label htmlFor="owner-name">Your Name</Label>
+                            <div className="relative">
+                              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                id="owner-name"
+                                placeholder="Enter your name"
+                                value={quickListingForm.name}
+                                onChange={(e) => setQuickListingForm({ ...quickListingForm, name: e.target.value })}
+                                className="pl-10"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="owner-phone">Phone Number</Label>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                id="owner-phone"
+                                placeholder="10-digit mobile number"
+                                value={quickListingForm.phone}
+                                onChange={(e) => setQuickListingForm({ ...quickListingForm, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                                className="pl-10"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting ? (
+                              <>Submitting...</>
+                            ) : (
+                              <>
+                                <Send className="mr-2 h-4 w-4" />
+                                Submit Request
+                              </>
+                            )}
+                          </Button>
+                        </motion.form>
+                      ) : (
+                        <motion.div
+                          key="success"
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          className="bg-primary/10 border-2 border-primary/30 p-8 rounded-2xl text-center"
+                        >
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', duration: 0.6 }}
+                            className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4"
+                          >
+                            <CheckCircle2 className="h-8 w-8" />
+                          </motion.div>
+                          <h4 className="text-2xl font-bold mb-2">Request Submitted!</h4>
+                          <p className="text-muted-foreground">
+                            Our team will contact you soon. Check WhatsApp for the property details form.
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
-                  {/* Image */}
-                  <div className={index % 2 === 1 ? 'xl:order-1' : ''}>
-                    <div className="relative rounded-3xl overflow-hidden shadow-hover">
+                  {/* Right: Mobile App Image */}
+                  <div className="relative flex items-center justify-center">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                      whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8 }}
+                      className="relative"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-500/30 blur-3xl" />
                       <img
-                        src={feature.image}
-                        alt={feature.title}
-                        className="w-full h-[500px] object-cover"
+                        src="https://miaoda-site-img.s3cdn.medo.dev/images/1a49f9b3-b677-40e8-be27-e9ef957d0732.jpg"
+                        alt="Mobile App"
+                        className="relative w-full max-w-md h-auto rounded-3xl shadow-2xl"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
-                      
-                      {/* Floating Badge */}
-                      <div className="absolute bottom-8 left-8 right-8">
-                        <Card className="bg-background/90 backdrop-blur-sm border-primary/20">
-                          <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                              <div className={`p-3 rounded-xl ${feature.color}`}>
-                                <feature.icon className="h-6 w-6" />
-                              </div>
-                              <div>
-                                <h4 className="font-bold text-lg">{feature.title}</h4>
-                                <p className="text-sm text-muted-foreground">Available on mobile & web</p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Management Software Banner */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500/10 via-primary/5 to-blue-500/10 border-2 border-primary/20"
+              >
+                <div className="absolute inset-0 bg-grid-white/5" />
+                <div className="relative grid xl:grid-cols-2 gap-8 p-8 xl:p-12">
+                  {/* Left: Mobile App Image */}
+                  <div className="relative flex items-center justify-center xl:order-1">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+                      whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8 }}
+                      className="relative"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-blue-500/30 blur-3xl" />
+                      <img
+                        src="https://miaoda-site-img.s3cdn.medo.dev/images/f0e098ff-0007-44d3-8e76-a131283558af.jpg"
+                        alt="Management Software Dashboard"
+                        className="relative w-full max-w-md h-auto rounded-3xl shadow-2xl"
+                      />
+                    </motion.div>
+                  </div>
+
+                  {/* Right: Content */}
+                  <div className="space-y-6 xl:order-2">
+                    <motion.div
+                      initial={{ scale: 0.9 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5 }}
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-500/20 text-purple-500 mb-4"
+                    >
+                      <BarChart3 className="h-8 w-8" />
+                    </motion.div>
+                    
+                    <div>
+                      <h3 className="text-3xl xl:text-4xl font-bold mb-4">
+                        Management <span className="gradient-text">Software</span>
+                      </h3>
+                      <p className="text-lg text-muted-foreground mb-6">
+                        Comprehensive dashboard to manage all your properties, bookings, and payments in one place. Available on web and mobile.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {[
+                        'Track Bookings & Occupancy Rates',
+                        'Automated Payment Reminders',
+                        'Tenant Management System',
+                        'Revenue Analytics & Reports',
+                        'Mobile App for On-the-Go Management',
+                        'Real-time Notifications',
+                      ].map((benefit, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: idx * 0.1 }}
+                          className="flex items-center gap-3"
+                        >
+                          <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                          <span className="text-muted-foreground">{benefit}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-wrap gap-4 pt-4">
+                      <Button size="lg" asChild>
+                        <a href="https://rosamanage.netlify.app/" target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          Visit Management Portal
+                        </a>
+                      </Button>
+                      <Button size="lg" variant="outline" asChild>
+                        <Link to="/contact">
+                          Schedule Demo
+                        </Link>
+                      </Button>
+                    </div>
+
+                    {/* Mobile App Badge */}
+                    <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl border border-border">
+                      <div className="flex items-center gap-3">
+                        <Smartphone className="h-6 w-6 text-primary" />
+                        <div>
+                          <p className="font-semibold">Mobile App Available</p>
+                          <p className="text-sm text-muted-foreground">Manage your properties anywhere, anytime</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>
