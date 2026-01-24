@@ -42,9 +42,21 @@ export default function GoogleMap({
       return;
     }
 
+    // Check if script is already being loaded
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      // Wait for existing script to load
+      existingScript.addEventListener('load', () => {
+        if (window.google && window.google.maps) {
+          initializeMap();
+        }
+      });
+      return;
+    }
+
     // Load Google Maps script
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
@@ -57,12 +69,7 @@ export default function GoogleMap({
 
     document.head.appendChild(script);
 
-    return () => {
-      // Cleanup if needed
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
+    // No cleanup needed - keep script loaded for other map instances
   }, [latitude, longitude]);
 
   const initializeMap = () => {
@@ -79,27 +86,17 @@ export default function GoogleMap({
         streetViewControl: true,
         fullscreenControl: true,
         zoomControl: true,
-        styles: [
-          {
-            featureType: 'poi',
-            elementType: 'labels',
-            stylers: [{ visibility: 'on' }]
-          }
-        ]
+        mapId: 'DEMO_MAP_ID', // Required for AdvancedMarkerElement
       });
 
       mapInstanceRef.current = map;
 
-      // Create marker
+      // Create marker using the standard Marker (AdvancedMarkerElement requires more setup)
       const marker = new google.maps.Marker({
         position: position,
         map: map,
         title: propertyName,
         animation: google.maps.Animation.DROP,
-        icon: {
-          url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-          scaledSize: new google.maps.Size(40, 40)
-        }
       });
 
       // Create info window

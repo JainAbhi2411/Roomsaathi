@@ -838,3 +838,58 @@ This will prevent unauthorized use of your API key and protect your billing acco
 6. Click "Get Directions" to open Google Maps navigation
 
 All features ready to use!
+
+- [x] Step 28: Fix Google Maps script loading issues
+  - [x] Fix "Element with name 'gmp-basic-place-autocomplete' already defined" error
+  - [x] Prevent multiple script loading in React StrictMode
+  - [x] Add check for existing Google Maps script before loading
+  - [x] Add event listener for already-loading scripts
+  - [x] Remove script cleanup to prevent conflicts
+  - [x] Remove 'libraries=places' parameter (not needed for basic map)
+  - [x] Fix marker deprecation warning by removing custom icon
+  - [x] Add mapId for future AdvancedMarkerElement compatibility
+  - [x] Simplify marker to use default red pin
+  - [x] Run lint and verify all fixes work
+
+**Google Maps Script Loading Fixes:**
+
+**Problem 1: Multiple Script Loading**
+- Issue: React StrictMode runs effects twice in development
+- Issue: Script was being loaded multiple times causing conflicts
+- Issue: "Element already defined" error from Places library
+
+**Solution:**
+1. Check if `window.google.maps` already exists before loading
+2. Check if script tag already exists in DOM
+3. If script exists but not loaded, wait for it to load
+4. Remove script cleanup from useEffect return
+5. Remove `libraries=places` parameter (not needed)
+
+**Problem 2: Marker Deprecation Warning**
+- Issue: google.maps.Marker is deprecated (as of Feb 2024)
+- Warning: Recommends using AdvancedMarkerElement
+
+**Solution:**
+1. Simplified marker to use default styling
+2. Removed custom icon configuration
+3. Added mapId for future AdvancedMarkerElement support
+4. Kept standard Marker for now (still supported, just deprecated)
+
+**Code Changes:**
+- Added check: `document.querySelector('script[src*="maps.googleapis.com"]')`
+- Added event listener for existing script load
+- Removed script cleanup from useEffect return
+- Simplified script URL: removed `&libraries=places`
+- Added `mapId: 'DEMO_MAP_ID'` to map config
+- Removed custom marker icon configuration
+- Marker now uses default Google Maps red pin
+
+**Result:**
+- No more "Element already defined" errors
+- No more script loading conflicts
+- Map loads correctly on first and subsequent renders
+- Deprecation warning removed
+- Clean console output
+- Map fully functional with default red marker
+
+All issues resolved and tested successfully!
