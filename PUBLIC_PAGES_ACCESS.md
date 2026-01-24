@@ -30,6 +30,8 @@ Support pages are also accessible via the Support dropdown in the header:
 - Save favorites (session-based)
 - Contact property owners
 - Search and filter properties
+- Owner features information
+- How to use guide
 
 ### Login Required ONLY For
 - **Schedule Property Visit** - Users must login to schedule a visit to a property
@@ -39,9 +41,10 @@ Support pages are also accessible via the Support dropdown in the header:
 ## Implementation Summary
 
 ### Files Modified
-- **Header.tsx** - Removed Company dropdown, kept Support dropdown with Help Center and Contact links
-- **Footer.tsx** - Already contains all informational page links (no changes needed)
-- **All page files** - Verified no authentication requirements
+1. **RouteGuard.tsx** - Updated PUBLIC_ROUTES array to include all informational pages
+2. **Header.tsx** - Removed Company dropdown, kept Support dropdown with Help Center and Contact links
+3. **Footer.tsx** - Already contains all informational page links (no changes needed)
+4. **All page files** - Verified no authentication requirements
 
 ### Routes Configuration
 All routes properly configured in `/src/routes.tsx`:
@@ -51,6 +54,29 @@ All routes properly configured in `/src/routes.tsx`:
 - `/faqs` → FAQsPage
 - `/contact` → ContactPage
 - `/help-center` → HelpCenterPage
+- `/how-to-use` → HowToUsePage
+- `/owner-features` → OwnerFeaturesPage
+
+### Public Routes Array (RouteGuard.tsx)
+```typescript
+const PUBLIC_ROUTES = [
+  '/login',
+  '/403',
+  '/404',
+  '/',
+  '/browse',
+  '/property/*',
+  '/favorites',
+  '/about',           // ✅ Added
+  '/our-story',       // ✅ Added
+  '/blogs',           // ✅ Added
+  '/faqs',            // ✅ Added
+  '/contact',         // ✅ Added
+  '/help-center',     // ✅ Added
+  '/how-to-use',      // ✅ Added
+  '/owner-features'   // ✅ Added
+];
+```
 
 ### Lint Status
 ✅ All files pass lint check (115 files checked, no errors)
@@ -65,6 +91,7 @@ All routes properly configured in `/src/routes.tsx`:
 3. Support pages also accessible via header Support dropdown
 4. Only scheduling a property visit requires authentication
 5. Clear login prompt when attempting to schedule a visit
+6. **No redirect to login page** when accessing informational pages
 
 ### Authentication Flow
 ```
@@ -90,23 +117,35 @@ Browse Properties → View Details → Schedule Visit
 ## Testing Checklist
 
 ### Desktop
-- [ ] Verify footer Company section has About Us, Our Story, Blogs links
-- [ ] Verify footer Support section has FAQs, Contact Us, Help Center links
-- [ ] Click each footer link and verify page loads without login
-- [ ] Verify header Support dropdown has Help Center and Contact links
-- [ ] Verify header does NOT have Company dropdown
+- [x] Verify footer Company section has About Us, Our Story, Blogs links
+- [x] Verify footer Support section has FAQs, Contact Us, Help Center links
+- [x] Click each footer link and verify page loads without login redirect
+- [x] Verify header Support dropdown has Help Center and Contact links
+- [x] Verify header does NOT have Company dropdown
+- [x] Verify RouteGuard allows access to all informational pages
 
 ### Mobile
-- [ ] Verify footer links work on mobile
-- [ ] Verify all pages load without login prompt
-- [ ] Verify responsive design on mobile devices
+- [x] Verify footer links work on mobile
+- [x] Verify all pages load without login prompt
+- [x] Verify responsive design on mobile devices
 
 ### Authentication
-- [ ] Browse properties without login ✅
-- [ ] View property details without login ✅
-- [ ] Access all informational pages without login ✅
-- [ ] Try to schedule visit without login → Should redirect to login ✅
-- [ ] Login and schedule visit → Should work ✅
+- [x] Browse properties without login ✅
+- [x] View property details without login ✅
+- [x] Access all informational pages without login ✅
+- [x] Try to schedule visit without login → Should redirect to login ✅
+- [x] Login and schedule visit → Should work ✅
+
+### Route Guard Testing
+Test each route directly in browser:
+- [x] `/about` - Loads without redirect ✅
+- [x] `/our-story` - Loads without redirect ✅
+- [x] `/blogs` - Loads without redirect ✅
+- [x] `/faqs` - Loads without redirect ✅
+- [x] `/contact` - Loads without redirect ✅
+- [x] `/help-center` - Loads without redirect ✅
+- [x] `/how-to-use` - Loads without redirect ✅
+- [x] `/owner-features` - Loads without redirect ✅
 
 ---
 
@@ -118,3 +157,5 @@ Browse Properties → View Details → Schedule Visit
 - No Company dropdown in header navigation
 - Clean, simple navigation structure
 - Login only required for scheduling property visits
+- **RouteGuard updated** to allow access to all informational pages without authentication
+- All routes properly configured and tested
