@@ -74,5 +74,8 @@ export interface FilterOptions {
   price_min?: number;
   price_max?: number;
   search?: string;
+  amenities?: string[];
+  gender?: string;
+  food_included?: boolean;
 }
 
