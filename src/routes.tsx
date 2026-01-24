@@ -8,6 +8,9 @@ import BlogsPage from './pages/BlogsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import OurStoryPage from './pages/OurStoryPage';
 import FAQsPage from './pages/FAQsPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import HowToUsePage from './pages/HowToUsePage';
+import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import TestAuthPage from './pages/TestAuthPage';
 import type { ReactNode } from 'react';
@@ -69,6 +72,24 @@ const routes: RouteConfig[] = [
     name: 'FAQs',
     path: '/faqs',
     element: <FAQsPage />,
+    visible: false
+  },
+  {
+    name: 'Help Center',
+    path: '/help-center',
+    element: <HelpCenterPage />,
+    visible: false
+  },
+  {
+    name: 'How to Use',
+    path: '/how-to-use',
+    element: <HowToUsePage />,
+    visible: false
+  },
+  {
+    name: 'Contact',
+    path: '/contact',
+    element: <ContactPage />,
     visible: false
   },
   {

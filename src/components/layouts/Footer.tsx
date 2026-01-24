@@ -161,11 +161,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Phone className="h-4 w-4 flex-shrink-0" />
-                <a href="tel:+919876543210">+91 98765 43210</a>
+                <a href="tel:+917374035907">+91 7374035907</a>
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <a href="mailto:support@roomsaathi.com">support@roomsaathi.com</a>
+                <a href="mailto:jainabhi7374@gmail.com">jainabhi7374@gmail.com</a>
               </li>
             </ul>
             <div className="mt-6">
