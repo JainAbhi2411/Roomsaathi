@@ -1,155 +1,191 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import PolicyModal from '@/components/ui/PolicyModal';
+import { policies } from '@/data/policies';
+import type { PolicyContent } from '@/data/policies';
 
 export default function Footer() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPolicy, setSelectedPolicy] = useState<PolicyContent | null>(null);
+
+  const openPolicy = (policyId: string) => {
+    setSelectedPolicy(policies[policyId]);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedPolicy(null), 300);
+  };
+
   return (
-    <footer className="bg-muted/50 border-t border-border">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-5 gap-8 mb-8">
-          {/* Brand Section */}
-          <div className="xl:col-span-1">
-            <Link to="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold gradient-text">RoomSaathi</span>
-            </Link>
-            <p className="text-sm text-muted-foreground mb-4">
-              Your trusted companion for finding the perfect student accommodation in Sikar, Jaipur, and Kota.
-            </p>
-            <div className="flex gap-3">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
+    <>
+      <footer className="bg-muted/50 border-t border-border">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-5 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="xl:col-span-1">
+              <Link to="/" className="inline-block mb-4">
+                <span className="text-2xl font-bold gradient-text">RoomSaathi</span>
+              </Link>
+              <p className="text-sm text-muted-foreground mb-4">
+                Your trusted companion for finding the perfect student accommodation in Sikar, Jaipur, and Kota.
+              </p>
+              <div className="flex gap-3">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <Twitter className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* Company Section */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Company</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/our-story" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Our Story
-                </Link>
-              </li>
-              <li>
-                <Link to="/blogs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Blogs
-                </Link>
-              </li>
-              <li>
-                <Link to="/community" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Community
-                </Link>
-              </li>
-              <li>
-                <Link to="/careers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Careers
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Company Section */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Company</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/our-story" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Our Story
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/blogs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Blogs
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/community" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Community
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/careers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Careers
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Support Section */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Support</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/faqs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/help-center" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link to="/browse" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Browse Properties
-                </Link>
-              </li>
-              <li>
-                <Link to="/list-property" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  List Your Property
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Support Section */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Support</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link to="/faqs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    FAQs
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/help-center" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/browse" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Browse Properties
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/list-property" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    List Your Property
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Policies Section */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Policies</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Terms and Conditions
-                </Link>
-              </li>
-              <li>
-                <Link to="/service-terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Service Terms
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/refund-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Guest Refund Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/non-discrimination" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Non Discrimination Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/booking-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Booking Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Policies Section */}
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Policies</h3>
+              <ul className="space-y-3">
+                <li>
+                  <button
+                    onClick={() => openPolicy('terms-and-conditions')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Terms and Conditions
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => openPolicy('service-terms')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Service Terms
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => openPolicy('privacy-policy')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => openPolicy('refund-policy')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Guest Refund Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => openPolicy('non-discrimination')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Non Discrimination Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => openPolicy('booking-policy')}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                  >
+                    Booking Policy
+                  </button>
+                </li>
+              </ul>
+            </div>
 
           {/* Contact Section */}
           <div>
@@ -200,5 +236,9 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+
+    {/* Policy Modal */}
+    <PolicyModal isOpen={isModalOpen} onClose={closeModal} policy={selectedPolicy} />
+    </>
   );
 }

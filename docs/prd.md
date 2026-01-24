@@ -5,8 +5,8 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.
-\n### 1.3 Logo
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.\n
+### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
 ## 2. Property Categories
 
@@ -36,7 +36,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
     - Add proper error handling for SMS delivery failures with user-friendly messages
     - Display alternative contact options if SMS delivery fails (e.g., Contact Support)
     - Log SMS delivery status for debugging and monitoring purposes
-  - Login flow:\n    - User enters mobile number
+  - Login flow:
+    - User enters mobile number
     - System sends OTP to the provided mobile number via configured SMS provider
     - Display loading state while OTP is being sent
     - Show success message when OTP is sent successfully
@@ -116,12 +117,10 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Property Age: New (0-1 year), Recent (1-3 years), Established (3+ years)
   - Distance from Landmark: Radius filter with slider (1km, 2km, 5km, 10km)
 - Filter panel should be collapsible/expandable with smooth animation
-- Display active filter count badge
-- Clear All Filters button prominently displayed
+- Display active filter count badge\n- Clear All Filters button prominently displayed
 - Apply Filters button for mobile view
 - Save Filter Preset option for future use
-
-#### 3.4.2 Real-Time Search Functionality
+\n#### 3.4.2 Real-Time Search Functionality
 - Instant search results as user types in search bar
 - Search across multiple parameters:\n  - Property name
   - Locality name
@@ -203,8 +202,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Display images of students in accommodation settings
   - Show student lifestyle and accommodation experiences
 \n### 3.7 What RoomSaathi Students Get Section
-- Split layout design with left and right sections
-- Left side:
+- Split layout design with left and right sections\n- Left side:
   - Display 4 to 5 key features and benefits for students that impress and attract them
   - Include benefits such as:
     - Welcome kits upon booking
@@ -248,7 +246,8 @@ Each property should display complete information with the following advanced la
   - Smooth transition between images and videos in the media gallery
   - Video loading indicator
   - Fallback message if video fails to load
-\n**Right Side:**
+
+**Right Side:**
 \n- **Neighborhood Highlights:**
   - Nearby landmarks and facilities
   - Distance to key locations (colleges, hospitals, markets, etc.)
@@ -256,8 +255,7 @@ Each property should display complete information with the following advanced la
   - Area description and locality benefits
 \n- **Property Details:**
   - Property name\n  - Property type and category
-  - **Property type classification (For Girls/For Boys/For Family/For Bachelors/For Students)**
-  - RoomSaathi Verified badge (if applicable)
+  - **Property type classification (For Girls/For Boys/For Family/For Bachelors/For Students)**\n  - RoomSaathi Verified badge (if applicable)
   - Complete address\n  - Location (city and locality)
   - Detailed description
   - Property owner/manager details
@@ -369,7 +367,8 @@ Each property should display complete information with the following advanced la
   - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
     - Opens query form or chat interface
     - Quick response commitment display
-\n- **Payment Policies:**
+
+- **Payment Policies:**
   - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
   - Payment schedule (Monthly/Quarterly/Advance)
   - Due date for monthly payments
@@ -688,6 +687,54 @@ Each property should display complete information with the following advanced la
 - Copyright information
 - Operating cities: Sikar, Jaipur, Kota
 - Quick links to property categories
+\n### 3.29 Legal Policy Modals
+- Create interactive modal system for all legal policy documents
+- **Modal Trigger Behavior:**
+  - All legal policy links in footer (Terms and Conditions, Service Terms, Privacy Policy, Guest Refund Policy, Non Discrimination Policy, Booking Policy) should open modals on click
+  - Modal should appear above the page content like a banner with creative transition effect
+  - Implement smooth fade-in and slide-down animation when modal opens
+  - Add backdrop overlay with semi-transparent dark background
+  - Modal should be centered on screen with appropriate padding
+\n- **Modal Design and Features:**
+  - Creative opening animation:\n    - Fade-in effect for backdrop (0.3s duration)
+    - Slide-down from top with bounce effect for modal content (0.5s duration)
+    - Scale animation starting from 0.9 to 1.0 for smooth appearance
+  - Modal header:\n    - Policy title prominently displayed
+    - Close button (X icon) in top-right corner
+    - Subtle shadow and border for depth
+  - Modal body:
+    - Scrollable content area for policy text
+    - Clean typography with proper spacing
+    - Section headings and subheadings for easy navigation
+    - Maximum height with internal scroll for long content
+  - Modal footer (optional):
+    - Last updated date
+    - Accept/Close button
+  - Responsive design:\n    - Full-width on mobile devices with minimal side padding
+    - Centered with max-width on desktop (e.g., 800px)
+    - Adjust animation and positioning for different screen sizes
+
+- **Modal Interaction:**
+  - Click outside modal (on backdrop) to close
+  - Press ESC key to close modal
+  - Click close button (X) to close modal
+  - Smooth fade-out and slide-up animation when closing (reverse of opening animation)
+  - Prevent body scroll when modal is open
+  - Restore body scroll when modal is closed
+
+- **Policy Content Structure:**
+  Each policy modal should contain well-structured content with:
+  - Introduction section
+  - Detailed policy clauses with numbered or bulleted lists
+  - Definitions and terminology
+  - Rights and responsibilities\n  - Contact information for policy-related queries
+  - Effective date and last updated date
+\n- **Specific Policy Requirements:**
+  - **Terms and Conditions:** General terms of use, user obligations, platform rules\n  - **Service Terms:** Service-specific terms, usage guidelines, limitations
+  - **Privacy Policy:** Data collection, usage, storage, and protection practices
+  - **Guest Refund Policy:** Refund eligibility, process, timelines, and conditions
+  - **Non Discrimination Policy:** Equal opportunity statement, anti-discrimination commitment
+  - **Booking Policy:** Booking process, confirmation, modifications, and cancellations
 \n## 4. Design Requirements
 
 ### 4.1 UI/UX Style\n- Creative and modern design approach
@@ -729,13 +776,17 @@ Each property should display complete information with the following advanced la
 - Smooth transitions when expanding room details
 - Google Map loading animation and smooth zoom transitions
 - Login modal animations with smooth fade-in effect
-- OTP input field animations
-- Schedule Visit form animations
+- OTP input field animations\n- Schedule Visit form animations
 - **Amenity icon hover effects and tooltips**
 - **Accommodation type badge animations on property cards**
 - **Property type classification badge animations on property cards**
 - **Video player loading animations and smooth transitions between media items**
-\n### 4.4 Images and Visual Content
+- **Legal policy modal animations:**
+  - Backdrop fade-in effect (0.3s)\n  - Modal slide-down from top with bounce effect (0.5s)
+  - Scale animation from 0.9 to 1.0\n  - Smooth fade-out and slide-up when closing
+  - Creative transition effects for opening and closing
+
+### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
 - Lifestyle images depicting accommodation experiences
@@ -760,8 +811,7 @@ Each property should display complete information with the following advanced la
 - Floor plan visual diagrams\n- Amenity icons for room furnishings
 - 360-degree room view images (if available)
 - **Property video content stored in database and displayed in property detail page**
-
-## 5. Primary Operating Locations
+\n## 5. Primary Operating Locations
 - Sikar\n- Jaipur
 - Kota
 
