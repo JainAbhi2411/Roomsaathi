@@ -5,16 +5,18 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.\n
-### 1.3 Logo
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.
+\n### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
 ## 2. Property Categories
 
 ### 2.1 Main Categories
 - PG (Paying Guest)
-- Flats\n- Apartments
+- Flats
+- Apartments
 - Rooms
-- Hostels\n- RoomSaathi Verified (special verified properties category)
+- Hostels
+- RoomSaathi Verified (special verified properties category)
 - Short Term Stays
 
 ## 3. Core Features and Functionality
@@ -30,7 +32,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - List Your Property\n  - Login (display button only, no login functionality implementation for now)
 
 ### 3.2 Animated Home Screen
-- Hero section with split layout: one side featuring animated images that transition with a hanging hook effect, displaying images of hostels, PG accommodations, and students\n- Images should appear as if hanging from a hook and smoothly transition between different property types and student lifestyle scenes
+- Hero section with split layout: one side featuring animated images that transition with a hanging hook effect, displaying images of hostels, PG accommodations, and students
+- Images should appear as if hanging from a hook and smoothly transition between different property types and student lifestyle scenes
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
@@ -131,22 +134,23 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Distance (when location is specified)
 - No results found state with suggestions:\n  - Relax some filters
   - Try different keywords
-  - Browse all properties\n  - Contact support for assistance
+  - Browse all properties
+  - Contact support for assistance
 
 ### 3.4 Browse by Category Section
 - Split layout design with left and right sections
-- Left side:
-  - Display category images with cutout design effect\n  - Implement hover effects on category images
+- Left side:\n  - Display category images with cutout design effect
+  - Implement hover effects on category images
   - Show category icons for selection
   - Categories include: PG, Flats, Apartments, Rooms, Hostels, RoomSaathi Verified, Short Term Stays
   - On category click, navigate to Browse Property page with selected category pre-filtered
 - Right side:
   - Display property cards with small and minimal design
   - Arrange property cards in column-wise layout
-  - Enable vertical scrolling for property cards within the column\n  - Update property cards dynamically based on category selection from left side
+  - Enable vertical scrolling for property cards within the column
+  - Update property cards dynamically based on category selection from left side
 \n### 3.5 Student Information Section
-- Split layout design with left and right sections
-- Left side:
+- Split layout design with left and right sections\n- Left side:
   - Display informational content about RoomSaathi services for students
   - Include text describing benefits and features
 - Right side:
@@ -181,18 +185,19 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Advanced search options with multiple criteria
 - Save search preferences for future visits
 - Recent searches display\n\n### 3.8 Property Detail Page
-Each property should display complete information with the following layout:
+Each property should display complete information with the following advanced layout:
 \n**Left Side:**
 - Property images gallery with multiple high-quality images
 - Image slider/carousel functionality\n- Thumbnail navigation for quick image browsing
 - Full-screen image view option
 \n**Right Side:**
-- **Neighborhood Highlights:**
+\n- **Neighborhood Highlights:**
   - Nearby landmarks and facilities
   - Distance to key locations (colleges, hospitals, markets, etc.)
   - Transportation connectivity information
   - Area description and locality benefits
-\n- **Property Details:**
+
+- **Property Details:**
   - Property name\n  - Property type and category
   - RoomSaathi Verified badge (if applicable)
   - Complete address\n  - Location (city and locality)
@@ -200,53 +205,141 @@ Each property should display complete information with the following layout:
   - Property owner/manager details
   - Availability status
 \n- **Accommodation Type:**
-  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities:**
-  - Complete list of available amenities with icons
-  - WiFi, AC, Parking, Laundry, Meals, Security, Power Backup, Water Supply, Gym, Common Area, etc.
+  - Type of accommodation (PG/Flat/Apartment/Room/Hostel)\n  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)\n\n- **Amenities with Icons:**
+  - Display complete list of available amenities with corresponding icons
+  - Each amenity should have a clear icon representation
+  - Amenities include: WiFi, AC, Parking, Laundry, Meals, Security, Power Backup, Water Supply, Gym, Common Area, etc.
+  - Use visual grid or card layout for amenity display
+  - Highlight premium or unique amenities
 
-- **Rooms Information:**
-  - Detailed information about each room type available
-  - Room images for each room category
-  - Room specifications (size, furnishing, attached bathroom, etc.)
-\n- **Rent According to Room Type:**
-  - Single Sharing: Price per month
-  - Double Sharing: Price per month
-  - Triple Sharing: Price per month
-  - Any other sharing options with respective pricing
-  - Security deposit information
-  - Additional charges (if any)
+- **Rooms Visual Layout:**
+  - Interactive visual representation of property floor plan
+  - Display floor-wise breakdown:\n    - Floor number (Ground Floor, First Floor, Second Floor, etc.)\n    - Number of rooms on each floor
+    - Visual floor map showing room positions
+  - For each room, display:
+    - Room number or identifier
+    - Room type (Single/Double/Triple/Shared)
+    - Total seats in the room
+    - Available seats (real-time availability)
+    - Room size (in sq ft)
+    - Attached/Common bathroom indicator
+  - Room-specific amenities and furnishings with icons:\n    - Bed (Single/Double/Bunk)
+    - Almirah/Wardrobe
+    - Study Table
+    - Chair\n    - Shoe Rack
+    - Fan/AC
+    - Window\n    - Balcony access
+    - Power outlets
+    - Reading light
+    - Mattress type
+  - Visual design approach:\n    - Use floor plan view with clickable room sections
+    - Color-coded availability status (Available/Occupied/Reserved)
+    - Hover effect to show quick room details
+    - Click on room to expand detailed view with images and amenities
+  - Room images gallery for each room type
+  - 360-degree room view option (if available)
+
+- **Rent Details:**
+  - Comprehensive pricing breakdown by room type:\n    - Single Sharing: Price per month per seat
+    - Double Sharing: Price per month per seat
+    - Triple Sharing: Price per month per seat
+    - Any other sharing options with respective per-seat pricing
+  - Additional charges breakdown:
+    - Security deposit amount
+    - Maintenance charges
+    - Electricity charges (included/extra)
+    - Water charges (included/extra)
+    - WiFi charges (included/extra)
+    - Meal charges (if applicable)
+    - Parking charges (if applicable)
+  - Short term stay pricing:
+    - Per day rate for short term stays
+    - Minimum stay duration for short term\n    - Short term availability indicator
+    - Separate pricing for different room types on per-day basis
+  - Pricing comparison table for easy understanding
+  - Discount information (if any)
+  - Seasonal pricing variations (if applicable)
+
+- **Things You Should Know:**
+  - Important property rules and regulations
+  - Check-in/Check-out timings
+  - Guest policy\n  - Smoking/Drinking policy
+  - Pet policy
+  - Noise restrictions
+  - Visitor timings
+  - Lock-in period (if any)
+  - Notice period for vacating\n  - Property maintenance schedule
+  - Emergency contact information
+  - Still Confused? Send Query button:\n    - Prominent button for users to ask specific questions
+    - Opens query form or chat interface
+    - Quick response commitment display
+
+- **Payment Policies:**
+  - Accepted payment methods (Cash/Card/UPI/Net Banking/Wallet)
+  - Payment schedule (Monthly/Quarterly/Advance)
+  - Due date for monthly payments
+  - Late payment penalties
+  - Security deposit refund policy
+  - Advance payment requirements
+  - Payment receipt and invoice details
+  - Auto-debit facility availability
+  - Payment gateway security information
+
+- **Cancellation Policies:**
+  - Booking cancellation terms
+  - Refund policy with timeline:\n    - Full refund conditions
+    - Partial refund conditions
+    - No refund conditions
+  - Cancellation charges breakdown
+  - Notice period required for cancellation
+  - Security deposit refund timeline
+  - Cancellation process steps
+  - Force majeure clause
+  - Dispute resolution process
+\n- **Short Term Stay Availability:**
+  - Clear indicator if property accepts short term stays
+  - Minimum stay duration (1 day, 3 days, 1 week, etc.)
+  - Maximum short term stay duration
+  - Per day pricing for short term stays
+  - Short term availability calendar
+  - Booking process for short term stays
+  - Short term stay specific policies
+  - Advance booking requirements
+  - Check-in/Check-out flexibility for short stays
 
 - **Action Buttons:**
   - Schedule Visit button: Allow users to request a property visit
   - See Rooms button: Navigate to detailed room information section or modal
   - Contact Owner button\n  - Share Property button
   - Save to Favorites button
+  - Send Query button (for Things You Should Know section)
 \n**Additional Sections on Property Detail Page:**
 - Virtual tour option (if available)
 - Reviews and Ratings section
 - Similar Properties section:\n  - Display 3-4 similar properties based on location, price range, and property type
   - Property cards with basic information and images
   - Quick navigation to similar property detail pages
-
-### 3.9 User Actions\n- Browse all properties on dedicated browse page
+\n### 3.9 User Actions\n- Browse all properties on dedicated browse page
 - View detailed property information including room details and images
 - Filter and search properties with advanced options
 - Save favorite properties\n- Contact property owners\n- Share property listings
 - Compare multiple properties
 - Request property visits
 - Read and view property reviews
+- Send queries about specific properties
+- View floor plans and room layouts
+- Check short term stay availability
+- Review payment and cancellation policies
 \n### 3.10 Property Comparison
 - Allow users to select multiple properties for side-by-side comparison
 - Compare key features, amenities, pricing, and locations
 - Visual comparison interface with clear distinctions
 \n### 3.11 Reviews and Ratings
 - Display user reviews and ratings for properties
-- Show overall rating scores
-- Filter reviews by rating level\n- Display review highlights\n\n### 3.12 Featured Properties Section
+- Show overall rating scores\n- Filter reviews by rating level\n- Display review highlights\n\n### 3.12 Featured Properties Section
 - Showcase premium or featured listings
 - Highlight RoomSaathi Verified properties\n- Display special offers or deals
-
-### 3.13 Cities We Serve Section
+\n### 3.13 Cities We Serve Section
 - Display the three primary operating cities: Sikar, Jaipur, and Kota
 - Perfect UI/UX design with consistent visual treatment for all cities
 - Each city card should have:
@@ -299,7 +392,8 @@ Each property should display complete information with the following layout:
 - On click, navigate to Browse Property page with selected locality pre-filtered
 
 ### 3.19 Property Owner Section
-- Information for property owners wanting to list their properties\n- Benefits of listing on RoomSaathi\n- Call-to-action for property listing
+- Information for property owners wanting to list their properties
+- Benefits of listing on RoomSaathi\n- Call-to-action for property listing
 - Display functionalities provided for owners: management software, website listing services, etc.
 
 ### 3.20 Owner Features Section
@@ -364,7 +458,8 @@ Each property should display complete information with the following layout:
 - Team Section:
   - Founder and leadership team profiles with photos
   - Key team members with their roles and brief bios
-  - Team photos showcasing company culture\n- Company Milestones:
+  - Team photos showcasing company culture
+- Company Milestones:
   - Timeline of key achievements and growth
   - Number of properties listed
   - Number of satisfied users
@@ -373,7 +468,8 @@ Each property should display complete information with the following layout:
   - Story behind the founding of RoomSaathi
   - Problem statement that RoomSaathi aims to solve
   - Impact on students and property owners
-- Our Commitment:\n  - Quality assurance and verification process
+- Our Commitment:
+  - Quality assurance and verification process
   - Customer support commitment
   - Transparency and trust-building measures
 - Visual Elements:
@@ -416,7 +512,9 @@ Each property should display complete information with the following layout:
   - Searching and Browsing Properties
   - Property Details and Verification
   - Contacting Property Owners
-  - RoomSaathi Verified Properties\n  - For Property Owners\n  - Safety and Security
+  - RoomSaathi Verified Properties
+  - For Property Owners
+  - Safety and Security
   - Policies and Terms
 - FAQ Format:
   - Expandable/collapsible accordion interface for each question
@@ -509,6 +607,9 @@ Each property should display complete information with the following layout:
 - Filter panel expand/collapse animations
 - Active filter chip animations
 - Smooth hover effects on Cities We Serve cards
+- Interactive floor plan animations for room layout visualization
+- Hover effects on room sections in floor plan
+- Smooth transitions when expanding room details
 \n### 4.4 Images and Visual Content
 - High-quality property images throughout the website
 - Hero section images: hostels, PG accommodations, and students in accommodation settings
@@ -527,6 +628,10 @@ Each property should display complete information with the following layout:
 - Office location images\n- Timeline images for Our Story section
 - Testimonial photos for success stories
 - High-quality city images for Cities We Serve section with consistent aspect ratios
+- Room-specific images for each room type
+- Floor plan visual diagrams
+- Amenity icons for room furnishings
+- 360-degree room view images (if available)
 \n## 5. Primary Operating Locations
 - Sikar\n- Jaipur
 - Kota

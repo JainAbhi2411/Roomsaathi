@@ -511,3 +511,149 @@ Error resolved successfully!
 WiFi, Parking, Mess/Kitchen, Gym, Security, Power Backup, Water Supply, AC, TV, Refrigerator, Laundry, Geyser - each with appropriate Lucide icon
 
 All features implemented successfully with lint passing!
+
+- [x] Step 25: Create advanced Property Details page with comprehensive features
+  - [x] Search for floor plan and room furniture images
+  - [x] Create FloorPlanView component showing floor-wise room layout
+  - [x] Display rooms by floor with visual cards
+  - [x] Show occupancy status with progress bars (Available/Almost Full/Full)
+  - [x] Display seat availability for each room (e.g., "2/3 occupied")
+  - [x] Add color-coded room status (green=available, yellow=almost full, red=full)
+  - [x] Show rent per seat for each room
+  - [x] Display room facilities (Bed, Almirah, Study Table, etc.)
+  - [x] Create SendQueryDialog component with contact form
+  - [x] Add "Still Confused? Send Query" button
+  - [x] Implement form with name, email, phone, message fields
+  - [x] Add form validation and submission handling
+  - [x] Create tabbed interface for Details/Rooms/Amenities/Policies
+  - [x] Enhanced Amenities tab with larger icons and better layout
+  - [x] Add accommodation type display
+  - [x] Create "Things You Should Know" section
+  - [x] Add check-in time, security deposit, notice period info
+  - [x] Add visitors policy and prohibited items
+  - [x] Create Payment Policies section
+  - [x] Add advance payment, monthly payment, payment methods info
+  - [x] Add late payment fee information
+  - [x] Create Cancellation Policies section
+  - [x] Add refund policies based on cancellation timing
+  - [x] Add after move-in cancellation policy
+  - [x] Create Short Term Stay section
+  - [x] Add per-day booking availability check
+  - [x] Display daily rates and minimum stay requirements
+  - [x] Add "Short Term Available" badge on property images
+  - [x] Show short-term status in Quick Info sidebar
+  - [x] Enhanced room details with furniture icons
+  - [x] Add visual floor plan with 8 sample rooms across 2 floors
+  - [x] Show room numbers, types, and real-time availability
+  - [x] Add legend for room status colors
+  - [x] Integrate all components into PropertyDetailsPage
+  - [x] Run lint and verify all code passes
+
+**Advanced Property Details Page Features:**
+
+**1. Floor Plan View Component:**
+- Visual representation of property layout
+- Organized by floors (Ground, First, Second, etc.)
+- Each room displayed as a card with:
+  * Room number (e.g., #101, #202)
+  * Room type badge (Single/Double/Triple/Quad Sharing)
+  * Occupancy indicator (e.g., "2/3 occupied")
+  * Visual progress bar showing occupancy
+  * Color-coded status (green/yellow/red borders)
+  * Availability text ("2 seats", "1 seat left", "Full")
+  * Rent per seat prominently displayed
+  * Top 3 facilities shown with badges
+  * Available/Not Available icon
+- Responsive grid layout (2-4 columns)
+- Legend showing color meanings
+- Sample data: 8 rooms across 2 floors with varying occupancy
+
+**2. Enhanced Rooms Tab:**
+- Floor Plan View at the top
+- Detailed room type cards below
+- Each room card shows:
+  * Large room image (250px width)
+  * Room type and description
+  * Price per seat/month
+  * Room specifications (size, bed, bathroom, AC)
+  * Furniture provided in room with icons:
+    - Bed, Almirah, Study Table, Chair, Shoe Rack
+  * "Book This Room" button for available rooms
+  * "Not Available" overlay for full rooms
+
+**3. Tabbed Interface:**
+- **Details Tab**: Property info, accommodation type, owner contact
+- **Rooms Tab**: Floor plan + detailed room information
+- **Amenities Tab**: All facilities with large icons
+- **Policies Tab**: All policies and important information
+
+**4. Things You Should Know Section:**
+- Check-in time and flexibility
+- Security deposit amount and refund policy
+- Notice period requirements
+- Visitors policy with timings
+- Prohibited items (smoking, alcohol)
+- Each point with icon (checkmark or X)
+
+**5. Payment Policies Section:**
+- Numbered list (1-4) with clear steps
+- Advance payment requirements
+- Monthly payment due date
+- Accepted payment methods
+- Late payment fees and penalties
+- Each point with numbered badge
+
+**6. Cancellation Policies Section:**
+- Color-coded by severity:
+  * Green: 100% refund (7+ days before)
+  * Yellow: 50% refund (3-7 days before)
+  * Red: No refund (less than 3 days)
+  * Blue: After move-in policy
+- Clear refund percentages
+- Notice period for after move-in
+- Security deposit return process
+
+**7. Short Term Stay Feature:**
+- Automatic detection (Short Term Stay or Hostel types)
+- "Short Term Available" badge on main image
+- Dedicated policy card with:
+  * Per day booking availability
+  * Daily rate range (₹500-₹800)
+  * Minimum stay requirements
+  * Advance booking policy
+- Short-term status in Quick Info sidebar
+- "Per Day Booking Available" badge in header
+
+**8. Send Query Dialog:**
+- Modal form with professional design
+- Fields: Name, Email, Phone, Message
+- All fields required with validation
+- Submit button with loading state
+- Success toast notification
+- Form reset after submission
+- "Still Confused? Send Query" button in sidebar
+
+**9. Enhanced Sidebar:**
+- Schedule Visit card (unchanged)
+- Call Now button
+- Send Query button (new)
+- Neighborhood highlights
+- Quick Info with short-term status
+
+**10. Visual Improvements:**
+- Larger amenity icons (h-6 w-6)
+- Better spacing and padding
+- Hover effects on all interactive elements
+- Color-coded status indicators
+- Progress bars for occupancy
+- Icon backgrounds with primary color
+- Responsive design throughout
+
+**Mock Data Included:**
+- 8 rooms across 2 floors
+- Mix of Single/Double/Triple/Quad sharing
+- Varying occupancy levels (0-4 seats)
+- Different rent prices (₹4,500 - ₹8,500)
+- Various facilities per room
+
+All features implemented successfully with lint passing!

@@ -6,19 +6,23 @@ import {
   Wifi, Car, Utensils, Dumbbell, Shield, Zap, Droplet, Wind,
   Tv, Refrigerator, WashingMachine, CheckCircle2, Users, Bed,
   Bath, Maximize, Home, MapPinned, School, ShoppingBag, Hospital,
-  Bus, Coffee, ChevronLeft, ChevronRight, X
+  Bus, Coffee, ChevronLeft, ChevronRight, X, Info, FileText,
+  CreditCard, XCircle, Clock, Armchair, DoorOpen, Lamp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { PropertyWithDetails, Property } from '@/types/index';
 import { getPropertyById, getProperties } from '@/db/api';
 import VerifiedBadge from '@/components/property/VerifiedBadge';
 import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
+import FloorPlanView from '@/components/property/FloorPlanView';
+import SendQueryDialog from '@/components/property/SendQueryDialog';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
@@ -38,11 +42,22 @@ const amenityIcons: Record<string, React.ElementType> = {
   'Geyser': Droplet,
 };
 
+// Room furniture icons
+const furnitureIcons: Record<string, React.ElementType> = {
+  'Bed': Bed,
+  'Almirah': DoorOpen,
+  'Study Table': Armchair,
+  'Chair': Armchair,
+  'Shoe Rack': DoorOpen,
+  'Lamp': Lamp,
+};
+
 // Room type data with images
 const roomTypeImages: Record<string, string> = {
   'Single': 'https://miaoda-site-img.s3cdn.medo.dev/images/2e273e6d-09f8-4dcb-806e-4698e8295177.jpg',
   'Double': 'https://miaoda-site-img.s3cdn.medo.dev/images/e10f6ba5-bc93-4df3-800a-7354c322ac79.jpg',
   'Triple': 'https://miaoda-site-img.s3cdn.medo.dev/images/f11d4a6d-ccca-4857-93ec-b89bbe7a2fa2.jpg',
+  'Quad': 'https://miaoda-site-img.s3cdn.medo.dev/images/f11d4a6d-ccca-4857-93ec-b89bbe7a2fa2.jpg',
 };
 
 export default function PropertyDetailsPage() {
@@ -131,7 +146,19 @@ export default function PropertyDetailsPage() {
     ? `₹${property.price_from.toLocaleString()} - ₹${property.price_to.toLocaleString()}`
     : `Starting from ₹${property.price_from.toLocaleString()}`;
 
-  // Neighborhood highlights (mock data - in real app, this would come from database)
+  // Mock data for floor plan (in real app, this would come from database)
+  const mockRoomsData = [
+    { roomNumber: '101', floor: 1, type: 'Double' as const, totalSeats: 2, occupiedSeats: 1, rentPerSeat: 6500, facilities: ['Bed', 'Almirah', 'Study Table', 'AC'] },
+    { roomNumber: '102', floor: 1, type: 'Triple' as const, totalSeats: 3, occupiedSeats: 2, rentPerSeat: 5500, facilities: ['Bed', 'Almirah', 'Study Table'] },
+    { roomNumber: '103', floor: 1, type: 'Single' as const, totalSeats: 1, occupiedSeats: 0, rentPerSeat: 8500, facilities: ['Bed', 'Almirah', 'Study Table', 'AC', 'Attached Bath'] },
+    { roomNumber: '104', floor: 1, type: 'Double' as const, totalSeats: 2, occupiedSeats: 2, rentPerSeat: 6000, facilities: ['Bed', 'Almirah', 'Study Table'] },
+    { roomNumber: '201', floor: 2, type: 'Triple' as const, totalSeats: 3, occupiedSeats: 1, rentPerSeat: 5800, facilities: ['Bed', 'Almirah', 'Study Table', 'AC'] },
+    { roomNumber: '202', floor: 2, type: 'Double' as const, totalSeats: 2, occupiedSeats: 0, rentPerSeat: 6500, facilities: ['Bed', 'Almirah', 'Study Table', 'AC'] },
+    { roomNumber: '203', floor: 2, type: 'Quad' as const, totalSeats: 4, occupiedSeats: 3, rentPerSeat: 4500, facilities: ['Bed', 'Almirah', 'Study Table'] },
+    { roomNumber: '204', floor: 2, type: 'Single' as const, totalSeats: 1, occupiedSeats: 1, rentPerSeat: 8000, facilities: ['Bed', 'Almirah', 'Study Table', 'AC'] },
+  ];
+
+  // Neighborhood highlights
   const neighborhoodHighlights = [
     { icon: School, label: 'Educational Institutes', distance: '500m' },
     { icon: ShoppingBag, label: 'Shopping Centers', distance: '1.2km' },
@@ -139,6 +166,9 @@ export default function PropertyDetailsPage() {
     { icon: Bus, label: 'Bus Stand', distance: '300m' },
     { icon: Coffee, label: 'Cafes & Restaurants', distance: '200m' },
   ];
+
+  // Check if short-term stay is available
+  const isShortTermAvailable = property.type === 'Short Term Stay' || property.type === 'Hostel';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -174,6 +204,16 @@ export default function PropertyDetailsPage() {
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                       
+                      {/* Short Term Badge */}
+                      {isShortTermAvailable && (
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-primary text-primary-foreground">
+                            <Clock className="mr-1 h-3 w-3" />
+                            Short Term Available
+                          </Badge>
+                        </div>
+                      )}
+
                       {/* Image Counter */}
                       <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium">
                         {currentImageIndex + 1} / {property.images.length}
@@ -227,7 +267,7 @@ export default function PropertyDetailsPage() {
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <h1 className="text-3xl xl:text-4xl font-bold">{property.name}</h1>
                         <VerifiedBadge verified={property.verified} />
                       </div>
@@ -235,9 +275,16 @@ export default function PropertyDetailsPage() {
                         <MapPin className="h-4 w-4" />
                         <span>{property.locality}, {property.city}</span>
                       </div>
-                      <Badge variant="secondary" className="text-sm">
-                        {property.type}
-                      </Badge>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge variant="secondary" className="text-sm">
+                          {property.type}
+                        </Badge>
+                        {isShortTermAvailable && (
+                          <Badge variant="outline" className="text-sm">
+                            Per Day Booking Available
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <FavoriteButton propertyId={property.id} isFavorite={property.is_favorite || false} />
@@ -257,208 +304,448 @@ export default function PropertyDetailsPage() {
 
                 <Separator />
 
-                {/* Property Details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Home className="h-5 w-5" />
-                      Property Details
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Property Type</p>
-                        <p className="font-semibold">{property.type}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">City</p>
-                        <p className="font-semibold">{property.city}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Locality</p>
-                        <p className="font-semibold">{property.locality}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Availability</p>
-                        <p className="font-semibold">{property.availability_status}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Verified</p>
-                        <p className="font-semibold">{property.verified ? 'Yes' : 'No'}</p>
-                      </div>
-                    </div>
-                    <Separator />
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-2">Full Address</p>
-                      <p className="font-medium">{property.address}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Tabs for Different Sections */}
+                <Tabs defaultValue="details" className="w-full">
+                  <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="details">Details</TabsTrigger>
+                    <TabsTrigger value="rooms">Rooms</TabsTrigger>
+                    <TabsTrigger value="amenities">Amenities</TabsTrigger>
+                    <TabsTrigger value="policies">Policies</TabsTrigger>
+                  </TabsList>
 
-                {/* Amenities */}
-                {property.amenities && property.amenities.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Amenities</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 @md:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {property.amenities.map((amenity, index) => {
-                          const Icon = amenityIcons[amenity.amenity_name] || CheckCircle2;
-                          return (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <Icon className="h-5 w-5 text-primary" />
+                  {/* Property Details Tab */}
+                  <TabsContent value="details" className="space-y-6 mt-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Home className="h-5 w-5" />
+                          Property Information
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Property Type</p>
+                            <p className="font-semibold">{property.type}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">City</p>
+                            <p className="font-semibold">{property.city}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Locality</p>
+                            <p className="font-semibold">{property.locality}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Availability</p>
+                            <p className="font-semibold">{property.availability_status}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Verified</p>
+                            <p className="font-semibold">{property.verified ? 'Yes' : 'No'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Accommodation</p>
+                            <p className="font-semibold">{property.type === 'PG' ? 'Paying Guest' : property.type}</p>
+                          </div>
+                        </div>
+                        <Separator />
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">Full Address</p>
+                          <p className="font-medium">{property.address}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Owner Contact */}
+                    {(property.owner_name || property.contact_phone || property.contact_email) && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <User className="h-5 w-5" />
+                            Contact Owner
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {property.owner_name && (
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                <User className="h-5 w-5 text-primary" />
                               </div>
-                              <span className="text-sm font-medium">{amenity.amenity_name}</span>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Owner</p>
+                                <p className="font-semibold">{property.owner_name}</p>
+                              </div>
                             </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Rooms Information */}
-                {property.rooms && property.rooms.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Bed className="h-5 w-5" />
-                        Available Rooms
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid gap-4">
-                        {property.rooms.map((room) => (
-                          <Card key={room.id} className="overflow-hidden">
-                            <div className="grid @md:grid-cols-[200px_1fr] gap-4">
-                              {/* Room Image */}
-                              <div className="relative h-48 @md:h-full">
-                                <img
-                                  src={room.images[0] || roomTypeImages[room.room_type] || property.images[0]}
-                                  alt={room.room_type}
-                                  className="w-full h-full object-cover"
-                                />
-                                {!room.available && (
-                                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                    <Badge variant="destructive">Not Available</Badge>
-                                  </div>
-                                )}
+                          )}
+                          {property.contact_phone && (
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                <Phone className="h-5 w-5 text-primary" />
                               </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Phone</p>
+                                <a href={`tel:${property.contact_phone}`} className="font-semibold hover:text-primary">
+                                  {property.contact_phone}
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          {property.contact_email && (
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                <Mail className="h-5 w-5 text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Email</p>
+                                <a href={`mailto:${property.contact_email}`} className="font-semibold hover:text-primary">
+                                  {property.contact_email}
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+                  </TabsContent>
 
-                              {/* Room Details */}
-                              <CardContent className="p-4">
-                                <div className="flex items-start justify-between mb-3">
-                                  <div>
-                                    <h3 className="text-xl font-bold mb-1">{room.room_type} Sharing</h3>
-                                    {room.description && (
-                                      <p className="text-sm text-muted-foreground">{room.description}</p>
+                  {/* Rooms Tab */}
+                  <TabsContent value="rooms" className="space-y-6 mt-6">
+                    {/* Floor Plan View */}
+                    <FloorPlanView 
+                      propertyName={property.name}
+                      floors={2}
+                      roomsData={mockRoomsData}
+                    />
+
+                    {/* Detailed Room Information */}
+                    {property.rooms && property.rooms.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Bed className="h-5 w-5" />
+                            Room Types & Pricing
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid gap-6">
+                            {property.rooms.map((room) => (
+                              <Card key={room.id} className="overflow-hidden">
+                                <div className="grid @md:grid-cols-[250px_1fr] gap-4">
+                                  {/* Room Image */}
+                                  <div className="relative h-48 @md:h-full">
+                                    <img
+                                      src={room.images[0] || roomTypeImages[room.room_type] || property.images[0]}
+                                      alt={room.room_type}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    {!room.available && (
+                                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                        <Badge variant="destructive">Not Available</Badge>
+                                      </div>
                                     )}
                                   </div>
-                                  <div className="text-right">
-                                    <div className="text-2xl font-bold text-primary">
-                                      ₹{room.price.toLocaleString()}
+
+                                  {/* Room Details */}
+                                  <CardContent className="p-4 space-y-4">
+                                    <div className="flex items-start justify-between">
+                                      <div>
+                                        <h3 className="text-xl font-bold mb-1">{room.room_type} Sharing</h3>
+                                        {room.description && (
+                                          <p className="text-sm text-muted-foreground">{room.description}</p>
+                                        )}
+                                      </div>
+                                      <div className="text-right">
+                                        <div className="text-2xl font-bold text-primary">
+                                          ₹{room.price.toLocaleString()}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">per seat/month</div>
+                                      </div>
                                     </div>
-                                    <div className="text-xs text-muted-foreground">per month</div>
-                                  </div>
+
+                                    {/* Room Specifications */}
+                                    {room.specifications && (
+                                      <div>
+                                        <p className="text-sm font-semibold mb-2">Room Specifications:</p>
+                                        <div className="grid grid-cols-2 @md:grid-cols-4 gap-3">
+                                          {room.specifications.size && (
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Maximize className="h-4 w-4 text-muted-foreground" />
+                                              <span>{room.specifications.size}</span>
+                                            </div>
+                                          )}
+                                          {room.specifications.bed && (
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Bed className="h-4 w-4 text-muted-foreground" />
+                                              <span>{room.specifications.bed}</span>
+                                            </div>
+                                          )}
+                                          {room.specifications.bathroom && (
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Bath className="h-4 w-4 text-muted-foreground" />
+                                              <span>{room.specifications.bathroom}</span>
+                                            </div>
+                                          )}
+                                          {room.specifications.ac && (
+                                            <div className="flex items-center gap-2 text-sm">
+                                              <Wind className="h-4 w-4 text-muted-foreground" />
+                                              <span>AC</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Furniture & Amenities in Room */}
+                                    <div>
+                                      <p className="text-sm font-semibold mb-2">Provided in Room:</p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {['Bed', 'Almirah', 'Study Table', 'Chair', 'Shoe Rack'].map((item) => {
+                                          const Icon = furnitureIcons[item] || CheckCircle2;
+                                          return (
+                                            <div key={item} className="flex items-center gap-1 bg-muted px-3 py-1.5 rounded-full text-sm">
+                                              <Icon className="h-3 w-3 text-primary" />
+                                              <span>{item}</span>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+
+                                    {room.available && (
+                                      <Button className="w-full @md:w-auto">
+                                        Book This Room
+                                      </Button>
+                                    )}
+                                  </CardContent>
                                 </div>
+                              </Card>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </TabsContent>
 
-                                {/* Room Specifications */}
-                                {room.specifications && (
-                                  <div className="grid grid-cols-2 @md:grid-cols-4 gap-3 mb-4">
-                                    {room.specifications.size && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <Maximize className="h-4 w-4 text-muted-foreground" />
-                                        <span>{room.specifications.size}</span>
-                                      </div>
-                                    )}
-                                    {room.specifications.bed && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <Bed className="h-4 w-4 text-muted-foreground" />
-                                        <span>{room.specifications.bed}</span>
-                                      </div>
-                                    )}
-                                    {room.specifications.bathroom && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <Bath className="h-4 w-4 text-muted-foreground" />
-                                        <span>{room.specifications.bathroom}</span>
-                                      </div>
-                                    )}
-                                    {room.specifications.ac && (
-                                      <div className="flex items-center gap-2 text-sm">
-                                        <Wind className="h-4 w-4 text-muted-foreground" />
-                                        <span>AC</span>
-                                      </div>
-                                    )}
+                  {/* Amenities Tab */}
+                  <TabsContent value="amenities" className="space-y-6 mt-6">
+                    {property.amenities && property.amenities.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Property Amenities</CardTitle>
+                          <p className="text-sm text-muted-foreground">
+                            All the facilities and services available at this property
+                          </p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {property.amenities.map((amenity, index) => {
+                              const Icon = amenityIcons[amenity.amenity_name] || CheckCircle2;
+                              return (
+                                <div key={index} className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <Icon className="h-6 w-6 text-primary" />
                                   </div>
-                                )}
+                                  <span className="text-sm font-medium">{amenity.amenity_name}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </TabsContent>
 
-                                {room.available && (
-                                  <Button className="w-full @md:w-auto">
-                                    Book This Room
-                                  </Button>
-                                )}
-                              </CardContent>
+                  {/* Policies Tab */}
+                  <TabsContent value="policies" className="space-y-6 mt-6">
+                    {/* Things You Should Know */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Info className="h-5 w-5" />
+                          Things You Should Know
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Check-in Time</p>
+                              <p className="text-sm text-muted-foreground">Flexible check-in available after 10:00 AM</p>
                             </div>
-                          </Card>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Security Deposit</p>
+                              <p className="text-sm text-muted-foreground">Refundable security deposit of ₹5,000 required</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Notice Period</p>
+                              <p className="text-sm text-muted-foreground">1 month notice required before vacating</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Visitors Policy</p>
+                              <p className="text-sm text-muted-foreground">Visitors allowed between 9:00 AM - 9:00 PM</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Smoking & Alcohol</p>
+                              <p className="text-sm text-muted-foreground">Strictly prohibited inside the premises</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-                {/* Owner Contact */}
-                {(property.owner_name || property.contact_phone || property.contact_email) && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <User className="h-5 w-5" />
-                        Contact Owner
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {property.owner_name && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <User className="h-5 w-5 text-primary" />
+                    {/* Payment Policies */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <CreditCard className="h-5 w-5" />
+                          Payment Policies
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-primary">1</span>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Owner</p>
-                            <p className="font-semibold">{property.owner_name}</p>
+                            <p className="font-medium">Advance Payment</p>
+                            <p className="text-sm text-muted-foreground">First month rent + security deposit required at booking</p>
                           </div>
                         </div>
-                      )}
-                      {property.contact_phone && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Phone className="h-5 w-5 text-primary" />
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-primary">2</span>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Phone</p>
-                            <a href={`tel:${property.contact_phone}`} className="font-semibold hover:text-primary">
-                              {property.contact_phone}
-                            </a>
+                            <p className="font-medium">Monthly Payment</p>
+                            <p className="text-sm text-muted-foreground">Rent to be paid by 5th of every month</p>
                           </div>
                         </div>
-                      )}
-                      {property.contact_email && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Mail className="h-5 w-5 text-primary" />
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-primary">3</span>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Email</p>
-                            <a href={`mailto:${property.contact_email}`} className="font-semibold hover:text-primary">
-                              {property.contact_email}
-                            </a>
+                            <p className="font-medium">Payment Methods</p>
+                            <p className="text-sm text-muted-foreground">Cash, UPI, Bank Transfer, Cheque accepted</p>
                           </div>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-primary">4</span>
+                          </div>
+                          <div>
+                            <p className="font-medium">Late Payment</p>
+                            <p className="text-sm text-muted-foreground">₹100 per day late fee after 10th of the month</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Cancellation Policies */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <XCircle className="h-5 w-5" />
+                          Cancellation Policies
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Before Move-in</p>
+                            <p className="text-sm text-muted-foreground">100% refund if cancelled 7 days before move-in date</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Info className="h-4 w-4 text-yellow-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">3-7 Days Before</p>
+                            <p className="text-sm text-muted-foreground">50% refund if cancelled 3-7 days before move-in</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <XCircle className="h-4 w-4 text-destructive" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Less than 3 Days</p>
+                            <p className="text-sm text-muted-foreground">No refund for cancellations within 3 days of move-in</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <FileText className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">After Move-in</p>
+                            <p className="text-sm text-muted-foreground">1 month notice period required. Security deposit refunded after inspection</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Short Term Stay Policy */}
+                    {isShortTermAvailable && (
+                      <Card className="border-primary/20">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Clock className="h-5 w-5" />
+                            Short Term Stay Available
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Per Day Booking</p>
+                              <p className="text-sm text-muted-foreground">Available for stays from 1 day to 30 days</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Daily Rate</p>
+                              <p className="text-sm text-muted-foreground">₹500 - ₹800 per day depending on room type</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Minimum Stay</p>
+                              <p className="text-sm text-muted-foreground">Minimum 1 day booking required</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-medium">Advance Booking</p>
+                              <p className="text-sm text-muted-foreground">Full payment required at the time of booking</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </div>
 
               {/* Right Sidebar - Sticky */}
@@ -481,6 +768,7 @@ export default function PropertyDetailsPage() {
                         <Phone className="mr-2 h-5 w-5" />
                         Call Now
                       </Button>
+                      <SendQueryDialog propertyId={property.id} propertyName={property.name} />
                     </CardContent>
                   </Card>
 
@@ -536,6 +824,12 @@ export default function PropertyDetailsPage() {
                         <span className="text-muted-foreground">Status</span>
                         <Badge variant="secondary">{property.availability_status}</Badge>
                       </div>
+                      {isShortTermAvailable && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Short Term</span>
+                          <Badge className="bg-primary">Available</Badge>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
