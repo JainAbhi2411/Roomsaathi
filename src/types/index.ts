@@ -82,3 +82,27 @@ export interface FilterOptions {
   food_included?: boolean;
 }
 
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  featured_image?: string;
+  author: string;
+  read_time?: number;
+  published: boolean;
+  admin_id?: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  created_at: string;
+}
+

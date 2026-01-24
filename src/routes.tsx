@@ -13,6 +13,15 @@ import HowToUsePage from './pages/HowToUsePage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import TestAuthPage from './pages/TestAuthPage';
+import AdminLogin from './pages/admin/AdminLogin';
+import Dashboard from './pages/admin/Dashboard';
+import Properties from './pages/admin/Properties';
+import PropertyForm from './pages/admin/PropertyForm';
+import Blogs from './pages/admin/Blogs';
+import BlogForm from './pages/admin/BlogForm';
+import Queries from './pages/admin/Queries';
+import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
+import AdminLayout from './components/layouts/AdminLayout';
 import type { ReactNode } from 'react';
 
 // Lazy load BlogPostPage to avoid react-markdown loading issues
@@ -122,6 +131,109 @@ const routes: RouteConfig[] = [
     name: 'Test Auth',
     path: '/test-auth',
     element: <TestAuthPage />,
+    visible: false
+  },
+  // Admin Routes
+  {
+    name: 'Admin Login',
+    path: '/admin/login',
+    element: <AdminLogin />,
+    visible: false
+  },
+  {
+    name: 'Admin Dashboard',
+    path: '/admin/dashboard',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Dashboard />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Properties',
+    path: '/admin/properties',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Properties />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'New Property',
+    path: '/admin/properties/new',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <PropertyForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Edit Property',
+    path: '/admin/properties/edit/:id',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <PropertyForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Blogs',
+    path: '/admin/blogs',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Blogs />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'New Blog',
+    path: '/admin/blogs/new',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <BlogForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Edit Blog',
+    path: '/admin/blogs/edit/:id',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <BlogForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Queries',
+    path: '/admin/queries',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Queries />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
     visible: false
   }
 ];

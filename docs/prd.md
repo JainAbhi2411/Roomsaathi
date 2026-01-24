@@ -5,7 +5,8 @@
 ### 1.1 Application Name
 RoomSaathi\n
 ### 1.2 Application Description
-RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities.\n
+RoomSaathi is a comprehensive full-stack property listing website that enables users to browse and discover various types of accommodation properties including PG, flats, apartments, rooms, and hostels. The platform features creative UI/UX with rich animations and multiple interactive sections, primarily operating in Sikar, Jaipur, and Kota cities. The platform includes a dedicated admin panel for managing properties, blogs, and user queries.
+
 ### 1.3 Logo
 Use the uploaded logo image with a creative hanging animation effect - the logo should appear as if hanging from a string with subtle swinging motion.\n
 ## 2. Property Categories
@@ -74,9 +75,9 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
-\n### 3.4 Dedicated Property Browse Page
-- Create a separate dedicated page for browsing all properties
-- Display all property listings with preview cards
+
+### 3.4 Dedicated Property Browse Page
+- Create a separate dedicated page for browsing all properties\n- Display all property listings with preview cards
 - Show property thumbnail images with auto slider functionality for multiple property images
 - Display basic details and pricing on listing cards
 - **Display Amenities on Property Cards:**
@@ -117,7 +118,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Property Age: New (0-1 year), Recent (1-3 years), Established (3+ years)
   - Distance from Landmark: Radius filter with slider (1km, 2km, 5km, 10km)
 - Filter panel should be collapsible/expandable with smooth animation
-- Display active filter count badge\n- Clear All Filters button prominently displayed
+- Display active filter count badge
+- Clear All Filters button prominently displayed
 - Apply Filters button for mobile view
 - Save Filter Preset option for future use
 \n#### 3.4.2 Real-Time Search Functionality
@@ -255,7 +257,8 @@ Each property should display complete information with the following advanced la
   - Area description and locality benefits
 \n- **Property Details:**
   - Property name\n  - Property type and category
-  - **Property type classification (For Girls/For Boys/For Family/For Bachelors/For Students)**\n  - RoomSaathi Verified badge (if applicable)
+  - **Property type classification (For Girls/For Boys/For Family/For Bachelors/For Students)**
+  - RoomSaathi Verified badge (if applicable)
   - Complete address\n  - Location (city and locality)
   - Detailed description
   - Property owner/manager details
@@ -277,7 +280,8 @@ Each property should display complete information with the following advanced la
 
 - **Accommodation Type:**
   - Type of accommodation (PG/Flat/Apartment/Room/Hostel)
-  - Gender preference (Male/Female/Co-ed)\n  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
+  - Gender preference (Male/Female/Co-ed)
+  - Furnishing status (Fully Furnished/Semi-Furnished/Unfurnished)
   - Property age (New/Recent/Established)
   - Total number of floors
   - Total number of rooms
@@ -524,11 +528,13 @@ Each property should display complete information with the following advanced la
 
 ### 3.22 Blog Section
 - Create a dedicated blog page with complete blog functionality
+- **Blog posts can only be created and published by RoomSaathi admin through the admin panel**
 - Blog Listing Page:
   - Display blog posts in a grid or card layout
   - Each blog card should include:
     - Featured image
-    - Blog title\n    - Brief excerpt or summary
+    - Blog title
+    - Brief excerpt or summary
     - Author name and avatar
     - Publication date
     - Category tags
@@ -735,7 +741,151 @@ Each property should display complete information with the following advanced la
   - **Guest Refund Policy:** Refund eligibility, process, timelines, and conditions
   - **Non Discrimination Policy:** Equal opportunity statement, anti-discrimination commitment
   - **Booking Policy:** Booking process, confirmation, modifications, and cancellations
-\n## 4. Design Requirements
+\n### 3.30 Admin Panel\n- **Admin Authentication System:**
+  - Create a separate API endpoint for admin login
+  - Admin login credentials (username/email and password)
+  - Secure authentication with JWT tokens or session management
+  - Admin-only access control and authorization
+  - Separate admin login page (e.g., /admin/login)
+  - Password reset functionality for admin accounts
+  - Role-based access control for different admin levels (if needed)
+
+- **Admin Dashboard:**
+  - Centralized dashboard for managing all RoomSaathi operations
+  - Overview statistics and analytics:\n    - Total properties listed
+    - Total active users
+    - Total blog posts published
+    - Pending user queries
+    - Recent activities and updates
+  - Quick access navigation to all management sections
+  - Visual charts and graphs for key metrics
+  - Recent activity feed\n\n- **Property Management:**
+  - **Property Listing Management:**
+    - View all properties in a table/grid format
+    - Search and filter properties by:\n      - City (Sikar, Jaipur, Kota)
+      - Property type (PG, Flat, Apartment, Room, Hostel, Short Term Stays)
+      - Property type classification (For Girls, For Boys, For Family, For Bachelors, For Students)
+      - Verification status (Verified/Unverified)
+      - Availability status\n      - Date added
+    - Sort properties by various parameters
+    - Bulk actions (delete, verify, feature)
+  \n  - **Add New Property:**
+    - Comprehensive property creation form with all fields:\n      - Basic Information: Property name, type, classification, description
+      - Location: City, locality, complete address, Google Maps coordinates
+      - Property Details: Number of floors, total rooms, property age, furnishing status
+      - Accommodation Type: Gender preference, occupancy types available
+      - Amenities: Multi-select checkboxes for all amenities
+      - Room Details: Floor-wise room layout, room types, pricing, availability
+      - Rent Details: Pricing breakdown by room type, additional charges, short term pricing
+      - Images: Multiple image upload with drag-and-drop functionality
+      - Videos: Video URL input for property videos
+      - Policies: Payment policies, cancellation policies, property rules
+      - Verification: RoomSaathi Verified toggle
+    - Form validation and error handling
+    - Image preview before upload
+    - Save as draft functionality
+    - Publish immediately or schedule for later
+  \n  - **Edit Property:**
+    - Edit any existing property with pre-filled form\n    - Update property information, images, videos, pricing, availability
+    - Version history or change log (optional)
+    - Update verification status
+  
+  - **Delete Property:**
+    - Soft delete with confirmation prompt
+    - Option to permanently delete or archive
+    - Bulk delete functionality
+\n- **Blog Management:**
+  - **Blog Post Listing:**
+    - View all blog posts in a table/grid format
+    - Search and filter blogs by:
+      - Category\n      - Publication status (Published/Draft)
+      - Author
+      - Date published
+    - Sort blogs by date, views, or popularity
+    - Bulk actions (delete, publish, unpublish)
+  
+  - **Create New Blog Post:**
+    - Rich text editor for blog content creation (WYSIWYG editor)
+    - Blog post fields:\n      - Title
+      - Featured image upload
+      - Content (rich text with formatting, images, videos, links)
+      - Excerpt/Summary
+      - Category selection
+      - Tags
+      - Author information
+      - SEO meta title and description
+      - Publication date (immediate or scheduled)
+    - Image upload and management within blog content
+    - Preview functionality before publishing
+    - Save as draft\n    - Publish or schedule for future publication
+  
+  - **Edit Blog Post:**
+    - Edit any existing blog post with pre-filled content
+    - Update content, images, categories, tags
+    - Change publication status (publish/unpublish)
+    - Version history or revision tracking (optional)
+  
+  - **Delete Blog Post:**
+    - Soft delete with confirmation prompt
+    - Option to permanently delete or archive
+    - Bulk delete functionality
+  
+  - **Blog Categories Management:**
+    - Add, edit, delete blog categories
+    - Assign categories to blog posts
+\n- **User Query Management:**
+  - **View All Queries:**
+    - Display all user queries in a table format
+    - Query information:\n      - User name and contact details
+      - Query subject/topic
+      - Query message/description
+      - Property related to query (if applicable)
+      - Date and time submitted
+      - Status (New/In Progress/Resolved)
+    - Search and filter queries by:
+      - Status
+      - Date range
+      - Property\n      - User
+    - Sort queries by date, status, priority\n  
+  - **Query Details View:**
+    - View full query details\n    - User information and contact details
+    - Query message and context
+    - Related property information (if applicable)
+    - Response history (if any previous responses)
+  
+  - **Respond to Queries:**
+    - Reply to user queries directly from admin panel
+    - Send response via email or SMS
+    - Mark query as resolved\n    - Add internal notes for admin reference
+  
+  - **Query Status Management:**
+    - Update query status (New/In Progress/Resolved)
+    - Assign queries to specific admin team members (optional)
+    - Priority marking (High/Medium/Low)
+  
+  - **Delete Queries:**
+    - Delete resolved or spam queries
+    - Bulk delete functionality
+
+- **Admin Panel UI/UX:**
+  - Clean and professional admin interface
+  - Responsive design for desktop and tablet
+  - Sidebar navigation with collapsible menu
+  - Top header with admin profile and logout option
+  - Breadcrumb navigation
+  - Data tables with pagination and sorting
+  - Form validation and error messages
+  - Success/error notifications for actions
+  - Loading indicators for async operations
+  - Confirmation dialogs for destructive actions (delete, unpublish)
+\n- **Admin Panel Security:**
+  - Secure authentication and authorization
+  - Session timeout and auto-logout
+  - Activity logging for admin actions
+  - IP whitelisting (optional)
+  - Two-factor authentication (optional)
+  - Regular security audits\n
+## 4. Design Requirements
 
 ### 4.1 UI/UX Style\n- Creative and modern design approach
 - Smooth animations and transitions throughout the website
@@ -776,7 +926,8 @@ Each property should display complete information with the following advanced la
 - Smooth transitions when expanding room details
 - Google Map loading animation and smooth zoom transitions
 - Login modal animations with smooth fade-in effect
-- OTP input field animations\n- Schedule Visit form animations
+- OTP input field animations
+- Schedule Visit form animations
 - **Amenity icon hover effects and tooltips**
 - **Accommodation type badge animations on property cards**
 - **Property type classification badge animations on property cards**
@@ -814,6 +965,5 @@ Each property should display complete information with the following advanced la
 \n## 5. Primary Operating Locations
 - Sikar\n- Jaipur
 - Kota
-
-## 6. Reference Files
+\n## 6. Reference Files
 1. Logo image: Use the uploaded logo file for branding throughout the website

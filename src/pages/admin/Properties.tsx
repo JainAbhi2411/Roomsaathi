@@ -1,0 +1,181 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
+import { motion } from 'motion/react';
+import { Plus, Edit, Trash2, MapPin, IndianRupee, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+import { getAllPropertiesAdmin, deleteProperty } from '@/db/adminApi';
+import type { Property } from '@/types/index';
+import { useToast } from '@/hooks/use-toast';
+
+export default function Properties() {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadProperties();
+  }, []);
+
+  const loadProperties = async () => {
+    setIsLoading(true);
+    const data = await getAllPropertiesAdmin();
+    setProperties(data);
+    setIsLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await deleteProperty(id);
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: 'Property deleted successfully'
+      });
+      loadProperties();
+    } else {
+      toast({
+        title: 'Error',
+        description: result.error || 'Failed to delete property',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Properties</h1>
+          <p className="text-muted-foreground">Manage all property listings</p>
+        </div>
+        <Link to="/admin/properties/new">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Property
+          </Button>
+        </Link>
+      </div>
+
+      {/* Properties Grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-48 bg-muted" />
+              <CardContent className="p-4 space-y-2">
+                <div className="h-4 bg-muted rounded w-3/4" />
+                <div className="h-3 bg-muted rounded w-1/2" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : properties.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <p className="text-muted-foreground mb-4">No properties found</p>
+            <Link to="/admin/properties/new">
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Your First Property
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {properties.map((property, index) => (
+            <motion.div
+              key={property.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                {/* Property Image */}
+                <div className="relative h-48 bg-muted">
+                  {property.images && property.images.length > 0 ? (
+                    <img
+                      src={property.images[0]}
+                      alt={property.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Eye className="h-12 w-12 text-muted-foreground" />
+                    </div>
+                  )}
+                  {property.verified && (
+                    <Badge className="absolute top-2 right-2 bg-green-500">
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg text-foreground mb-2 line-clamp-1">
+                    {property.name}
+                  </h3>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span className="line-clamp-1">{property.locality}, {property.city}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                      <IndianRupee className="h-4 w-4" />
+                      <span>₹{property.price_from.toLocaleString()}/month</span>
+                    </div>
+                    <Badge variant="outline">{property.type}</Badge>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link to={`/admin/properties/edit/${property.id}`} className="flex-1">
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Property</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete "{property.name}"? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDelete(property.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
