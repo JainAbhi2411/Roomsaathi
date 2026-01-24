@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
-import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, ChevronDown, Menu } from 'lucide-react';
+import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -115,7 +115,7 @@ export default function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/browse" className="cursor-pointer text-primary hover:bg-primary/10 transition-colors">
+                  <Link to="/owner-features" className="cursor-pointer text-primary hover:bg-primary/10 transition-colors">
                     Learn More →
                   </Link>
                 </DropdownMenuItem>
@@ -130,10 +130,78 @@ export default function Header() {
 
         {/* Right Section - Actions */}
         <div className="hidden lg:flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="hover:bg-primary/10 hover:text-primary transition-all">
-            <Headphones className="mr-2 h-4 w-4" />
-            Support
-          </Button>
+          {/* Support Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="gap-1 hover:bg-primary/10 hover:text-primary transition-all">
+                <Headphones className="h-4 w-4" />
+                Support
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <div className="px-2 py-2">
+                <p className="text-sm font-semibold mb-1">Get Help & Support</p>
+                <p className="text-xs text-muted-foreground">We're here to assist you 24/7</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a 
+                  href="https://wa.me/919876543210" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="cursor-pointer hover:bg-primary/10 transition-colors"
+                >
+                  <MessageCircle className="mr-2 h-4 w-4 text-green-500" />
+                  <div>
+                    <div className="font-medium">WhatsApp Support</div>
+                    <div className="text-xs text-muted-foreground">Chat with us instantly</div>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a 
+                  href="tel:+919876543210"
+                  className="cursor-pointer hover:bg-primary/10 transition-colors"
+                >
+                  <Phone className="mr-2 h-4 w-4 text-blue-500" />
+                  <div>
+                    <div className="font-medium">Call Us</div>
+                    <div className="text-xs text-muted-foreground">+91 98765 43210</div>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/contact" className="cursor-pointer hover:bg-primary/10 transition-colors">
+                  <Mail className="mr-2 h-4 w-4 text-orange-500" />
+                  <div>
+                    <div className="font-medium">Contact Support</div>
+                    <div className="text-xs text-muted-foreground">Send us a message</div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/help-center" className="cursor-pointer hover:bg-primary/10 transition-colors">
+                  <HelpCircle className="mr-2 h-4 w-4 text-purple-500" />
+                  <div>
+                    <div className="font-medium">Help Center</div>
+                    <div className="text-xs text-muted-foreground">Browse FAQs & guides</div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/how-to-use" className="cursor-pointer hover:bg-primary/10 transition-colors">
+                  <BookOpen className="mr-2 h-4 w-4 text-pink-500" />
+                  <div>
+                    <div className="font-medium">How to Use</div>
+                    <div className="text-xs text-muted-foreground">Step-by-step tutorials</div>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button variant="outline" size="sm" className="hover:bg-primary hover:text-primary-foreground transition-all">
             <PlusCircle className="mr-2 h-4 w-4" />
             List Your Property

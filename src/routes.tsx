@@ -2,6 +2,7 @@ import HomePage from './pages/HomePage';
 import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
+import OwnerFeaturesPage from './pages/OwnerFeaturesPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -32,6 +33,12 @@ const routes: RouteConfig[] = [
     name: 'Favorites',
     path: '/favorites',
     element: <FavoritesPage />
+  },
+  {
+    name: 'Owner Features',
+    path: '/owner-features',
+    element: <OwnerFeaturesPage />,
+    visible: false
   }
 ];
 
