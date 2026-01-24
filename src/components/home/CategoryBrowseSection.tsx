@@ -17,7 +17,7 @@ const categories = [
     iconColor: 'text-orange-500',
   },
   {
-    value: 'Apartments',
+    value: 'Apartment',
     label: 'Apartments',
     fullLabel: 'Luxury Apartments',
     icon: Building2,
@@ -26,7 +26,7 @@ const categories = [
     iconColor: 'text-blue-500',
   },
   {
-    value: 'Flats',
+    value: 'Flat',
     label: 'Flats',
     fullLabel: 'Independent Flats',
     icon: Home,
@@ -35,7 +35,7 @@ const categories = [
     iconColor: 'text-green-500',
   },
   {
-    value: 'Rooms',
+    value: 'Room',
     label: 'Rooms',
     fullLabel: 'Private Rooms',
     icon: DoorOpen,
@@ -44,7 +44,7 @@ const categories = [
     iconColor: 'text-purple-500',
   },
   {
-    value: 'Hostels',
+    value: 'Hostel',
     label: 'Hostels',
     fullLabel: 'Student Hostels',
     icon: Hotel,
@@ -53,7 +53,7 @@ const categories = [
     iconColor: 'text-pink-500',
   },
   {
-    value: 'Short Term Stays',
+    value: 'Short Term Stay',
     label: 'Short Term',
     fullLabel: 'Short Term Stays',
     icon: Calendar,
@@ -87,38 +87,38 @@ export default function CategoryBrowseSection() {
   const selectedCategoryData = categories.find(cat => cat.value === selectedCategory);
 
   return (
-    <section className="py-16 xl:py-24 bg-muted/30">
+    <section className="py-12 xl:py-16 bg-muted/30">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <h2 className="text-3xl xl:text-4xl font-bold mb-4">
+          <h2 className="text-2xl xl:text-3xl font-bold mb-2">
             Browse by <span className="gradient-text">Category</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-sm xl:text-base text-muted-foreground">
             Select a category to explore properties tailored to your needs
           </p>
         </motion.div>
 
-        <div className="grid xl:grid-cols-[320px_1fr] gap-8">
+        <div className="grid xl:grid-cols-[280px_1fr] gap-6">
           {/* Left Sidebar - Category Selection */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {categories.map((category, index) => (
               <motion.button
                 key={category.value}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 onClick={() => setSelectedCategory(category.value)}
-                className={`relative w-full h-24 rounded-2xl overflow-hidden transition-all duration-300 group ${
+                className={`relative w-full h-16 rounded-xl overflow-hidden transition-all duration-300 group ${
                   selectedCategory === category.value
-                    ? 'ring-4 ring-primary shadow-hover scale-105'
-                    : 'hover:scale-105 hover:shadow-card'
+                    ? 'ring-2 ring-primary shadow-hover scale-[1.02]'
+                    : 'hover:scale-[1.02] hover:shadow-card'
                 }`}
               >
                 {/* Background Image with Cutout Effect */}
@@ -130,21 +130,21 @@ export default function CategoryBrowseSection() {
                   />
                   {/* Gradient Overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-r ${category.color} backdrop-blur-[1px]`} />
-                  <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-background/40" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-background/85 to-background/50" />
                 </div>
 
                 {/* Content */}
-                <div className="relative h-full flex items-center justify-between px-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-xl bg-background/90 backdrop-blur-sm ${
+                <div className="relative h-full flex items-center justify-between px-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg bg-background/90 backdrop-blur-sm ${
                       selectedCategory === category.value ? 'bg-primary text-primary-foreground' : ''
                     } transition-colors`}>
-                      <category.icon className={`h-6 w-6 ${
+                      <category.icon className={`h-4 w-4 ${
                         selectedCategory === category.value ? '' : category.iconColor
                       }`} />
                     </div>
                     <div className="text-left">
-                      <h3 className="font-bold text-lg">{category.label}</h3>
+                      <h3 className="font-semibold text-sm">{category.label}</h3>
                       <p className="text-xs text-muted-foreground">{category.fullLabel}</p>
                     </div>
                   </div>
@@ -153,14 +153,14 @@ export default function CategoryBrowseSection() {
                   {selectedCategory === category.value && (
                     <motion.div
                       layoutId="activeCategory"
-                      className="w-2 h-12 bg-primary rounded-full"
+                      className="w-1 h-8 bg-primary rounded-full"
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                   )}
                 </div>
 
                 {/* Cutout Corner Effect */}
-                <div className={`absolute top-0 right-0 w-16 h-16 ${
+                <div className={`absolute top-0 right-0 w-12 h-12 ${
                   selectedCategory === category.value ? 'bg-primary/20' : 'bg-background/20'
                 } transition-colors`}
                   style={{
@@ -183,16 +183,16 @@ export default function CategoryBrowseSection() {
                 className="space-y-4"
               >
                 {/* Category Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     {selectedCategoryData && (
                       <>
                         <div className={`p-2 rounded-lg bg-background ${selectedCategoryData.iconColor}`}>
-                          <selectedCategoryData.icon className="h-6 w-6" />
+                          <selectedCategoryData.icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold">{selectedCategoryData.fullLabel}</h3>
-                          <p className="text-sm text-muted-foreground">
+                          <h3 className="text-xl font-bold">{selectedCategoryData.fullLabel}</h3>
+                          <p className="text-xs text-muted-foreground">
                             {properties.length} properties available
                           </p>
                         </div>
@@ -202,20 +202,20 @@ export default function CategoryBrowseSection() {
                 </div>
 
                 {/* Scrollable Property Grid */}
-                <div className="max-h-[600px] overflow-y-auto pr-2 scrollbar-thin">
+                <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                   {loading ? (
-                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
                       {[...Array(4)].map((_, i) => (
-                        <div key={i} className="space-y-4">
+                        <div key={i} className="space-y-3">
                           <Skeleton className="h-48 w-full bg-muted" />
-                          <Skeleton className="h-6 w-3/4 bg-muted" />
-                          <Skeleton className="h-4 w-full bg-muted" />
-                          <Skeleton className="h-4 w-2/3 bg-muted" />
+                          <Skeleton className="h-4 w-3/4 bg-muted" />
+                          <Skeleton className="h-3 w-full bg-muted" />
+                          <Skeleton className="h-3 w-2/3 bg-muted" />
                         </div>
                       ))}
                     </div>
                   ) : properties.length > 0 ? (
-                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
                       {properties.map((property, index) => (
                         <motion.div
                           key={property.id}
@@ -231,13 +231,13 @@ export default function CategoryBrowseSection() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-center py-16"
+                      className="text-center py-12"
                     >
-                      <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted mb-4 ${selectedCategoryData?.iconColor}`}>
-                        {selectedCategoryData && <selectedCategoryData.icon className="h-10 w-10" />}
+                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-3 ${selectedCategoryData?.iconColor}`}>
+                        {selectedCategoryData && <selectedCategoryData.icon className="h-8 w-8" />}
                       </div>
-                      <h3 className="text-xl font-semibold mb-2">No properties found</h3>
-                      <p className="text-muted-foreground">
+                      <h3 className="text-lg font-semibold mb-1">No properties found</h3>
+                      <p className="text-sm text-muted-foreground">
                         No {selectedCategory} properties available at the moment
                       </p>
                     </motion.div>

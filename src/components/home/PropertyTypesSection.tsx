@@ -7,41 +7,47 @@ const propertyTypes = [
   {
     icon: Bed,
     title: 'PG',
+    displayTitle: 'PG',
     description: 'Paying Guest accommodations with meals and amenities',
     count: '150+',
     color: 'bg-orange-500/10 text-orange-500',
   },
   {
     icon: Building2,
-    title: 'Apartments',
+    title: 'Apartment',
+    displayTitle: 'Apartments',
     description: 'Spacious apartments for families and professionals',
     count: '120+',
     color: 'bg-blue-500/10 text-blue-500',
   },
   {
     icon: Home,
-    title: 'Flats',
+    title: 'Flat',
+    displayTitle: 'Flats',
     description: 'Independent flats with modern facilities',
     count: '100+',
     color: 'bg-green-500/10 text-green-500',
   },
   {
     icon: DoorOpen,
-    title: 'Rooms',
+    title: 'Room',
+    displayTitle: 'Rooms',
     description: 'Single and shared rooms for students',
     count: '80+',
     color: 'bg-purple-500/10 text-purple-500',
   },
   {
     icon: Hotel,
-    title: 'Hostels',
+    title: 'Hostel',
+    displayTitle: 'Hostels',
     description: 'Budget-friendly hostel accommodations',
     count: '60+',
     color: 'bg-pink-500/10 text-pink-500',
   },
   {
     icon: Calendar,
-    title: 'Short Term Stays',
+    title: 'Short Term Stay',
+    displayTitle: 'Short Term Stays',
     description: 'Flexible short-term rental options',
     count: '40+',
     color: 'bg-yellow-500/10 text-yellow-500',
@@ -83,7 +89,7 @@ export default function PropertyTypesSection() {
                       <type.icon className="h-7 w-7" />
                     </div>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-semibold">{type.title}</h3>
+                      <h3 className="text-xl font-semibold">{type.displayTitle}</h3>
                       <span className="text-sm font-bold text-primary">{type.count}</span>
                     </div>
                     <p className="text-muted-foreground">{type.description}</p>

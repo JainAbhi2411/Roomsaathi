@@ -122,3 +122,24 @@ All features completed successfully with lint passing!
   - [x] Add hover effects and active state animations
   - [x] Implement vertical scrollable property grid
   - [x] Run lint and fix issues
+
+- [x] Step 16: Make category cards smaller and add diverse property data
+  - [x] Reduce category card size (h-24 to h-16, smaller padding and fonts)
+  - [x] Make section more compact for mobile and desktop
+  - [x] Add Flat properties (4 properties across cities)
+  - [x] Add Apartment properties (4 properties across cities)
+  - [x] Add Room properties (4 properties across cities)
+  - [x] Add Hostel properties (4 properties across cities)
+  - [x] Add Short Term Stay properties (4 properties across cities)
+  - [x] Update category values to match database (singular forms)
+  - [x] Update PropertyTypesSection with correct type values
+  - [x] Run lint and fix issues
+
+**Database now contains:**
+- PG: 5 properties
+- Flat: 4 properties
+- Apartment: 4 properties
+- Room: 4 properties
+- Hostel: 4 properties
+- Short Term Stay: 4 properties
+Total: 25 properties across all categories and cities
