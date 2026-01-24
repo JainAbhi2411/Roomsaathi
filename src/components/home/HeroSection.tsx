@@ -10,7 +10,11 @@ export default function HeroSection() {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    navigate(`/?search=${encodeURIComponent(searchQuery)}`);
+    if (searchQuery.trim()) {
+      navigate(`/browse?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate('/browse');
+    }
   };
 
   return (

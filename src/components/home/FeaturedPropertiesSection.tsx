@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router';
+import { useState, useEffect } from 'react';
 import type { Property } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCard from '@/components/property/PropertyCard';
@@ -47,7 +47,7 @@ export default function FeaturedPropertiesSection() {
             </p>
           </div>
           <Button asChild variant="outline">
-            <Link to="/">
+            <Link to="/browse">
               View All Properties
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

@@ -90,7 +90,7 @@ export default function CitiesSection() {
                     </div>
                   </div>
                   <Button asChild variant="outline" className="w-full group">
-                    <Link to={`/?city=${encodeURIComponent(city.name)}`}>
+                    <Link to={`/browse?city=${encodeURIComponent(city.name)}`}>
                       Explore {city.name}
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>

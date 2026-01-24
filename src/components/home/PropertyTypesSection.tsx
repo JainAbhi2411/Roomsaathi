@@ -76,7 +76,7 @@ export default function PropertyTypesSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <Link to={`/?type=${encodeURIComponent(type.title)}`}>
+              <Link to={`/browse?type=${encodeURIComponent(type.title)}`}>
                 <Card className="h-full hover:shadow-hover transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                   <CardContent className="p-6">
                     <div className={`inline-flex items-center justify-center w-14 h-14 rounded-lg ${type.color} mb-4`}>

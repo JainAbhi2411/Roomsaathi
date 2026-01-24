@@ -47,7 +47,7 @@ export default function CTASection() {
               className="flex flex-col @md:flex-row gap-4 justify-center"
             >
               <Button size="lg" variant="secondary" asChild className="text-lg">
-                <Link to="/">
+                <Link to="/browse">
                   Browse Properties
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>

@@ -2,13 +2,6 @@
 
 ## Plan
 - [x] Step 1: Initialize Supabase and create database schema
-  - [x] Initialize Supabase
-  - [x] Create properties table
-  - [x] Create rooms table
-  - [x] Create amenities table
-  - [x] Create favorites table
-  - [x] Create image storage bucket
-  - [x] Insert sample data
 - [x] Step 2: Design color system and update index.css
 - [x] Step 3: Create type definitions
 - [x] Step 4: Create database API functions
@@ -18,38 +11,55 @@
 - [x] Step 8: Update routes and App.tsx
 - [x] Step 9: Run lint and fix issues
 - [x] Step 10: Enhance homepage with additional sections (inspired by homversity.com)
-  - [x] Create animated HeroSection with split layout (text + image)
-  - [x] Create HowItWorksSection with 4-step process
-  - [x] Create PropertyTypesSection with 6 property categories
-  - [x] Create CitiesSection with interactive city cards
-  - [x] Create FeaturedPropertiesSection
-  - [x] Create WhyChooseUsSection with 6 features
-  - [x] Create TestimonialsSection with customer reviews
-  - [x] Create StatsSection with key metrics
-  - [x] Create CTASection with call-to-action
-  - [x] Update HomePage to include all new sections
+- [x] Step 11: Create separate Browse Properties page with advanced functionalities
+  - [x] Create BrowsePropertiesPage with dedicated property browsing
+  - [x] Add sidebar filters for desktop (sticky)
+  - [x] Add mobile filter sheet
+  - [x] Implement sorting options (newest, price low/high, name A-Z/Z-A)
+  - [x] Add grid/list view toggle
+  - [x] Show property count and active filter badges
   - [x] Add URL parameter support for filtering
+  - [x] Update HomePage to be pure landing page
+  - [x] Update all navigation links to point to /browse
+  - [x] Update Header with Browse Properties link
   - [x] Run lint and fix issues
 
 ## Notes
-- Using motion library (already installed) for animations
-- Logo hanging animation implemented in Header component with swing effect
-- Auto image slider implemented in PropertyCard using interval-based rotation
-- Color scheme: Warm, trustworthy real estate theme with orange/amber primary colors (HSL 24 88% 58%)
+- Using motion library for smooth animations throughout
+- Logo hanging animation with swing effect in Header
+- Auto image slider in PropertyCard using interval-based rotation
+- Color scheme: Warm orange/amber (HSL 24 88% 58%) for real estate trust
 - Operating cities: Sikar, Jaipur, Kota
 - Property types: PG, Flats, Apartments, Rooms, Hostels, Short Term Stays
-- Special feature: RoomSaathi Verified badge with CheckCircle icon
-- Enhanced homepage with 9 new sections:
-  1. Animated hero section with side image and search functionality
-  2. Featured properties section showing verified properties
-  3. Property types showcase with 6 categories
-  4. How it works section with 4-step process
-  5. Cities section with interactive cards for Jaipur, Kota, Sikar
-  6. Why choose us section with 6 key features
-  7. Stats section with impact metrics
-  8. Testimonials section with customer reviews
-  9. CTA section with call-to-action buttons
-- All sections have smooth scroll animations using motion library
-- Homepage now shows all sections by default, and switches to filtered view when user searches or clicks category/city links
-- All features completed successfully
-- Lint check passed with no errors
+- RoomSaathi Verified badge for trusted properties
+
+**Homepage Sections (Landing Page):**
+1. Animated hero section with split layout and search
+2. Featured properties (verified only)
+3. Property types showcase (6 categories)
+4. How it works (4-step process)
+5. Cities we serve (3 cities with details)
+6. Why choose us (6 features)
+7. Statistics section (impact metrics)
+8. Customer testimonials (3 reviews)
+9. Call-to-action section
+
+**Browse Properties Page Features:**
+- Desktop: Sidebar filters (sticky) with all filter options
+- Mobile: Sheet-based filters with trigger button
+- Sorting: Newest, Price (low/high), Name (A-Z/Z-A)
+- View modes: Grid and List toggle
+- Active filter count badges
+- Property count display
+- URL parameter support for deep linking
+- Responsive 2-column grid on desktop
+- Empty state with clear filters button
+- Smooth animations for property cards
+
+**Navigation Structure:**
+- Home (/) - Landing page with all sections
+- Browse Properties (/browse) - Dedicated property search page
+- Property Details (/property/:id) - Individual property page
+- Favorites (/favorites) - Saved properties page
+
+All features completed successfully with lint passing!

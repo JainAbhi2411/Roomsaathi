@@ -28,6 +28,9 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">
+            Home
+          </Link>
+          <Link to="/browse" className="text-sm font-medium transition-colors hover:text-primary">
             Browse Properties
           </Link>
           <Link to="/favorites" className="text-sm font-medium transition-colors hover:text-primary">
@@ -51,6 +54,9 @@ export default function Header() {
           <SheetContent side="right">
             <nav className="flex flex-col gap-4 mt-8">
               <Link to="/" className="text-lg font-medium transition-colors hover:text-primary">
+                Home
+              </Link>
+              <Link to="/browse" className="text-lg font-medium transition-colors hover:text-primary">
                 Browse Properties
               </Link>
               <Link to="/favorites" className="text-lg font-medium transition-colors hover:text-primary">

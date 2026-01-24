@@ -1,4 +1,5 @@
 import HomePage from './pages/HomePage';
+import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import type { ReactNode } from 'react';
@@ -15,6 +16,11 @@ const routes: RouteConfig[] = [
     name: 'Home',
     path: '/',
     element: <HomePage />
+  },
+  {
+    name: 'Browse Properties',
+    path: '/browse',
+    element: <BrowsePropertiesPage />
   },
   {
     name: 'Property Details',
