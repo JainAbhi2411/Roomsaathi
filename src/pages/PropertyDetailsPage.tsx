@@ -28,6 +28,9 @@ import GoogleMap from '@/components/common/GoogleMap';
 import VideoPlayer from '@/components/ui/video-player';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import SEO from '@/components/common/SEO';
+import StructuredData from '@/components/common/StructuredData';
+import { generatePropertySchema, generateBreadcrumbSchema, generateKeywords, generateTitle, generateDescription } from '@/lib/seo';
 
 // Amenity icons mapping
 const amenityIcons: Record<string, React.ElementType> = {
@@ -173,8 +176,46 @@ export default function PropertyDetailsPage() {
   // Check if short-term stay is available
   const isShortTermAvailable = property.type === 'Short Term Stay' || property.type === 'Hostel';
 
+  // Generate SEO content
+  const seoTitle = generateTitle(`${property.name} - ${property.type} in ${property.locality}, ${property.city}`);
+  const seoDescription = generateDescription(
+    `${property.name} - ${property.type} in ${property.locality}, ${property.city}. ${property.description} Starting from ₹${property.price_from}/month. ${property.verified ? 'RoomSaathi Verified Property.' : ''} Book now!`
+  );
+  const seoKeywords = generateKeywords([
+    property.type.toLowerCase(),
+    property.city.toLowerCase(),
+    property.locality.toLowerCase(),
+    property.verified ? 'verified' : '',
+    'accommodation',
+    'rental',
+    property.suitable_for?.join(', ').toLowerCase() || '',
+  ]);
+
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Browse Properties', url: '/browse' },
+    { name: property.city, url: `/browse?city=${property.city}` },
+    { name: property.name, url: `/property/${property.id}` },
+  ];
+
+  const structuredData = [
+    generatePropertySchema(property),
+    generateBreadcrumbSchema(breadcrumbs),
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        canonical={`/property/${property.id}`}
+        ogType="product"
+        ogImage={property.images[0] || undefined}
+      >
+        <StructuredData data={structuredData} />
+      </SEO>
+      
       <Header />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">

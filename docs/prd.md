@@ -42,8 +42,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
     - Log SMS delivery status for debugging and monitoring purposes
   - Login flow:
     - User enters mobile number\n    - System sends OTP to the provided mobile number via configured SMS provider
-    - Display loading state while OTP is being sent
-    - Show success message when OTP is sent successfully
+    - Display loading state while OTP is being sent\n    - Show success message when OTP is sent successfully
     - Show error message with retry option if OTP sending fails
     - User enters received OTP for verification
     - Upon successful verification, user is logged in\n  - Login button in header navigation (right side)
@@ -77,7 +76,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
 - Animated text elements introducing RoomSaathi's value proposition
 - Call-to-action buttons for browsing properties or getting started
 - Smooth scroll animations as users navigate down the page
-\n### 3.4 Global Search Context Management System
+
+### 3.4 Global Search Context Management System
 \n#### 3.4.1 Search Context Persistence
 - **Unified Search State Management:**
   - Implement centralized search context that persists across all pages
@@ -85,8 +85,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Preserve search context when navigating between pages
   - URL parameters reflect active search state for shareable links
   - Browser back/forward buttons maintain search context
-
-- **Search Context Parameters:**
+\n- **Search Context Parameters:**
   - Search query text
   - Selected city\n  - Selected locality
   - Property type filters
@@ -161,7 +160,8 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
   - Pre-check checkboxes for active filters
   - Pre-fill price range sliders\n  - Pre-select dropdowns (city, locality)\n  - Highlight active filter sections
   - Show filter count badges
-\n- **Search Bar on Browse Property Page:**
+
+- **Search Bar on Browse Property Page:**
   - Search bar pre-filled with search query from context
   - Modify search query updates results in real-time
   - Search suggestions based on current filter context
@@ -341,8 +341,7 @@ Use the uploaded logo image with a creative hanging animation effect - the logo 
      - Within 1 month
      - Custom date (date picker)
      - Any\n   - Show property count for each option
-
-10. **Furnishing Filter:**
+\n10. **Furnishing Filter:**
     - Multi-select checkboxes
     - Options: Fully Furnished, Semi-Furnished, Unfurnished, Any
     - Show property count for each option
@@ -1482,6 +1481,303 @@ Each property should display complete information with the following advanced la
 \n## 5. Primary Operating Locations
 - Sikar\n- Jaipur
 - Kota
-\n## 6. Reference Files
+\n## 6. SEO Optimization Requirements
+
+### 6.1 Technical SEO Implementation
+\n**Meta Tags and HTML Structure:**
+- Implement proper HTML5 semantic structure (header, nav, main, article, section, footer)
+- Add comprehensive meta tags on all pages:\n  - Meta title (unique for each page, 50-60 characters)
+  - Meta description (unique for each page, 150-160 characters)
+  - Meta keywords (relevant keywords for each page)
+  - Open Graph tags for social media sharing (og:title, og:description, og:image, og:url, og:type)
+  - Twitter Card tags (twitter:card, twitter:title, twitter:description, twitter:image)\n  - Canonical URLs to prevent duplicate content issues
+  - Viewport meta tag for mobile responsiveness
+  - Charset declaration (UTF-8)
+  - Language declaration (lang attribute in HTML tag)
+
+**Structured Data (Schema.org):**
+- Implement JSON-LD structured data for:\n  - Organization schema (RoomSaathi company information)
+  - LocalBusiness schema (for each city: Sikar, Jaipur, Kota)
+  - Product schema for each property listing
+  - AggregateRating schema for property reviews
+  - BreadcrumbList schema for navigation
+  - Article schema for blog posts
+  - FAQPage schema for FAQ section
+  - WebSite schema with search action
+  - ContactPoint schema for contact information
+
+**URL Structure:**
+- Clean, descriptive, and SEO-friendly URLs
+- Use hyphens to separate words in URLs
+- Include relevant keywords in URLs
+- Implement proper URL hierarchy
+- Examples:\n  - /properties/sikar/pg-for-girls\n  - /properties/jaipur/apartments-for-students
+  - /blog/accommodation-tips-for-students
+  - /city-guide/kota
+
+**Sitemap and Robots.txt:**
+- Generate and submit XML sitemap to Google Search Console
+- Include all important pages in sitemap
+- Update sitemap automatically when new content is added
+- Create robots.txt file with proper directives
+- Allow search engine crawlers to access all public pages
+- Disallow admin panel and private pages
+
+**Page Speed Optimization:**
+- Implement lazy loading for images and videos
+- Optimize and compress all images (WebP format preferred)
+- Minify CSS, JavaScript, and HTML\n- Enable browser caching
+- Use Content Delivery Network (CDN) for static assets
+- Implement code splitting for faster initial load
+- Reduce server response time
+- Eliminate render-blocking resources
+- Optimize critical rendering path
+- Target Core Web Vitals metrics:\n  - Largest Contentful Paint (LCP) < 2.5s
+  - First Input Delay (FID) < 100ms
+  - Cumulative Layout Shift (CLS) < 0.1
+\n**Mobile Optimization:**
+- Fully responsive design for all devices
+- Mobile-first approach\n- Touch-friendly interface elements
+- Optimized mobile page speed
+- Avoid intrusive interstitials
+- Implement Accelerated Mobile Pages (AMP) for blog posts (optional)
+\n### 6.2 On-Page SEO
+
+**Content Optimization:**
+- Unique, high-quality, and relevant content on all pages
+- Keyword research and strategic keyword placement
+- Target keywords:\n  - Primary: PG in Sikar, PG in Jaipur, PG in Kota, hostels in Sikar, apartments in Jaipur, rooms for rent in Kota
+  - Secondary: student accommodation, paying guest, affordable PG, verified properties, RoomSaathi\n  - Long-tail: PG for girls in Jaipur, hostels for students in Kota, affordable apartments in Sikar
+- Natural keyword integration in:\n  - Page titles
+  - Headings (H1, H2, H3)
+  - First paragraph
+  - Image alt text
+  - Meta descriptions
+  - URL slugs
+  - Internal links
+- Content length: Minimum 300 words per page, 1000+ words for blog posts
+- Regular content updates and fresh content addition
+\n**Heading Structure:**
+- Single H1 tag per page with primary keyword
+- Proper hierarchy of H2, H3, H4 tags
+- Descriptive and keyword-rich headings\n- Logical content structure
+\n**Image Optimization:**
+- Descriptive, keyword-rich file names (e.g., pg-for-girls-jaipur.jpg)
+- Comprehensive alt text for all images
+- Optimized image dimensions and file sizes
+- Use of next-gen image formats (WebP, AVIF)
+- Implement responsive images with srcset
+- Add title attributes where appropriate
+
+**Internal Linking:**
+- Strategic internal linking structure
+- Link to related properties, blog posts, and pages
+- Use descriptive anchor text with keywords
+- Implement breadcrumb navigation
+- Create topic clusters and pillar pages
+- Ensure all pages are accessible within 3 clicks from homepage
+
+**External Linking:**
+- Link to authoritative external sources when relevant
+- Use rel=nofollow for untrusted links
+- Open external links in new tabs
+\n### 6.3 Content Strategy for SEO
+
+**Blog Content:**
+- Regular blog posts (minimum 2-4 per month)
+- Target informational keywords and long-tail queries
+- Blog topics:\n  - Student accommodation guides
+  - City-specific living guides (Sikar, Jaipur, Kota)
+  - Tips for finding PG/hostels\n  - Locality spotlights
+  - Student life and experiences
+  - Property hunting advice
+  - Safety tips for students
+  - Budget accommodation tips
+- Optimize blog posts for featured snippets
+- Include FAQ sections in blog posts
+- Add social sharing buttons\n\n**Location Pages:**
+- Dedicated pages for each city (Sikar, Jaipur, Kota)
+- Locality-specific pages with detailed information
+- Include:\n  - City/locality overview
+  - Available properties
+  - Popular landmarks
+  - Transportation information
+  - Educational institutions nearby
+  - Cost of living information
+  - Local amenities and facilities
+
+**Property Listings:**
+- Unique descriptions for each property
+- Detailed property information
+- High-quality images with alt text
+- User reviews and ratings
+- Nearby landmarks and facilities
+- Clear call-to-action buttons
+\n### 6.4 Off-Page SEO
+
+**Backlink Strategy:**
+- Build high-quality backlinks from relevant websites
+- Target domains:\n  - Educational institution websites
+  - Student forums and communities
+  - Local business directories\n  - Real estate and accommodation websites
+  - City-specific blogs and news sites
+- Guest posting on relevant blogs
+- Create shareable infographics and resources
+- Participate in online communities and forums
+\n**Local SEO:**
+- Create and optimize Google My Business profiles for each city
+- Consistent NAP (Name, Address, Phone) information across all platforms
+- List on local business directories:\n  - Justdial
+  - Sulekha
+  - IndiaMART
+  - MagicBricks
+  - 99acres
+- Encourage and respond to user reviews
+- Create location-specific content\n- Build local citations\n
+**Social Media Integration:**
+- Social sharing buttons on all pages
+- Open Graph and Twitter Card implementation
+- Regular social media posting
+- Engage with users on social platforms
+- Share blog posts and property listings
+\n### 6.5 Analytics and Monitoring
+
+**Google Search Console:**
+- Set up and verify Google Search Console
+- Submit sitemap\n- Monitor search performance
+- Track indexing status
+- Identify and fix crawl errors
+- Monitor mobile usability
+- Track Core Web Vitals
+
+**Google Analytics:**
+- Implement Google Analytics 4 (GA4)\n- Set up conversion tracking:\n  - Property views
+  - Contact form submissions
+  - Schedule visit requests
+  - Phone calls
+  - WhatsApp clicks
+- Track user behavior and engagement
+- Monitor traffic sources
+- Analyze user demographics
+- Set up custom events and goals
+
+**SEO Monitoring Tools:**
+- Regular SEO audits using tools like:
+  - Google PageSpeed Insights
+  - GTmetrix
+  - Screaming Frog
+  - SEMrush or Ahrefs (optional)
+- Monitor keyword rankings
+- Track backlink profile
+- Analyze competitor SEO strategies
+- Monitor website health and technical issues
+
+**Performance Metrics:**
+- Track key SEO metrics:
+  - Organic traffic growth
+  - Keyword rankings\n  - Click-through rates (CTR)
+  - Bounce rate
+  - Average session duration
+  - Pages per session
+  - Conversion rates
+  - Core Web Vitals scores
+\n### 6.6 Content Freshness and Updates
+
+**Regular Updates:**
+- Update property listings regularly
+- Refresh blog content periodically
+- Add new properties and remove outdated ones
+- Update city guides and locality information
+- Refresh testimonials and reviews
+- Update statistics and numbers
+
+**Seasonal Content:**
+- Create content around academic calendars
+- Target admission seasons\n- Holiday and festival-related content
+- Seasonal accommodation tips
+\n### 6.7 User Experience (UX) for SEO
+
+**Navigation and Site Structure:**
+- Clear and intuitive navigation
+- Logical site hierarchy
+- Easy-to-use search functionality
+- Breadcrumb navigation
+- Related content suggestions
+- Clear call-to-action buttons
+
+**Engagement Signals:**
+- Reduce bounce rate through engaging content
+- Increase dwell time with valuable information
+- Encourage user interactions (reviews, comments, shares)
+- Implement related content sections
+- Add interactive elements (maps, filters, comparisons)
+
+**Accessibility:**
+- WCAG 2.1 compliance
+- Proper color contrast
+- Keyboard navigation support
+- Screen reader compatibility
+- Alt text for all images
+- Descriptive link text
+
+### 6.8 Security and Trust Signals
+
+**HTTPS Implementation:**
+- Implement SSL certificate
+- Ensure all pages load over HTTPS
+- Fix mixed content issues
+- Implement HSTS (HTTP Strict Transport Security)
+\n**Trust Indicators:**
+- Display contact information prominently
+- Show verified property badges
+- Display user reviews and ratings
+- Include privacy policy and terms of service
+- Show security certifications (if any)
+- Display social proof (number of properties, users, etc.)
+
+### 6.9 International SEO (Future Consideration)
+
+**Multi-language Support:**
+- Implement hreflang tags if expanding to other languages
+- Create language-specific content\n- Use proper URL structure for different languages
+\n### 6.10 Voice Search Optimization
+
+**Conversational Keywords:**
+- Optimize for natural language queries
+- Target question-based keywords
+- Create FAQ content\n- Use long-tail keywords
+- Implement structured data for voice search
+
+### 6.11 Video SEO
+
+**Property Videos:**
+- Optimize video titles and descriptions
+- Add video transcripts
+- Create video sitemaps
+- Use schema markup for videos
+- Host videos on YouTube and embed on website
+- Optimize video thumbnails
+
+### 6.12 Continuous SEO Improvement
+
+**Regular Audits:**
+- Conduct monthly SEO audits
+- Identify and fix technical issues
+- Update outdated content
+- Monitor and improve Core Web Vitals
+- Analyze competitor strategies
+- Stay updated with Google algorithm changes
+
+**A/B Testing:**
+- Test different meta titles and descriptions
+- Test call-to-action buttons
+- Test page layouts for better engagement
+- Test content formats\n\n**Reporting:**
+- Monthly SEO performance reports
+- Track progress towards SEO goals
+- Identify areas for improvement
+- Document successful strategies
+
+## 7. Reference Files
 1. Logo image: Use the uploaded logo file for branding throughout the website
 2. Management Software Link: https://rosamanage.netlify.app/

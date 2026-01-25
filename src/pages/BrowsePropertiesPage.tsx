@@ -17,6 +17,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
+import SEO from '@/components/common/SEO';
+import StructuredData from '@/components/common/StructuredData';
+import { generateBreadcrumbSchema, generateKeywords, generateTitle, generateDescription } from '@/lib/seo';
 
 type SortOption = 'newest' | 'price_low' | 'price_high' | 'name_az' | 'name_za';
 type ViewMode = 'grid' | 'list';
@@ -164,8 +167,54 @@ export default function BrowsePropertiesPage() {
     updateUrlParams();
   };
 
+  // Generate SEO content based on filters
+  const generateSEOContent = () => {
+    const parts = ['Browse'];
+    const keywords = ['properties', 'accommodation'];
+    
+    if (contextFilters.type) {
+      parts.push(contextFilters.type);
+      keywords.push(contextFilters.type.toLowerCase());
+    }
+    if (contextFilters.city) {
+      parts.push(`in ${contextFilters.city}`);
+      keywords.push(`${contextFilters.city.toLowerCase()}`);
+    }
+    if (contextFilters.verified) {
+      parts.push('Verified');
+      keywords.push('verified', 'trusted');
+    }
+    
+    const title = generateTitle(parts.join(' '));
+    const description = generateDescription(
+      `Find ${parts.join(' ').toLowerCase()} on RoomSaathi. ${filteredProperties.length} properties available with verified listings, zero brokerage, and student-friendly options.`
+    );
+    
+    return { title, description, keywords: generateKeywords(keywords) };
+  };
+
+  const seoContent = generateSEOContent();
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Browse Properties', url: '/browse' },
+  ];
+
+  if (contextFilters.city) {
+    breadcrumbs.push({ name: contextFilters.city, url: `/browse?city=${contextFilters.city}` });
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title={seoContent.title}
+        description={seoContent.description}
+        keywords={seoContent.keywords}
+        canonical="/browse"
+        ogType="website"
+      >
+        <StructuredData data={generateBreadcrumbSchema(breadcrumbs)} />
+      </SEO>
+      
       <Header />
       <main className="flex-1">
         {/* Page Header */}
