@@ -12,6 +12,8 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import HowToUsePage from './pages/HowToUsePage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TestAuthPage from './pages/TestAuthPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
@@ -125,6 +127,18 @@ const routes: RouteConfig[] = [
     name: 'Login',
     path: '/login',
     element: <LoginPage />,
+    visible: false
+  },
+  {
+    name: 'Terms of Service',
+    path: '/terms',
+    element: <TermsOfServicePage />,
+    visible: false
+  },
+  {
+    name: 'Privacy Policy',
+    path: '/privacy',
+    element: <PrivacyPolicyPage />,
     visible: false
   },
   {

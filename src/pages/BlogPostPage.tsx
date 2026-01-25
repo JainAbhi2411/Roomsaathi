@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { motion } from 'motion/react';
 import Header from '@/components/layouts/Header';
@@ -7,16 +7,84 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Calendar, Clock, User, ArrowLeft, Share2 } from 'lucide-react';
-import { blogPosts } from '@/data/blogPosts';
 import ReactMarkdown from 'react-markdown';
 import { useToast } from '@/hooks/use-toast';
+import type { Blog } from '@/types';
+import { getBlogById , getPublishedBlogs } from '@/db/api'; // your DB fetch function
 
 export default function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const post = blogPosts.find(p => p.id === Number(id));
+
+  const [post, setPost] = useState<Blog | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch blog by ID
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchBlog = async () => {
+      try {
+        setLoading(true);
+        const blog = await getBlogById(id);
+        if (!blog) {
+          setPost(null);
+          return;
+        }
+        setPost(blog);
+
+        // Fetch related posts from same category, exclude current blog
+        const allBlogs = await getPublishedBlogs();
+        console.log(allBlogs);
+        const related = allBlogs
+          .filter(b => b.category === blog.category && b.id !== blog.id)
+          .slice(0, 3);
+        setRelatedPosts(related);
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: 'Error',
+          description: 'Failed to fetch blog data',
+          variant: 'destructive'
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
+
+  const handleShare = () => {
+    if (!post) return;
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: window.location.href,
+      }).catch(() => copyToClipboard());
+    } else {
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+      title: 'Link Copied!',
+      description: 'Blog post link copied to clipboard',
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading blog...</p>
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -36,33 +104,6 @@ export default function BlogPostPage() {
       </div>
     );
   }
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: post.excerpt,
-        url: window.location.href,
-      }).catch(() => {
-        // Fallback to copying URL
-        copyToClipboard();
-      });
-    } else {
-      copyToClipboard();
-    }
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-      title: 'Link Copied!',
-      description: 'Blog post link copied to clipboard',
-    });
-  };
-
-  const relatedPosts = blogPosts
-    .filter(p => p.category === post.category && p.id !== post.id)
-    .slice(0, 3);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -104,16 +145,16 @@ export default function BlogPostPage() {
                     <User className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">{post.author}</p>
+                    <p className="font-medium text-foreground">{post.author_name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                  <span>{new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
-                  <span>{post.readTime}</span>
+                  <span>{post.read_time} min read</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -130,24 +171,26 @@ export default function BlogPostPage() {
         </section>
 
         {/* Featured Image */}
-        <section className="py-8">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="max-w-4xl mx-auto"
-            >
-              <div className="relative h-[300px] xl:h-[500px] rounded-xl overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </motion.div>
-          </div>
-        </section>
+        {post.image_url && (
+          <section className="py-8">
+            <div className="container mx-auto px-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="max-w-4xl mx-auto"
+              >
+                <div className="relative h-[300px] xl:h-[500px] rounded-xl overflow-hidden">
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
         {/* Content */}
         <section className="py-8 xl:py-16">
@@ -194,11 +237,13 @@ export default function BlogPostPage() {
                         className="block group"
                       >
                         <div className="relative h-48 rounded-lg overflow-hidden mb-4">
-                          <img
-                            src={relatedPost.image}
-                            alt={relatedPost.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
+                          {relatedPost.image_url && (
+                            <img
+                              src={relatedPost.image_url}
+                              alt={relatedPost.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          )}
                           <div className="absolute top-4 left-4">
                             <Badge className="bg-primary text-primary-foreground">
                               {relatedPost.category}
@@ -218,37 +263,10 @@ export default function BlogPostPage() {
               </motion.div>
             </div>
           </section>
-        )}
-
-        {/* CTA Section */}
-        <section className="py-16 xl:py-24">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <h2 className="text-3xl xl:text-4xl font-bold mb-4">
-                Looking for Your <span className="gradient-text">Perfect Home</span>?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Browse thousands of verified properties in Sikar, Jaipur, and Kota
-              </p>
-              <div className="flex flex-col @md:flex-row gap-4 justify-center">
-                <Button size="lg" onClick={() => navigate('/browse')}>
-                  Browse Properties
-                </Button>
-                <Button size="lg" variant="outline" onClick={() => navigate('/blogs')}>
-                  Read More Articles
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      </main>
+        )}{/* CTA Section */} <section className="py-16 xl:py-24"> <div className="container mx-auto px-4"> <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center" > <h2 className="text-3xl xl:text-4xl font-bold mb-4"> Looking for Your <span className="gradient-text">Perfect Home</span>? </h2> <p className="text-lg text-muted-foreground mb-8"> Browse thousands of verified properties in Sikar, Jaipur, and Kota </p> <div className="flex flex-col @md:flex-row gap-4 justify-center"> <Button size="lg" onClick={() => navigate('/browse')}> Browse Properties </Button> <Button size="lg" variant="outline" onClick={() => navigate('/blogs')}> Read More Articles </Button> </div> </motion.div> </div> </section> </main>
       <Footer />
     </div>
   );
 }
+
+

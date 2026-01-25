@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef ,useCallback} from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,20 +7,18 @@ import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
+import { supabase } from '@/db/supabase';
+import { toast } from '@/hooks/use-toast';
 
 export default function FeaturedPropertiesSection() {
   const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadFeaturedProperties();
-    // Poll for updates every 30 seconds
-    const interval = setInterval(loadFeaturedProperties, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadFeaturedProperties = async () => {
+  /**
+   * Initial fetch
+   */
+  const loadFeaturedProperties = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getProperties({ verified: true });
@@ -30,7 +28,82 @@ export default function FeaturedPropertiesSection() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+   /**
+   * Initial load
+   */
+  useEffect(() => {
+    loadFeaturedProperties();
+  }, [loadFeaturedProperties]);
+
+
+  /**
+   * Realtime subscription (created ONCE)
+   */
+  useEffect(() => {
+    const channel = supabase
+      .channel('featured-properties-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties',
+        },
+        (payload) => {
+          const newRow = payload.new as PropertyWithDetails | null;
+          const oldRow = payload.old as PropertyWithDetails | null;
+
+          // Only react to VERIFIED properties
+          const isRelevant =
+            newRow?.verified === true ||
+            oldRow?.verified === true;
+
+          if (!isRelevant) return;
+
+          if (payload.eventType === 'INSERT' && newRow?.verified) {
+            toast({
+              title: 'New Property Added',
+              description: 'A new verified property is now live.',
+            });
+
+            setProperties((prev) =>
+              [newRow, ...prev].slice(0, 8)
+            );
+          }
+
+          if (payload.eventType === 'UPDATE' && newRow?.verified) {
+            toast({
+              title: 'Property Updated',
+              description: 'A featured property was updated.',
+            });
+
+            setProperties((prev) =>
+              prev.map((p) =>
+                p.id === newRow.id ? newRow : p
+              )
+            );
+          }
+
+          if (payload.eventType === 'DELETE' && oldRow) {
+            toast({
+              title: 'Property Removed',
+              description: 'A featured property was removed.',
+            });
+
+            setProperties((prev) =>
+              prev.filter((p) => p.id !== oldRow.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {

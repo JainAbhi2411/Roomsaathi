@@ -14,6 +14,7 @@ export interface Property {
   address: string;
   price_from: number;
   price_to?: number;
+  offer_price?: number;
   description: string;
   verified: boolean;
   images: string[];
@@ -56,6 +57,17 @@ export interface Amenity {
   created_at: string;
 }
 
+export interface PropertyPolicy {
+  id: string;
+  property_id: string;
+  policy_title: string;
+  policy_description: string;
+  policy_icon?: string;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Favorite {
   id: string;
   property_id: string;
@@ -66,6 +78,7 @@ export interface Favorite {
 export interface PropertyWithDetails extends Property {
   rooms?: Room[];
   amenities?: Amenity[];
+  policies?: PropertyPolicy[];
   is_favorite?: boolean;
 }
 

@@ -28,6 +28,7 @@ export default function PropertyForm() {
     address: '',
     price_from: 0,
     price_to: 0,
+    offer_price: 0,
     description: '',
     verified: false,
     images: [] as string[],
@@ -52,6 +53,7 @@ export default function PropertyForm() {
         address: property.address,
         price_from: property.price_from,
         price_to: property.price_to || 0,
+        offer_price: property.offer_price || 0,
         description: property.description || '',
         verified: property.verified || false,
         images: property.images || [],
@@ -202,6 +204,20 @@ export default function PropertyForm() {
                   value={formData.price_to}
                   onChange={(e) => setFormData(prev => ({ ...prev, price_to: Number(e.target.value) }))}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="offer_price">Offer Price (₹/month)</Label>
+                <Input
+                  id="offer_price"
+                  type="number"
+                  value={formData.offer_price}
+                  onChange={(e) => setFormData(prev => ({ ...prev, offer_price: Number(e.target.value) }))}
+                  placeholder="Special offer price (optional)"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Set a special offer price lower than the regular price to show discount badge
+                </p>
               </div>
             </div>
 

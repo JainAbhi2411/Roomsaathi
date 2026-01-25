@@ -26,11 +26,9 @@ import SendQueryDialog from '@/components/property/SendQueryDialog';
 import ScheduleVisitDialog from '@/components/property/ScheduleVisitDialog';
 import GoogleMap from '@/components/common/GoogleMap';
 import VideoPlayer from '@/components/ui/video-player';
+import RoomImageSlider from '@/components/property/RoomImageSlider';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
-import SEO from '@/components/common/SEO';
-import StructuredData from '@/components/common/StructuredData';
-import { generatePropertySchema, generateBreadcrumbSchema, generateKeywords, generateTitle, generateDescription } from '@/lib/seo';
 
 // Amenity icons mapping
 const amenityIcons: Record<string, React.ElementType> = {
@@ -176,46 +174,8 @@ export default function PropertyDetailsPage() {
   // Check if short-term stay is available
   const isShortTermAvailable = property.type === 'Short Term Stay' || property.type === 'Hostel';
 
-  // Generate SEO content
-  const seoTitle = generateTitle(`${property.name} - ${property.type} in ${property.locality}, ${property.city}`);
-  const seoDescription = generateDescription(
-    `${property.name} - ${property.type} in ${property.locality}, ${property.city}. ${property.description} Starting from ₹${property.price_from}/month. ${property.verified ? 'RoomSaathi Verified Property.' : ''} Book now!`
-  );
-  const seoKeywords = generateKeywords([
-    property.type.toLowerCase(),
-    property.city.toLowerCase(),
-    property.locality.toLowerCase(),
-    property.verified ? 'verified' : '',
-    'accommodation',
-    'rental',
-    property.suitable_for?.join(', ').toLowerCase() || '',
-  ]);
-
-  const breadcrumbs = [
-    { name: 'Home', url: '/' },
-    { name: 'Browse Properties', url: '/browse' },
-    { name: property.city, url: `/browse?city=${property.city}` },
-    { name: property.name, url: `/property/${property.id}` },
-  ];
-
-  const structuredData = [
-    generatePropertySchema(property),
-    generateBreadcrumbSchema(breadcrumbs),
-  ];
-
   return (
     <div className="min-h-screen flex flex-col">
-      <SEO
-        title={seoTitle}
-        description={seoDescription}
-        keywords={seoKeywords}
-        canonical={`/property/${property.id}`}
-        ogType="product"
-        ogImage={property.images[0] || undefined}
-      >
-        <StructuredData data={structuredData} />
-      </SEO>
-      
       <Header />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
@@ -535,25 +495,31 @@ export default function PropertyDetailsPage() {
                         </CardHeader>
                         <CardContent>
                           <div className="grid gap-6">
-                            {property.rooms.map((room) => (
-                              <Card key={room.id} className="overflow-hidden">
-                                <div className="grid @md:grid-cols-[250px_1fr] gap-4">
-                                  {/* Room Image */}
-                                  <div className="relative h-48 @md:h-full">
-                                    <img
-                                      src={room.images[0] || roomTypeImages[room.room_type] || property.images[0]}
-                                      alt={room.room_type}
-                                      className="w-full h-full object-cover"
-                                    />
-                                    {!room.available && (
-                                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                        <Badge variant="destructive">Not Available</Badge>
-                                      </div>
-                                    )}
-                                  </div>
+                            {property.rooms.map((room) => {
+                              // Prepare room images - use room images if available, otherwise fallback
+                              const roomImages = room.images && room.images.length > 0 
+                                ? room.images 
+                                : [roomTypeImages[room.room_type] || property.images[0]];
+                              
+                              return (
+                                <Card key={room.id} className="overflow-hidden @container">
+                                  <div className="grid @md:grid-cols-[280px_1fr] gap-4">
+                                    {/* Room Image Slider */}
+                                    <div className="relative h-56 @md:h-full">
+                                      <RoomImageSlider 
+                                        images={roomImages}
+                                        roomType={`${room.room_type} Sharing`}
+                                        className="h-full w-full rounded-l-lg"
+                                      />
+                                      {!room.available && (
+                                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
+                                          <Badge variant="destructive">Not Available</Badge>
+                                        </div>
+                                      )}
+                                    </div>
 
-                                  {/* Room Details */}
-                                  <CardContent className="p-4 space-y-4">
+                                    {/* Room Details */}
+                                    <CardContent className="p-4 space-y-4">
                                     <div className="flex items-start justify-between">
                                       <div>
                                         <h3 className="text-xl font-bold mb-1">{room.room_type} Sharing</h3>
@@ -626,7 +592,8 @@ export default function PropertyDetailsPage() {
                                   </CardContent>
                                 </div>
                               </Card>
-                            ))}
+                            );
+                            })}
                           </div>
                         </CardContent>
                       </Card>

@@ -13,7 +13,7 @@ import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/hooks/use-toast';
 import type { Blog } from '@/types/index';
 
-export default function BlogForm() {
+export default function AdminBlogForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { admin } = useAdmin();
@@ -27,8 +27,9 @@ export default function BlogForm() {
     excerpt: '',
     content: '',
     category: 'Student Life',
-    featured_image: '',
-    author: admin?.name || 'RoomSaathi',
+    image_url: '',           // matches schema
+    author_id: admin?.id || '',   // required foreign key
+    author_name: admin?.name || 'RoomSaathi',
     read_time: 5,
     published: false
   });
@@ -49,8 +50,9 @@ export default function BlogForm() {
         excerpt: blog.excerpt || '',
         content: blog.content,
         category: blog.category,
-        featured_image: blog.image_url || '',
-        author: blog.author_name,
+        image_url: blog.image_url || '',
+        author_id: blog.author_id || admin?.id || '',
+        author_name: blog.author_name,
         read_time: blog.read_time || 5,
         published: blog.published
       });
@@ -77,9 +79,22 @@ export default function BlogForm() {
     setIsLoading(true);
 
     try {
+      const payload = {
+        title: formData.title,
+        slug: formData.slug,
+        excerpt: formData.excerpt,
+        content: formData.content,
+        category: formData.category,
+        image_url: formData.image_url,
+        author_id: formData.author_id,
+        author_name: formData.author_name,
+        read_time: formData.read_time,
+        published: formData.published
+      };
+
       const result = isEdit
-        ? await updateBlog(id!, formData)
-        : await createBlog(formData as any, admin!.id);
+        ? await updateBlog(id!, payload)
+        : await createBlog(payload, admin!.id);
 
       if (result.success) {
         toast({
@@ -194,10 +209,13 @@ export default function BlogForm() {
             </div>
 
             {/* Meta Info */}
-            <div className="grid grid-cols-1 @md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Category *</Label>
-                <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -210,11 +228,11 @@ export default function BlogForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="author">Author *</Label>
+                <Label htmlFor="author_name">Author *</Label>
                 <Input
-                  id="author"
-                  value={formData.author}
-                  onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                  id="author_name"
+                  value={formData.author_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
                   required
                 />
               </div>
@@ -234,11 +252,11 @@ export default function BlogForm() {
 
             {/* Featured Image */}
             <div className="space-y-2">
-              <Label htmlFor="featured_image">Featured Image URL</Label>
+              <Label htmlFor="image_url">Featured Image URL</Label>
               <Input
-                id="featured_image"
-                value={formData.featured_image}
-                onChange={(e) => setFormData(prev => ({ ...prev, featured_image: e.target.value }))}
+                id="image_url"
+                value={formData.image_url}
+                onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
                 placeholder="https://example.com/image.jpg"
               />
             </div>

@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import type { AdminLoginResponse, UserQuery, DashboardStats } from '@/types/admin';
-import type { Property, Blog } from '@/types/index';
+import type { Property, Blog, PropertyPolicy } from '@/types/index';
 
 // Admin Authentication
 export async function adminLogin(email: string, password: string): Promise<AdminLoginResponse> {
@@ -64,14 +64,16 @@ export async function getAllPropertiesAdmin(): Promise<Property[]> {
   }
 }
 
-export async function createProperty(property: Omit<Property, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string }> {
+export async function createProperty(property: Omit<Property, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: Property }> {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('properties')
-      .insert([property]);
+      .insert([property])
+      .select()
+      .single();
 
     if (error) throw error;
-    return { success: true };
+    return { success: true, data };
   } catch (error: any) {
     console.error('Error creating property:', error);
     return { success: false, error: error.message };
@@ -128,7 +130,7 @@ export async function createBlog(blog: Omit<Blog, 'id' | 'created_at' | 'updated
   try {
     const { error } = await supabase
       .from('blogs')
-      .insert([{ ...blog, admin_id: adminId }]);
+      .insert([{ ...blog, author_id: adminId }]);
 
     if (error) throw error;
     return { success: true };
@@ -218,6 +220,82 @@ export async function submitUserQuery(query: Omit<UserQuery, 'id' | 'status' | '
     return { success: true };
   } catch (error: any) {
     console.error('Error submitting query:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Property Policies Management
+export async function createPropertyPolicy(policy: Omit<PropertyPolicy, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: PropertyPolicy }> {
+  try {
+    const { data, error } = await supabase
+      .from('property_policies')
+      .insert([policy])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error: any) {
+    console.error('Error creating policy:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updatePropertyPolicy(id: string, policy: Partial<PropertyPolicy>): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_policies')
+      .update({ ...policy, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating policy:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deletePropertyPolicy(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_policies')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting policy:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function bulkCreatePropertyPolicies(policies: Omit<PropertyPolicy, 'id' | 'created_at' | 'updated_at'>[]): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_policies')
+      .insert(policies);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error creating policies:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function bulkDeletePropertyPolicies(propertyId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_policies')
+      .delete()
+      .eq('property_id', propertyId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting policies:', error);
     return { success: false, error: error.message };
   }
 }

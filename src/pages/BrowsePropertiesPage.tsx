@@ -17,9 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
-import SEO from '@/components/common/SEO';
-import StructuredData from '@/components/common/StructuredData';
-import { generateBreadcrumbSchema, generateKeywords, generateTitle, generateDescription } from '@/lib/seo';
+import { supabase } from '@/db/supabase';
 
 type SortOption = 'newest' | 'price_low' | 'price_high' | 'name_az' | 'name_za';
 type ViewMode = 'grid' | 'list';
@@ -58,40 +56,7 @@ export default function BrowsePropertiesPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Load properties when filters change
-  useEffect(() => {
-    loadProperties();
-    // Poll for updates every 30 seconds
-    const interval = setInterval(loadProperties, 30000);
-    return () => clearInterval(interval);
-  }, [contextFilters]);
-
-  // Sort properties when sort option changes
-  useEffect(() => {
-    sortProperties();
-  }, [sortBy, properties]);
-
-  // Real-time search with debouncing
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    searchTimeoutRef.current = window.setTimeout(() => {
-      if (searchQuery !== (contextFilters.search || '')) {
-        updateFilter('search', searchQuery || undefined);
-        updateUrlParams();
-      }
-    }, 500); // 500ms debounce
-
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchQuery]);
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getProperties(contextFilters);
@@ -102,10 +67,71 @@ export default function BrowsePropertiesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [contextFilters]);
 
-  const sortProperties = () => {
+  // Sort properties when sort option changes
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  useEffect(() => {
+  const channel = supabase
+    .channel('browse-properties-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'properties',
+      },
+      (payload) => {
+        const newRow = payload.new as PropertyWithDetails | null;
+        const oldRow = payload.old as PropertyWithDetails | null;
+
+        // INSERT or DELETE → always reload
+        if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+          loadProperties();
+          return;
+        }
+
+        // UPDATE → check if anything meaningful actually changed
+        if (payload.eventType === 'UPDATE' && newRow && oldRow) {
+          const hasMeaningfulChange =
+            newRow.price_from !== oldRow.price_from ||
+            newRow.price_to !== oldRow.price_to ||
+            newRow.verified !== oldRow.verified ||
+            newRow.city !== oldRow.city ||
+            newRow.locality !== oldRow.locality ||
+            newRow.type !== oldRow.type;
+
+          if (!hasMeaningfulChange) {
+            // Ignore useless updates (views, updated_at, etc.)
+            return;
+          }
+
+          // Optional: respect current city filter
+          if (
+            contextFilters.city &&
+            newRow.city !== contextFilters.city
+          ) {
+            return;
+          }
+
+          loadProperties();
+        }
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [loadProperties, contextFilters.city]);
+
+
+ useEffect(() => {
     const sorted = [...properties];
+
     switch (sortBy) {
       case 'price_low':
         sorted.sort((a, b) => a.price_from - b.price_from);
@@ -121,11 +147,34 @@ export default function BrowsePropertiesPage() {
         break;
       case 'newest':
       default:
-        sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        break;
+        sorted.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() -
+            new Date(a.created_at).getTime()
+        );
     }
+
     setFilteredProperties(sorted);
-  };
+  }, [sortBy, properties]);
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = window.setTimeout(() => {
+      if (searchQuery !== (contextFilters.search || '')) {
+        updateFilter('search', searchQuery || undefined);
+        updateUrlParams();
+      }
+    }, 500);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   const updateUrlParams = useCallback(() => {
     const params = new URLSearchParams();
@@ -167,54 +216,8 @@ export default function BrowsePropertiesPage() {
     updateUrlParams();
   };
 
-  // Generate SEO content based on filters
-  const generateSEOContent = () => {
-    const parts = ['Browse'];
-    const keywords = ['properties', 'accommodation'];
-    
-    if (contextFilters.type) {
-      parts.push(contextFilters.type);
-      keywords.push(contextFilters.type.toLowerCase());
-    }
-    if (contextFilters.city) {
-      parts.push(`in ${contextFilters.city}`);
-      keywords.push(`${contextFilters.city.toLowerCase()}`);
-    }
-    if (contextFilters.verified) {
-      parts.push('Verified');
-      keywords.push('verified', 'trusted');
-    }
-    
-    const title = generateTitle(parts.join(' '));
-    const description = generateDescription(
-      `Find ${parts.join(' ').toLowerCase()} on RoomSaathi. ${filteredProperties.length} properties available with verified listings, zero brokerage, and student-friendly options.`
-    );
-    
-    return { title, description, keywords: generateKeywords(keywords) };
-  };
-
-  const seoContent = generateSEOContent();
-  const breadcrumbs = [
-    { name: 'Home', url: '/' },
-    { name: 'Browse Properties', url: '/browse' },
-  ];
-
-  if (contextFilters.city) {
-    breadcrumbs.push({ name: contextFilters.city, url: `/browse?city=${contextFilters.city}` });
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
-      <SEO
-        title={seoContent.title}
-        description={seoContent.description}
-        keywords={seoContent.keywords}
-        canonical="/browse"
-        ogType="website"
-      >
-        <StructuredData data={generateBreadcrumbSchema(breadcrumbs)} />
-      </SEO>
-      
       <Header />
       <main className="flex-1">
         {/* Page Header */}
@@ -443,8 +446,8 @@ export default function BrowsePropertiesPage() {
 
               {/* Properties Grid/List */}
               {loading ? (
-                <div className={viewMode === 'grid' ? 'grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-2 gap-6' : 'space-y-6'}>
-                  {[...Array(6)].map((_, i) => (
+                <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5' : 'space-y-6'}>
+                  {[...Array(9)].map((_, i) => (
                     <div key={i} className="space-y-4">
                       <Skeleton className="h-48 w-full bg-muted" />
                       <Skeleton className="h-6 w-3/4 bg-muted" />
@@ -460,7 +463,7 @@ export default function BrowsePropertiesPage() {
                   transition={{ duration: 0.4 }}
                   className={
                     viewMode === 'grid'
-                      ? 'grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-2 gap-6'
+                      ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5'
                       : 'space-y-6'
                   }
                 >

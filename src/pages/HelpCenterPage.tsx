@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import {
@@ -12,8 +13,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import PolicyModal from '@/components/ui/PolicyModal';
+import { policies } from '@/data/policies';
+import type { PolicyContent } from '@/data/policies';
 
 export default function HelpCenterPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPolicy, setSelectedPolicy] = useState<PolicyContent | null>(null);
+
+  const openPolicy = (policyId: string) => {
+    setSelectedPolicy(policies[policyId]);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedPolicy(null), 300);
+  };
   const quickLinks = [
     {
       icon: BookOpen,
@@ -321,14 +337,17 @@ export default function HelpCenterPage() {
                       </div>
                       <ChevronRight className="h-5 w-5 ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
                     </Link>
-                    <Link to="/terms" className="flex items-center gap-3 p-4 rounded-lg bg-background hover:bg-muted transition-colors group">
+                    <button 
+                      onClick={() => openPolicy('service-terms')}
+                      className="flex items-center gap-3 p-4 rounded-lg bg-background hover:bg-muted transition-colors group w-full text-left"
+                    >
                       <Shield className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-semibold group-hover:text-primary transition-colors">Terms & Policies</p>
                         <p className="text-sm text-muted-foreground">Read our terms and conditions</p>
                       </div>
                       <ChevronRight className="h-5 w-5 ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
-                    </Link>
+                    </button>
                     <Link to="/contact" className="flex items-center gap-3 p-4 rounded-lg bg-background hover:bg-muted transition-colors group">
                       <MessageCircle className="h-5 w-5 text-primary" />
                       <div>
@@ -346,6 +365,9 @@ export default function HelpCenterPage() {
       </main>
 
       <Footer />
+      
+      {/* Policy Modal */}
+      <PolicyModal isOpen={isModalOpen} onClose={closeModal} policy={selectedPolicy} />
     </div>
   );
 }

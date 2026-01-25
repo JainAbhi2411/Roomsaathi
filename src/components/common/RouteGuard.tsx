@@ -24,6 +24,7 @@ const PUBLIC_ROUTES = [
   '/help-center',
   '/how-to-use',
   '/owner-features'
+  
 ];
 
 function matchPublicRoute(path: string, patterns: string[]) {

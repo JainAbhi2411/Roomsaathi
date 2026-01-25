@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   const refreshProfile = async () => {
     if (!user) {
@@ -45,26 +46,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Only initialize once
+    if (initialized) return;
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         getProfile(session.user.id).then(setProfile);
       }
       setLoading(false);
+      setInitialized(true);
     });
     
     // In this function, do NOT use any await calls. Use `.then()` instead to avoid deadlocks.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        getProfile(session.user.id).then(setProfile);
-      } else {
-        setProfile(null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Only update on specific events to prevent unnecessary refreshes
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        setUser(session?.user ?? null);
+        if (session?.user && event !== 'TOKEN_REFRESHED') {
+          // Don't fetch profile on token refresh, only on sign in or user update
+          getProfile(session.user.id).then(setProfile);
+        } else if (!session?.user) {
+          setProfile(null);
+        }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [initialized]);
 
   const signIn = async (username: string, password: string) => {
     try {
@@ -99,12 +108,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Convert username to email format
       const email = `${username}@miaoda.com`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            username: username,
+          },
+        },
       });
 
       if (error) throw error;
+
+      // Auto-login after successful signup
+      if (data.user) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (signInError) {
+          console.error('Auto-login failed:', signInError);
+        }
+      }
+
       return { error: null };
     } catch (error) {
       console.error('SignUp Error:', error);

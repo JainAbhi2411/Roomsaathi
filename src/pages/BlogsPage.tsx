@@ -124,7 +124,7 @@ export default function BlogsPage() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
                     <Card className="h-full hover:shadow-hover transition-all duration-300 hover:-translate-y-1 group overflow-hidden cursor-pointer"
-                      onClick={() => navigate(`/blog/${post.slug}`)}
+                      onClick={() => navigate(`/blog/${post.id}`)}
                     >
                       {/* Image */}
                       {post.image_url && (

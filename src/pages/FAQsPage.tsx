@@ -12,9 +12,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Search, MessageCircle, Mail, Phone } from 'lucide-react';
-import SEO from '@/components/common/SEO';
-import StructuredData from '@/components/common/StructuredData';
-import { generateFAQSchema, generateKeywords, generateTitle } from '@/lib/seo';
 
 const faqCategories = [
   {
@@ -158,30 +155,8 @@ export default function FAQsPage() {
     return true;
   });
 
-  // Generate FAQ schema for all FAQs
-  const allFAQs = faqCategories.flatMap(cat => cat.faqs);
-  const faqSchema = generateFAQSchema(allFAQs);
-
   return (
     <div className="min-h-screen flex flex-col">
-      <SEO
-        title={generateTitle('Frequently Asked Questions (FAQs)')}
-        description="Find answers to common questions about RoomSaathi, property booking, payments, safety, and more. Get help with student accommodation in Sikar, Jaipur, and Kota."
-        keywords={generateKeywords([
-          'FAQs',
-          'help',
-          'support',
-          'questions',
-          'answers',
-          'booking help',
-          'property questions',
-          'student accommodation help',
-        ])}
-        canonical="/faqs"
-      >
-        <StructuredData data={faqSchema} />
-      </SEO>
-      
       <Header />
       <main className="flex-1">
         {/* Hero Section */}

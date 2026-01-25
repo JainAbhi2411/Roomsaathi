@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Property, PropertyWithDetails, Room, Amenity, Favorite, FilterOptions } from '@/types/index';
+import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions } from '@/types/index';
 
 // Get user session ID from localStorage or generate new one
 const getUserSessionId = (): string => {
@@ -94,6 +94,12 @@ export const getPropertyById = async (id: string): Promise<PropertyWithDetails |
     .select('*')
     .eq('property_id', id);
 
+  const { data: policies } = await supabase
+    .from('property_policies')
+    .select('*')
+    .eq('property_id', id)
+    .order('display_order', { ascending: true });
+
   const sessionId = getUserSessionId();
   const { data: favorite } = await supabase
     .from('favorites')
@@ -106,6 +112,7 @@ export const getPropertyById = async (id: string): Promise<PropertyWithDetails |
     ...property,
     rooms: Array.isArray(rooms) ? rooms : [],
     amenities: Array.isArray(amenities) ? amenities : [],
+    policies: Array.isArray(policies) ? policies : [],
     is_favorite: !!favorite,
   };
 };
@@ -128,6 +135,18 @@ export const getAmenitiesByPropertyId = async (propertyId: string): Promise<Amen
     .from('amenities')
     .select('*')
     .eq('property_id', propertyId);
+
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+// Get policies for a property
+export const getPoliciesByPropertyId = async (propertyId: string): Promise<PropertyPolicy[]> => {
+  const { data, error } = await supabase
+    .from('property_policies')
+    .select('*')
+    .eq('property_id', propertyId)
+    .order('display_order', { ascending: true });
 
   if (error) throw error;
   return Array.isArray(data) ? data : [];
@@ -270,11 +289,11 @@ export const getPublishedBlogs = async () => {
   return Array.isArray(data) ? data : [];
 };
 
-export const getBlogBySlug = async (slug: string) => {
+export const getBlogById = async (id: string) => {
   const { data, error } = await supabase
     .from('blogs')
     .select('*')
-    .eq('slug', slug)
+    .eq('id', id)
     .eq('published', true)
     .maybeSingle();
 
