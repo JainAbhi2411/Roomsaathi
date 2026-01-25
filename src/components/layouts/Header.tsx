@@ -26,22 +26,32 @@ export default function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left Section - Logo and Main Navigation */}
         <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              {/* Hanging string */}
-              <div className="absolute left-1/2 top-0 h-4 w-0.5 -translate-x-1/2 -translate-y-4 bg-muted-foreground/30 group-hover:bg-primary/50 transition-colors" />
-              
-              {/* Logo with hanging animation */}
-              <motion.div
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="animate-swing"
-              >
-                <span className="text-2xl font-bold gradient-text group-hover:scale-105 transition-transform inline-block">RoomSaathi</span>
-              </motion.div>
-            </div>
-          </Link>
+         <Link to="/" className="flex items-center justify-center">
+  <div className="relative flex flex-col items-center">
+
+    {/* Hanging string */}
+    <div
+      className="w-[2px] h-30 bg-gray-400/40 group-hover:bg-yellow-400/70 transition-colors rounded-full"
+      style={{ transformOrigin: 'top' }}
+    />
+
+    {/* Logo with swinging animation */}
+    <motion.div
+      initial={{ y: -30, opacity: 0, rotate: -15 }}
+      animate={{ y: 0, opacity: 1, rotate: 0 }}
+      transition={{ duration: 0.8, ease: 'easeOut', type: 'spring', stiffness: 120 }}
+      className="animate-swing cursor-pointer group-hover:scale-110 transition-transform"
+    >
+      <img
+        src="/mainwebsitelogo.png" // your transparent logo in public folder
+        alt="RoomSaathi Logo"
+        className="h-40 w-auto"
+      />
+    </motion.div>
+
+  </div>
+</Link>
+
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
