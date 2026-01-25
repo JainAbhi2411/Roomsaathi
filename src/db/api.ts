@@ -300,6 +300,17 @@ export const getBlogBySlug = async (slug: string) => {
   if (error) throw error;
   return data;
 };
+export const getBlogById = async (id: string) => {
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .eq('id', id)
+    .eq('published', true)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+};
 
 // User Query Management
 export const createUserQuery = async (query: {
