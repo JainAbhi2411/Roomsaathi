@@ -9,7 +9,8 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Properties', href: '/admin/properties', icon: Building2 },
   { name: 'Blogs', href: '/admin/blogs', icon: FileText },
+  { name: 'Visits', href: '/admin/visits', icon: Calendar },
   { name: 'Queries', href: '/admin/queries', icon: MessageSquare }
 ];
 

@@ -21,6 +21,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { getAllQueries, updateQueryStatus } from '@/db/adminApi';
+import { supabase } from '@/db/supabase';
 import type { UserQuery } from '@/types/admin';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,6 +34,19 @@ export default function Queries() {
 
   useEffect(() => {
     loadQueries();
+
+    // Set up real-time subscription for user_queries table
+    const channel = supabase
+      .channel('admin-queries-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_queries' }, () => {
+        loadQueries();
+      })
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const loadQueries = async () => {

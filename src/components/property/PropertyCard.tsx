@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
-import { MapPin, IndianRupee, Wifi, Car, Utensils, Shield, Users, UserCheck, Sparkles, Tag } from 'lucide-react';
+import { MapPin, IndianRupee, Wifi, Car, Utensils, Shield, Users, UserCheck, Sparkles, Tag, Navigation } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Property, PropertyWithDetails } from '@/types/index';
@@ -8,6 +8,7 @@ import VerifiedBadge from './VerifiedBadge';
 import FavoriteButton from './FavoriteButton';
 import { useState, useEffect } from 'react';
 import { isFavorite } from '@/db/api';
+import { formatDistance } from '@/lib/geolocation';
 
 interface PropertyCardProps {
   property: Property | PropertyWithDetails;
@@ -55,6 +56,9 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
   const propertyWithDetails = property as PropertyWithDetails;
   const amenities = propertyWithDetails.amenities || [];
   const displayAmenities = amenities.slice(0, 4);
+  
+  // Check if distance is available
+  const hasDistance = propertyWithDetails.distance !== undefined;
 
   return (
     <motion.div
@@ -129,6 +133,16 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
             <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
             <span className="line-clamp-1">{property.locality}, {property.city}</span>
           </div>
+          
+          {/* Distance Badge (if available) */}
+          {hasDistance && (
+            <div className="mb-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs gap-1">
+                <Navigation className="h-3 w-3" />
+                {formatDistance(propertyWithDetails.distance!)} away
+              </Badge>
+            </div>
+          )}
           
           {/* Accommodation Type & Suitable For */}
           <div className="space-y-1.5 mb-2">

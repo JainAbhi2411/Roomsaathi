@@ -7,7 +7,7 @@ import {
   Tv, Refrigerator, WashingMachine, CheckCircle2, Users, Bed,
   Bath, Maximize, Home, MapPinned, School, ShoppingBag, Hospital,
   Bus, Coffee, ChevronLeft, ChevronRight, X, Info, FileText,
-  CreditCard, XCircle, Clock, Armchair, DoorOpen, Lamp, Video
+  CreditCard, XCircle, Clock, Armchair, DoorOpen, Lamp, Video, Navigation
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +27,10 @@ import ScheduleVisitDialog from '@/components/property/ScheduleVisitDialog';
 import GoogleMap from '@/components/common/GoogleMap';
 import VideoPlayer from '@/components/ui/video-player';
 import RoomImageSlider from '@/components/property/RoomImageSlider';
+import NearbyMessSection from '@/components/mess/NearbyMessSection';
+import { NeighborhoodAmenities } from '@/components/property/NeighborhoodAmenities';
+import { useSearchFilter } from '@/contexts/SearchFilterContext';
+import { calculateDistance, formatDistance } from '@/lib/geolocation';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 
@@ -67,17 +71,32 @@ const roomTypeImages: Record<string, string> = {
 export default function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { userLocation } = useSearchFilter();
   const [property, setProperty] = useState<PropertyWithDetails | null>(null);
   const [similarProperties, setSimilarProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [propertyDistance, setPropertyDistance] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) {
       loadProperty(id);
     }
   }, [id]);
+
+  // Calculate distance when property or user location changes
+  useEffect(() => {
+    if (property && userLocation && property.latitude && property.longitude) {
+      const distance = calculateDistance(userLocation, {
+        latitude: property.latitude,
+        longitude: property.longitude
+      });
+      setPropertyDistance(distance);
+    } else {
+      setPropertyDistance(null);
+    }
+  }, [property, userLocation]);
 
   const loadProperty = async (propertyId: string) => {
     setLoading(true);
@@ -286,6 +305,15 @@ export default function PropertyDetailsPage() {
                       <div className="flex items-center gap-2 text-muted-foreground mb-3">
                         <MapPin className="h-4 w-4" />
                         <span>{property.locality}, {property.city}</span>
+                        {propertyDistance !== null && (
+                          <>
+                            <span className="text-muted-foreground">•</span>
+                            <Badge variant="outline" className="text-xs bg-primary/10 border-primary/30 text-primary">
+                              <Navigation className="h-3 w-3 mr-1" />
+                              {formatDistance(propertyDistance)} away
+                            </Badge>
+                          </>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 flex-wrap mb-3">
                         <Badge variant="secondary" className="text-sm">
@@ -631,150 +659,51 @@ export default function PropertyDetailsPage() {
 
                   {/* Policies Tab */}
                   <TabsContent value="policies" className="space-y-6 mt-6">
-                    {/* Things You Should Know */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Info className="h-5 w-5" />
-                          Things You Should Know
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium">Check-in Time</p>
-                              <p className="text-sm text-muted-foreground">Flexible check-in available after 10:00 AM</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium">Security Deposit</p>
-                              <p className="text-sm text-muted-foreground">Refundable security deposit of ₹5,000 required</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium">Notice Period</p>
-                              <p className="text-sm text-muted-foreground">1 month notice required before vacating</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium">Visitors Policy</p>
-                              <p className="text-sm text-muted-foreground">Visitors allowed between 9:00 AM - 9:00 PM</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium">Smoking & Alcohol</p>
-                              <p className="text-sm text-muted-foreground">Strictly prohibited inside the premises</p>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Payment Policies */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <CreditCard className="h-5 w-5" />
-                          Payment Policies
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-xs font-bold text-primary">1</span>
-                          </div>
-                          <div>
-                            <p className="font-medium">Advance Payment</p>
-                            <p className="text-sm text-muted-foreground">First month rent + security deposit required at booking</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-xs font-bold text-primary">2</span>
-                          </div>
-                          <div>
-                            <p className="font-medium">Monthly Payment</p>
-                            <p className="text-sm text-muted-foreground">Rent to be paid by 5th of every month</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-xs font-bold text-primary">3</span>
-                          </div>
-                          <div>
-                            <p className="font-medium">Payment Methods</p>
-                            <p className="text-sm text-muted-foreground">Cash, UPI, Bank Transfer, Cheque accepted</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-xs font-bold text-primary">4</span>
-                          </div>
-                          <div>
-                            <p className="font-medium">Late Payment</p>
-                            <p className="text-sm text-muted-foreground">₹100 per day late fee after 10th of the month</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Cancellation Policies */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <XCircle className="h-5 w-5" />
-                          Cancellation Policies
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Before Move-in</p>
-                            <p className="text-sm text-muted-foreground">100% refund if cancelled 7 days before move-in date</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <Info className="h-4 w-4 text-yellow-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">3-7 Days Before</p>
-                            <p className="text-sm text-muted-foreground">50% refund if cancelled 3-7 days before move-in</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <XCircle className="h-4 w-4 text-destructive" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Less than 3 Days</p>
-                            <p className="text-sm text-muted-foreground">No refund for cancellations within 3 days of move-in</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <FileText className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium">After Move-in</p>
-                            <p className="text-sm text-muted-foreground">1 month notice period required. Security deposit refunded after inspection</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    {/* Property-Specific Policies */}
+                    {property.policies && property.policies.length > 0 ? (
+                      <div className="space-y-6">
+                        {property.policies.map((policy) => (
+                          <Card key={policy.id}>
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                {policy.policy_icon && (
+                                  <span className="text-primary">
+                                    {policy.policy_icon === 'Clock' && '🕐'}
+                                    {policy.policy_icon === 'Users' && '👥'}
+                                    {policy.policy_icon === 'CreditCard' && '💳'}
+                                    {policy.policy_icon === 'XCircle' && '❌'}
+                                    {policy.policy_icon === 'FileText' && '📄'}
+                                    {policy.policy_icon === 'Shield' && '🛡️'}
+                                    {policy.policy_icon === 'Bell' && '🔔'}
+                                    {!['Clock', 'Users', 'CreditCard', 'XCircle', 'FileText', 'Shield', 'Bell'].includes(policy.policy_icon) && '📋'}
+                                  </span>
+                                )}
+                                {policy.policy_title}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-muted-foreground whitespace-pre-line">
+                                {policy.policy_description}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Info className="h-5 w-5" />
+                            Property Policies
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-muted-foreground">
+                            No specific policies have been added for this property yet. Please contact the property owner for detailed information about policies and rules.
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )}
 
                     {/* Short Term Stay Policy */}
                     {isShortTermAvailable && (
@@ -929,6 +858,22 @@ export default function PropertyDetailsPage() {
                 </div>
               </div>
             </div>
+
+            {/* Nearby Mess & Tiffin Centers */}
+            <div className="mt-16">
+              <NearbyMessSection property={property} />
+            </div>
+
+            {/* Neighborhood Amenities */}
+            {property.latitude && property.longitude && (
+              <div className="mt-16">
+                <NeighborhoodAmenities
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  radius={5000}
+                />
+              </div>
+            )}
 
             {/* Similar Properties */}
             {similarProperties.length > 0 && (

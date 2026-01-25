@@ -29,4 +29,31 @@ export interface DashboardStats {
   totalBlogs: number;
   pendingQueries: number;
   totalQueries: number;
+  totalVisits: number;
+  pendingVisits: number;
+}
+
+export interface PropertyVisit {
+  id: string;
+  property_id: string;
+  user_id: string;
+  visitor_name: string;
+  visitor_phone: string;
+  visit_date: string;
+  visit_time: string;
+  message?: string;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  created_at: string;
+  updated_at: string;
+  property?: {
+    id: string;
+    name: string;
+    type: string;
+    city: string;
+    locality: string;
+  };
+  user?: {
+    id: string;
+    email: string;
+  };
 }

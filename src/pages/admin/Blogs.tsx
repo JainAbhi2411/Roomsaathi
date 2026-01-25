@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { getAllBlogsAdmin, deleteBlog } from '@/db/adminApi';
+import { supabase } from '@/db/supabase';
 import type { Blog } from '@/types/index';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,6 +28,19 @@ export default function Blogs() {
 
   useEffect(() => {
     loadBlogs();
+
+    // Set up real-time subscription for blogs table
+    const channel = supabase
+      .channel('admin-blogs-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'blogs' }, () => {
+        loadBlogs();
+      })
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const loadBlogs = async () => {

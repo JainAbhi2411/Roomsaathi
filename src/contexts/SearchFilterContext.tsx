@@ -2,6 +2,11 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useSearchParams } from 'react-router';
 import type { FilterOptions } from '@/types/index';
 
+interface UserLocation {
+  latitude: number;
+  longitude: number;
+}
+
 interface SearchFilterContextType {
   filters: FilterOptions;
   setFilters: (filters: FilterOptions) => void;
@@ -9,13 +14,30 @@ interface SearchFilterContextType {
   clearFilters: () => void;
   applyFiltersToUrl: () => void;
   activeFilterCount: number;
+  userLocation: UserLocation | null;
+  setUserLocation: (location: UserLocation | null) => void;
+  nearMeActive: boolean;
+  setNearMeActive: (active: boolean) => void;
 }
 
 const SearchFilterContext = createContext<SearchFilterContextType | undefined>(undefined);
 
+const USER_LOCATION_KEY = 'roomsaathi_user_location';
+const NEAR_ME_ACTIVE_KEY = 'roomsaathi_near_me_active';
+
 export function SearchFilterProvider({ children }: { children: React.ReactNode }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFiltersState] = useState<FilterOptions>({});
+  const [userLocation, setUserLocationState] = useState<UserLocation | null>(() => {
+    // Initialize from session storage
+    const stored = sessionStorage.getItem(USER_LOCATION_KEY);
+    return stored ? JSON.parse(stored) : null;
+  });
+  const [nearMeActive, setNearMeActiveState] = useState<boolean>(() => {
+    // Initialize from session storage
+    const stored = sessionStorage.getItem(NEAR_ME_ACTIVE_KEY);
+    return stored === 'true';
+  });
 
   // Initialize filters from URL on mount
   useEffect(() => {
@@ -93,6 +115,20 @@ export function SearchFilterProvider({ children }: { children: React.ReactNode }
     setSearchParams(new URLSearchParams());
   }, [setSearchParams]);
 
+  const setUserLocation = useCallback((location: UserLocation | null) => {
+    setUserLocationState(location);
+    if (location) {
+      sessionStorage.setItem(USER_LOCATION_KEY, JSON.stringify(location));
+    } else {
+      sessionStorage.removeItem(USER_LOCATION_KEY);
+    }
+  }, []);
+
+  const setNearMeActive = useCallback((active: boolean) => {
+    setNearMeActiveState(active);
+    sessionStorage.setItem(NEAR_ME_ACTIVE_KEY, active.toString());
+  }, []);
+
   // Calculate active filter count
   const activeFilterCount = Object.keys(filters).filter(key => {
     const value = filters[key as keyof FilterOptions];
@@ -109,6 +145,10 @@ export function SearchFilterProvider({ children }: { children: React.ReactNode }
         clearFilters,
         applyFiltersToUrl,
         activeFilterCount,
+        userLocation,
+        setUserLocation,
+        nearMeActive,
+        setNearMeActive,
       }}
     >
       {children}

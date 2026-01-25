@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { getAllPropertiesAdmin, deleteProperty } from '@/db/adminApi';
+import { supabase } from '@/db/supabase';
 import type { Property } from '@/types/index';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,6 +28,19 @@ export default function Properties() {
 
   useEffect(() => {
     loadProperties();
+
+    // Set up real-time subscription for properties table
+    const channel = supabase
+      .channel('admin-properties-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, () => {
+        loadProperties();
+      })
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const loadProperties = async () => {

@@ -22,6 +22,7 @@ import PropertyForm from './pages/admin/PropertyForm';
 import Blogs from './pages/admin/Blogs';
 import BlogForm from './pages/admin/BlogForm';
 import Queries from './pages/admin/Queries';
+import Visits from './pages/admin/UserVisits';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import AdminLayout from './components/layouts/AdminLayout';
 import type { ReactNode } from 'react';
@@ -245,6 +246,18 @@ const routes: RouteConfig[] = [
       <ProtectedAdminRoute>
         <AdminLayout>
           <Queries />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Visits',
+    path: '/admin/visits',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Visits />
         </AdminLayout>
       </ProtectedAdminRoute>
     ),

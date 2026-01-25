@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Loader2, AlertCircle } from 'lucide-react';
+import { MapPin, Loader2, AlertCircle, Navigation } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { calculateDistance, formatDistance, getUserLocation, type Coordinates } from '@/lib/geolocation';
 
 interface GoogleMapProps {
   latitude: number;
@@ -11,6 +13,7 @@ interface GoogleMapProps {
   zoom?: number;
   height?: string;
   showCard?: boolean;
+  showDistance?: boolean;
 }
 
 export default function GoogleMap({
@@ -20,12 +23,15 @@ export default function GoogleMap({
   address,
   zoom = 15,
   height = '400px',
-  showCard = true
+  showCard = true,
+  showDistance = true
 }: GoogleMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  const [distance, setDistance] = useState<number | null>(null);
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -34,6 +40,17 @@ export default function GoogleMap({
       setError('Google Maps API key is not configured. Please add VITE_GOOGLE_MAPS_API_KEY to your .env file.');
       setIsLoading(false);
       return;
+    }
+
+    // Get user location for distance calculation
+    if (showDistance) {
+      getUserLocation().then(location => {
+        if (location) {
+          setUserLocation(location);
+          const dist = calculateDistance(location, { latitude, longitude });
+          setDistance(dist);
+        }
+      });
     }
 
     // Check if Google Maps script is already loaded
@@ -70,7 +87,7 @@ export default function GoogleMap({
     document.head.appendChild(script);
 
     // No cleanup needed - keep script loaded for other map instances
-  }, [latitude, longitude]);
+  }, [latitude, longitude, showDistance]);
 
   const initializeMap = async () => {
     if (!mapRef.current) return;
@@ -172,10 +189,18 @@ export default function GoogleMap({
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            Property Location
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              Property Location
+            </CardTitle>
+            {distance !== null && showDistance && (
+              <Badge variant="secondary" className="gap-1.5">
+                <Navigation className="h-3.5 w-3.5" />
+                {formatDistance(distance)} away
+              </Badge>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <div className="relative">
@@ -183,9 +208,14 @@ export default function GoogleMap({
           </div>
           <div className="mt-4 flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
             <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-            <div className="text-sm">
+            <div className="text-sm flex-1">
               <p className="font-medium mb-1">{propertyName}</p>
               {address && <p className="text-muted-foreground">{address}</p>}
+              {distance !== null && showDistance && (
+                <p className="text-primary font-medium mt-1">
+                  {formatDistance(distance)} from your location
+                </p>
+              )}
             </div>
           </div>
         </CardContent>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSearchParams } from 'react-router';
-import { Grid3x3, List, SlidersHorizontal, Search, X, Filter } from 'lucide-react';
+import { Grid3x3, List, SlidersHorizontal, Search, X, Filter, Navigation, Loader2 } from 'lucide-react';
 import type { PropertyWithDetails } from '@/types/index';
 import type { FilterOptions } from '@/types/index';
 import { getProperties } from '@/db/api';
@@ -17,24 +17,41 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
-import { supabase } from '@/db/supabase';
+import { useGeolocation } from '@/hooks/use-geolocation';
+import { calculateDistance, formatDistance } from '@/lib/geolocation';
+import { useToast } from '@/hooks/use-toast';
 
-type SortOption = 'newest' | 'price_low' | 'price_high' | 'name_az' | 'name_za';
+type SortOption = 'newest' | 'price_low' | 'price_high' | 'name_az' | 'name_za' | 'distance';
 type ViewMode = 'grid' | 'list';
 
 export default function BrowsePropertiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { filters: contextFilters, updateFilter, clearFilters: clearContextFilters, activeFilterCount } = useSearchFilter();
+  const { 
+    filters: contextFilters, 
+    updateFilter, 
+    clearFilters: clearContextFilters, 
+    activeFilterCount,
+    userLocation: contextUserLocation,
+    setUserLocation: setContextUserLocation,
+    nearMeActive,
+    setNearMeActive
+  } = useSearchFilter();
   const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [sortBy, setSortBy] = useState<SortOption>(() => {
+    // Initialize sort from URL or default to 'newest'
+    const sortParam = searchParams.get('sort');
+    return (sortParam as SortOption) || 'newest';
+  });
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [isSearchBarSticky, setIsSearchBarSticky] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<number | undefined>(undefined);
+  const { location: geoLocation, loading: locationLoading, requestLocation, isAvailable: isGeolocationAvailable } = useGeolocation();
+  const { toast } = useToast();
 
   // Initialize search query from context filters
   useEffect(() => {
@@ -42,6 +59,25 @@ export default function BrowsePropertiesPage() {
       setSearchQuery(contextFilters.search);
     }
   }, [contextFilters.search]);
+
+  // Initialize sort from URL and restore Near Me state
+  useEffect(() => {
+    const sortParam = searchParams.get('sort');
+    if (sortParam) {
+      setSortBy(sortParam as SortOption);
+    }
+    // If Near Me was active and we have location, restore it
+    if (nearMeActive && contextUserLocation) {
+      setSortBy('distance');
+    }
+  }, []);
+
+  // Update geolocation when it changes
+  useEffect(() => {
+    if (geoLocation) {
+      setContextUserLocation(geoLocation);
+    }
+  }, [geoLocation, setContextUserLocation]);
 
   // Sticky search bar on scroll
   useEffect(() => {
@@ -56,7 +92,40 @@ export default function BrowsePropertiesPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const loadProperties = useCallback(async () => {
+  // Load properties when filters change
+  useEffect(() => {
+    loadProperties();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadProperties, 30000);
+    return () => clearInterval(interval);
+  }, [contextFilters]);
+
+  // Sort properties when sort option changes or user location changes
+  useEffect(() => {
+    sortProperties();
+  }, [sortBy, properties, contextUserLocation]);
+
+  // Real-time search with debouncing
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = window.setTimeout(() => {
+      if (searchQuery !== (contextFilters.search || '')) {
+        updateFilter('search', searchQuery || undefined);
+        updateUrlParams();
+      }
+    }, 500); // 500ms debounce
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
+
+  const loadProperties = async () => {
     setLoading(true);
     try {
       const data = await getProperties(contextFilters);
@@ -67,72 +136,35 @@ export default function BrowsePropertiesPage() {
     } finally {
       setLoading(false);
     }
-  }, [contextFilters]);
-
-  // Sort properties when sort option changes
-  useEffect(() => {
-    loadProperties();
-  }, [loadProperties]);
-
-  useEffect(() => {
-  const channel = supabase
-    .channel('browse-properties-realtime')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'properties',
-      },
-      (payload) => {
-        const newRow = payload.new as PropertyWithDetails | null;
-        const oldRow = payload.old as PropertyWithDetails | null;
-
-        // INSERT or DELETE → always reload
-        if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
-          loadProperties();
-          return;
-        }
-
-        // UPDATE → check if anything meaningful actually changed
-        if (payload.eventType === 'UPDATE' && newRow && oldRow) {
-          const hasMeaningfulChange =
-            newRow.price_from !== oldRow.price_from ||
-            newRow.price_to !== oldRow.price_to ||
-            newRow.verified !== oldRow.verified ||
-            newRow.city !== oldRow.city ||
-            newRow.locality !== oldRow.locality ||
-            newRow.type !== oldRow.type;
-
-          if (!hasMeaningfulChange) {
-            // Ignore useless updates (views, updated_at, etc.)
-            return;
-          }
-
-          // Optional: respect current city filter
-          if (
-            contextFilters.city &&
-            newRow.city !== contextFilters.city
-          ) {
-            return;
-          }
-
-          loadProperties();
-        }
-      }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
   };
-}, [loadProperties, contextFilters.city]);
 
-
- useEffect(() => {
-    const sorted = [...properties];
-
+  const sortProperties = () => {
+    let sorted = [...properties];
+    
+    // Calculate distances if user location is available and sorting by distance
+    if (sortBy === 'distance' && contextUserLocation) {
+      sorted = sorted.map(property => {
+        if (property.latitude && property.longitude) {
+          const distance = calculateDistance(contextUserLocation, {
+            latitude: property.latitude,
+            longitude: property.longitude
+          });
+          return { ...property, distance };
+        }
+        return { ...property, distance: undefined };
+      });
+    }
+    
     switch (sortBy) {
+      case 'distance':
+        // Sort by distance (properties without coordinates go to the end)
+        sorted.sort((a, b) => {
+          if (a.distance === undefined && b.distance === undefined) return 0;
+          if (a.distance === undefined) return 1;
+          if (b.distance === undefined) return -1;
+          return a.distance - b.distance;
+        });
+        break;
       case 'price_low':
         sorted.sort((a, b) => a.price_from - b.price_from);
         break;
@@ -147,34 +179,11 @@ export default function BrowsePropertiesPage() {
         break;
       case 'newest':
       default:
-        sorted.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() -
-            new Date(a.created_at).getTime()
-        );
+        sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        break;
     }
-
     setFilteredProperties(sorted);
-  }, [sortBy, properties]);
-
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    searchTimeoutRef.current = window.setTimeout(() => {
-      if (searchQuery !== (contextFilters.search || '')) {
-        updateFilter('search', searchQuery || undefined);
-        updateUrlParams();
-      }
-    }, 500);
-
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchQuery]);
+  };
 
   const updateUrlParams = useCallback(() => {
     const params = new URLSearchParams();
@@ -190,9 +199,14 @@ export default function BrowsePropertiesPage() {
     }
     if (contextFilters.suitable_for) params.set('suitable_for', contextFilters.suitable_for);
     if (contextFilters.food_included) params.set('food_included', 'true');
+    
+    // Add sort parameter to URL
+    if (sortBy !== 'newest') {
+      params.set('sort', sortBy);
+    }
 
     setSearchParams(params);
-  }, [contextFilters, setSearchParams]);
+  }, [contextFilters, sortBy, setSearchParams]);
 
   const handleFilterChange = (newFilters: FilterOptions) => {
     // Update each filter in context
@@ -214,6 +228,36 @@ export default function BrowsePropertiesPage() {
     }
     updateFilter(key, undefined);
     updateUrlParams();
+  };
+
+  const handleNearMeClick = async () => {
+    if (!isGeolocationAvailable) {
+      toast({
+        title: 'Location Not Available',
+        description: 'Your browser does not support geolocation.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    await requestLocation();
+    
+    if (geoLocation) {
+      setContextUserLocation(geoLocation);
+      setNearMeActive(true);
+      setSortBy('distance');
+      updateUrlParams();
+      toast({
+        title: 'Location Detected',
+        description: 'Properties are now sorted by distance from your location.',
+      });
+    } else {
+      toast({
+        title: 'Location Access Denied',
+        description: 'Please enable location access to use the "Near Me" feature.',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -401,18 +445,48 @@ export default function BrowsePropertiesPage() {
                   ) : (
                     <span>
                       <strong className="text-foreground">{filteredProperties.length}</strong> properties found
+                      {sortBy === 'distance' && contextUserLocation && (
+                        <span className="ml-2 text-primary">• Sorted by distance</span>
+                      )}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                  {/* Near Me Button */}
+                  <Button
+                    variant={sortBy === 'distance' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={handleNearMeClick}
+                    disabled={locationLoading}
+                    className="gap-2"
+                  >
+                    {locationLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Navigation className="h-4 w-4" />
+                    )}
+                    Near Me
+                  </Button>
+
                   {/* Sort Dropdown */}
-                  <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                  <Select 
+                    value={sortBy} 
+                    onValueChange={(value) => {
+                      setSortBy(value as SortOption);
+                      if (value === 'distance') {
+                        setNearMeActive(true);
+                      }
+                      // Update URL will happen via useEffect watching sortBy
+                      setTimeout(updateUrlParams, 0);
+                    }}
+                  >
                     <SelectTrigger className="w-48">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="newest">Newest First</SelectItem>
+                      <SelectItem value="distance">Distance (Near Me)</SelectItem>
                       <SelectItem value="price_low">Price: Low to High</SelectItem>
                       <SelectItem value="price_high">Price: High to Low</SelectItem>
                       <SelectItem value="name_az">Name: A to Z</SelectItem>

@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions } from '@/types/index';
+import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions, MessCenter } from '@/types/index';
 
 // Get user session ID from localStorage or generate new one
 const getUserSessionId = (): string => {
@@ -289,11 +289,11 @@ export const getPublishedBlogs = async () => {
   return Array.isArray(data) ? data : [];
 };
 
-export const getBlogById = async (id: string) => {
+export const getBlogBySlug = async (slug: string) => {
   const { data, error } = await supabase
     .from('blogs')
     .select('*')
-    .eq('id', id)
+    .eq('slug', slug)
     .eq('published', true)
     .maybeSingle();
 
@@ -324,4 +324,91 @@ export const createUserQuery = async (query: {
 
   if (error) throw error;
   return { success: true };
+};
+
+// Calculate distance between two coordinates using Haversine formula
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+// Get nearby mess centers for a property
+export const getNearbyMessCenters = async (propertyId: string, maxDistance: number = 5): Promise<MessCenter[]> => {
+  // First get the property location
+  const { data: property, error: propertyError } = await supabase
+    .from('properties')
+    .select('latitude, longitude, city')
+    .eq('id', propertyId)
+    .maybeSingle();
+
+  if (propertyError) throw propertyError;
+  if (!property || !property.latitude || !property.longitude) return [];
+
+  // Get all mess centers in the same city
+  const { data: messCenters, error: messError } = await supabase
+    .from('mess_centers')
+    .select('*')
+    .eq('city', property.city)
+    .order('rating', { ascending: false });
+
+  if (messError) throw messError;
+  if (!messCenters) return [];
+
+  // Calculate distance for each mess center and filter by maxDistance
+  const messCentersWithDistance = messCenters
+    .map(mess => ({
+      ...mess,
+      distance: calculateDistance(
+        property.latitude,
+        property.longitude,
+        mess.latitude,
+        mess.longitude
+      )
+    }))
+    .filter(mess => mess.distance <= maxDistance)
+    .sort((a, b) => a.distance - b.distance);
+
+  return messCentersWithDistance;
+};
+
+// Get mess center by ID
+export const getMessCenterById = async (id: string): Promise<MessCenter | null> => {
+  const { data, error } = await supabase
+    .from('mess_centers')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+};
+
+// Get all mess centers with optional filters
+export const getMessCenters = async (filters?: {
+  city?: string;
+  locality?: string;
+  verified?: boolean;
+}): Promise<MessCenter[]> => {
+  let query = supabase.from('mess_centers').select('*').order('rating', { ascending: false });
+
+  if (filters?.city) {
+    query = query.eq('city', filters.city);
+  }
+  if (filters?.locality) {
+    query = query.eq('locality', filters.locality);
+  }
+  if (filters?.verified !== undefined) {
+    query = query.eq('verified', filters.verified);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
 };

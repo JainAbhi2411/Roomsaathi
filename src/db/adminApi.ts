@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { AdminLoginResponse, UserQuery, DashboardStats } from '@/types/admin';
+import type { AdminLoginResponse, UserQuery, DashboardStats, PropertyVisit } from '@/types/admin';
 import type { Property, Blog, PropertyPolicy } from '@/types/index';
 
 // Admin Authentication
@@ -24,18 +24,22 @@ export async function adminLogin(email: string, password: string): Promise<Admin
 // Dashboard Stats
 export async function getDashboardStats(): Promise<DashboardStats> {
   try {
-    const [propertiesCount, blogsCount, queriesCount, pendingCount] = await Promise.all([
+    const [propertiesCount, blogsCount, queriesCount, pendingQueriesCount, visitsCount, pendingVisitsCount] = await Promise.all([
       supabase.from('properties').select('id', { count: 'exact', head: true }),
       supabase.from('blogs').select('id', { count: 'exact', head: true }),
       supabase.from('user_queries').select('id', { count: 'exact', head: true }),
-      supabase.from('user_queries').select('id', { count: 'exact', head: true }).eq('status', 'pending')
+      supabase.from('user_queries').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      supabase.from('property_visits').select('id', { count: 'exact', head: true }),
+      supabase.from('property_visits').select('id', { count: 'exact', head: true }).eq('status', 'pending')
     ]);
 
     return {
       totalProperties: propertiesCount.count || 0,
       totalBlogs: blogsCount.count || 0,
       totalQueries: queriesCount.count || 0,
-      pendingQueries: pendingCount.count || 0
+      pendingQueries: pendingQueriesCount.count || 0,
+      totalVisits: visitsCount.count || 0,
+      pendingVisits: pendingVisitsCount.count || 0
     };
   } catch (error) {
     console.error('Error fetching dashboard stats:', error);
@@ -43,7 +47,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       totalProperties: 0,
       totalBlogs: 0,
       totalQueries: 0,
-      pendingQueries: 0
+      pendingQueries: 0,
+      totalVisits: 0,
+      pendingVisits: 0
     };
   }
 }
@@ -130,7 +136,7 @@ export async function createBlog(blog: Omit<Blog, 'id' | 'created_at' | 'updated
   try {
     const { error } = await supabase
       .from('blogs')
-      .insert([{ ...blog, author_id: adminId }]);
+      .insert([{ ...blog, admin_id: adminId }]);
 
     if (error) throw error;
     return { success: true };
@@ -296,6 +302,68 @@ export async function bulkDeletePropertyPolicies(propertyId: string): Promise<{ 
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting policies:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Visit Management
+export async function getAllVisits(): Promise<PropertyVisit[]> {
+  try {
+    const { data, error } = await supabase
+      .from('property_visits')
+      .select(`
+        *,
+        property:properties!property_visits_property_id_fkey (
+          id,
+          name,
+          type,
+          city,
+          locality
+        ),
+        user:profiles!property_visits_user_id_fkey (
+          id,
+          email
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching visits:', error);
+    return [];
+  }
+}
+
+export async function updateVisitStatus(
+  visitId: string,
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_visits')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', visitId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating visit status:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteVisit(visitId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_visits')
+      .delete()
+      .eq('id', visitId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting visit:', error);
     return { success: false, error: error.message };
   }
 }

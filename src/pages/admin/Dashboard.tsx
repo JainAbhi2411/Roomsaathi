@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { Building2, FileText, MessageSquare, TrendingUp, Plus } from 'lucide-react';
+import { Building2, FileText, MessageSquare, TrendingUp, Plus, Calendar } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getDashboardStats } from '@/db/adminApi';
+import { supabase } from '@/db/supabase';
 import type { DashboardStats } from '@/types/admin';
 
 export default function Dashboard() {
@@ -12,12 +13,36 @@ export default function Dashboard() {
     totalProperties: 0,
     totalBlogs: 0,
     totalQueries: 0,
-    pendingQueries: 0
+    pendingQueries: 0,
+    totalVisits: 0,
+    pendingVisits: 0
   });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadStats();
+
+    // Set up real-time subscriptions for all tables
+    const channel = supabase
+      .channel('admin-dashboard-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, () => {
+        loadStats();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'blogs' }, () => {
+        loadStats();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_queries' }, () => {
+        loadStats();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'property_visits' }, () => {
+        loadStats();
+      })
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const loadStats = async () => {
@@ -45,6 +70,22 @@ export default function Dashboard() {
       link: '/admin/blogs'
     },
     {
+      title: 'Pending Visits',
+      value: stats.pendingVisits,
+      icon: Calendar,
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10',
+      link: '/admin/visits'
+    },
+    {
+      title: 'Total Visits',
+      value: stats.totalVisits,
+      icon: Calendar,
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
+      link: '/admin/visits'
+    },
+    {
       title: 'Pending Queries',
       value: stats.pendingQueries,
       icon: MessageSquare,
@@ -56,8 +97,8 @@ export default function Dashboard() {
       title: 'Total Queries',
       value: stats.totalQueries,
       icon: TrendingUp,
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-pink-500',
+      bgColor: 'bg-pink-500/10',
       link: '/admin/queries'
     }
   ];
@@ -78,6 +119,13 @@ export default function Dashboard() {
       color: 'bg-green-500'
     },
     {
+      title: 'View Visits',
+      description: 'Manage property visits',
+      icon: Calendar,
+      link: '/admin/visits',
+      color: 'bg-yellow-500'
+    },
+    {
       title: 'View Queries',
       description: 'Check user inquiries',
       icon: MessageSquare,
@@ -95,7 +143,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-3 gap-6">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}

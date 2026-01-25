@@ -26,6 +26,8 @@ export interface Property {
   availability_status: string;
   accommodation_type?: string;
   suitable_for?: string[];
+  latitude?: number;
+  longitude?: number;
   created_at: string;
   updated_at: string;
 }
@@ -80,6 +82,7 @@ export interface PropertyWithDetails extends Property {
   amenities?: Amenity[];
   policies?: PropertyPolicy[];
   is_favorite?: boolean;
+  distance?: number; // Distance from user location in km
 }
 
 export interface Blog {
@@ -140,5 +143,60 @@ export interface User {
   name: string;
   phone?: string;
   created_at: string;
+}
+
+export interface MessCenter {
+  id: string;
+  name: string;
+  description?: string;
+  address: string;
+  city: 'Sikar' | 'Jaipur' | 'Kota';
+  locality: string;
+  latitude: number;
+  longitude: number;
+  contact_phone?: string;
+  contact_email?: string;
+  images: string[];
+  meal_types: string[];
+  pricing: {
+    breakfast?: number;
+    lunch?: number;
+    dinner?: number;
+    snacks?: number;
+    monthly?: number;
+  };
+  timings: {
+    breakfast?: string;
+    lunch?: string;
+    dinner?: string;
+    snacks?: string;
+  };
+  amenities: string[];
+  rating: number;
+  verified: boolean;
+  distance?: number; // Distance from property in km
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NearbyAmenity {
+  id: string;
+  name: string;
+  type: AmenityType;
+  address: string;
+  distance: number; // in meters
+  rating?: number;
+  latitude: number;
+  longitude: number;
+  isOpen?: boolean;
+  photoUrl?: string;
+}
+
+export enum AmenityType {
+  COACHING = 'coaching',
+  HOSPITAL = 'hospital',
+  BUS_STATION = 'bus_station',
+  RAILWAY_STATION = 'railway_station',
+  COLLEGE = 'college',
 }
 
