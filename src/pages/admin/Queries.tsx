@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Mail, Phone, Calendar, MessageSquare } from 'lucide-react';
+import { Mail, Phone, Calendar, MessageSquare, Filter, Utensils, Home } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ export default function Queries() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuery, setSelectedQuery] = useState<UserQuery | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
+  const [queryTypeFilter, setQueryTypeFilter] = useState<string>('all');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -119,12 +120,59 @@ export default function Queries() {
     }
   };
 
+  const getQueryTypeIcon = (queryType?: string) => {
+    switch (queryType) {
+      case 'mess_booking':
+        return <Utensils className="h-4 w-4" />;
+      case 'property':
+        return <Home className="h-4 w-4" />;
+      default:
+        return <MessageSquare className="h-4 w-4" />;
+    }
+  };
+
+  const getQueryTypeLabel = (queryType?: string) => {
+    switch (queryType) {
+      case 'mess_booking':
+        return 'Mess Booking';
+      case 'property':
+        return 'Property Query';
+      case 'general':
+        return 'General Query';
+      default:
+        return 'Query';
+    }
+  };
+
+  const filteredQueries = queries.filter(query => {
+    if (queryTypeFilter === 'all') return true;
+    return query.query_type === queryTypeFilter;
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">User Queries</h1>
-        <p className="text-muted-foreground">Manage user inquiries and messages</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">User Queries</h1>
+          <p className="text-muted-foreground">Manage user inquiries and messages</p>
+        </div>
+        
+        {/* Filter by Query Type */}
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Select value={queryTypeFilter} onValueChange={setQueryTypeFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Queries</SelectItem>
+              <SelectItem value="property">Property Queries</SelectItem>
+              <SelectItem value="mess_booking">Mess Bookings</SelectItem>
+              <SelectItem value="general">General Queries</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Queries List */}
@@ -139,16 +187,18 @@ export default function Queries() {
             </Card>
           ))}
         </div>
-      ) : queries.length === 0 ? (
+      ) : filteredQueries.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">No queries found</p>
+            <p className="text-muted-foreground">
+              {queryTypeFilter === 'all' ? 'No queries found' : `No ${getQueryTypeLabel(queryTypeFilter).toLowerCase()}s found`}
+            </p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-4">
-          {queries.map((query, index) => (
+          {filteredQueries.map((query, index) => (
             <motion.div
               key={query.id}
               initial={{ opacity: 0, y: 20 }}
@@ -163,6 +213,10 @@ export default function Queries() {
                         <CardTitle className="text-lg">{query.name}</CardTitle>
                         <Badge className={getStatusColor(query.status)}>
                           {query.status.replace('_', ' ')}
+                        </Badge>
+                        <Badge variant="outline" className="flex items-center gap-1">
+                          {getQueryTypeIcon(query.query_type)}
+                          {getQueryTypeLabel(query.query_type)}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -200,6 +254,26 @@ export default function Queries() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
+                    {/* Property or Mess Center Info */}
+                    {query.query_type === 'mess_booking' && query.mess_center_name && (
+                      <div className="bg-accent/10 border border-accent/20 p-3 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Utensils className="h-4 w-4 text-accent" />
+                          <span className="font-semibold text-sm">Mess Center:</span>
+                          <span className="text-sm">{query.mess_center_name}</span>
+                        </div>
+                      </div>
+                    )}
+                    {query.query_type === 'property' && query.property_name && (
+                      <div className="bg-primary/10 border border-primary/20 p-3 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Home className="h-4 w-4 text-primary" />
+                          <span className="font-semibold text-sm">Property:</span>
+                          <span className="text-sm">{query.property_name}</span>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div>
                       <h4 className="font-semibold text-sm text-foreground mb-2">Message:</h4>
                       <p className="text-muted-foreground text-sm">{query.message}</p>

@@ -15,14 +15,21 @@ import LoginPage from './pages/LoginPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TestAuthPage from './pages/TestAuthPage';
+import MessCentersPage from './pages/MessCentersPage';
+import MessDetailPage from './pages/MessDetailPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import Properties from './pages/admin/Properties';
 import PropertyForm from './pages/admin/PropertyForm';
+import RoomManagement from './pages/admin/RoomManagement';
 import Blogs from './pages/admin/Blogs';
 import BlogForm from './pages/admin/BlogForm';
 import Queries from './pages/admin/Queries';
 import Visits from './pages/admin/UserVisits';
+import MessCenters from './pages/admin/MessCenters';
+import MessForm from './pages/admin/MessForm';
+import Coupons from './pages/admin/Coupons';
+import ChatbotFeedback from './pages/admin/ChatbotFeedback';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import AdminLayout from './components/layouts/AdminLayout';
 import type { ReactNode } from 'react';
@@ -148,6 +155,18 @@ const routes: RouteConfig[] = [
     element: <TestAuthPage />,
     visible: false
   },
+  {
+    name: 'Mess Centers',
+    path: '/mess',
+    element: <MessCentersPage />,
+    visible: false
+  },
+  {
+    name: 'Mess Detail',
+    path: '/mess/:id',
+    element: <MessDetailPage />,
+    visible: false
+  },
   // Admin Routes
   {
     name: 'Admin Login',
@@ -198,6 +217,18 @@ const routes: RouteConfig[] = [
       <ProtectedAdminRoute>
         <AdminLayout>
           <PropertyForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Room Management',
+    path: '/admin/properties/:propertyId/rooms',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <RoomManagement />
         </AdminLayout>
       </ProtectedAdminRoute>
     ),
@@ -258,6 +289,66 @@ const routes: RouteConfig[] = [
       <ProtectedAdminRoute>
         <AdminLayout>
           <Visits />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Mess Centers',
+    path: '/admin/mess',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <MessCenters />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'New Mess Center',
+    path: '/admin/mess/new',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <MessForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Edit Mess Center',
+    path: '/admin/mess/edit/:id',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <MessForm />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Coupons',
+    path: '/admin/coupons',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <Coupons />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Chatbot Feedback',
+    path: '/admin/chatbot-feedback',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <ChatbotFeedback />
         </AdminLayout>
       </ProtectedAdminRoute>
     ),

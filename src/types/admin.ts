@@ -18,6 +18,10 @@ export interface UserQuery {
   phone?: string;
   message: string;
   property_id?: string;
+  property_name?: string;
+  query_type?: 'property' | 'mess_booking' | 'general';
+  mess_center_id?: string;
+  mess_center_name?: string;
   status: 'pending' | 'in_progress' | 'resolved' | 'closed';
   admin_notes?: string;
   created_at: string;

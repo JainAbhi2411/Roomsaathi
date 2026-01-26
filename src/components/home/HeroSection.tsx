@@ -53,26 +53,26 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-secondary/20 to-background py-16 xl:py-24">
-      <div className="container mx-auto px-4">
-        <div className="grid xl:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden bg-gradient-to-br from-background via-secondary/20 to-background py-10 xl:py-24">
+      <div className="container mx-auto px-3 xl:px-4">
+        <div className="grid xl:grid-cols-2 gap-4 xl:gap-8 xl:gap-3 xl:gap-6 xl:gap-12 items-center">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-6"
+            className="space-y-4 xl:space-y-6"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <h1 className="text-4xl xl:text-6xl font-bold leading-tight mb-4">
+              <h1 className="text-2xl xl:text-6xl font-bold leading-tight mb-3 xl:mb-4">
                 Find Your Perfect
                 <span className="gradient-text block">Home Away From Home</span>
               </h1>
-              <p className="text-lg xl:text-xl text-muted-foreground">
+              <p className="text-sm xl:text-xl text-muted-foreground">
                 Discover quality PG, flats, apartments, rooms, and hostels across Sikar, Jaipur, and Kota. Your comfort is our priority.
               </p>
             </motion.div>
@@ -81,21 +81,21 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="flex flex-col @md:flex-row gap-3 max-w-xl"
+              className="flex flex-col @md:flex-row gap-2 xl:gap-3 max-w-xl"
             >
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Search className="absolute left-2.5 xl:left-3 top-1/2 -translate-y-1/2 h-4 w-4 xl:h-5 xl:w-5 text-muted-foreground" />
                 <Input
                   placeholder="Search by location, property name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-10 h-12"
+                  className="pl-9 xl:pl-10 h-10 xl:h-12 text-sm xl:text-base"
                 />
               </div>
-              <Button size="lg" onClick={handleSearch} className="h-12">
+              <Button size="lg" onClick={handleSearch} className="h-10 xl:h-12 bg-accent text-accent-foreground hover:bg-accent/90 shadow-accent font-semibold text-sm xl:text-base">
                 Search
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-1.5 xl:ml-2 h-3.5 w-3.5 xl:h-4 xl:w-4" />
               </Button>
             </motion.div>
 
@@ -103,19 +103,19 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="flex flex-wrap gap-4 pt-4"
+              className="flex flex-wrap gap-3 xl:gap-4 pt-2 xl:pt-4"
             >
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">Properties</div>
+                <div className="text-lg xl:text-3xl font-bold text-primary">500+</div>
+                <div className="text-xs xl:text-sm text-muted-foreground">Properties</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">3</div>
-                <div className="text-sm text-muted-foreground">Cities</div>
+                <div className="text-lg xl:text-3xl font-bold text-accent">3</div>
+                <div className="text-xs xl:text-sm text-muted-foreground">Cities</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">1000+</div>
-                <div className="text-sm text-muted-foreground">Happy Tenants</div>
+                <div className="text-lg xl:text-3xl font-bold text-primary">1000+</div>
+                <div className="text-xs xl:text-sm text-muted-foreground">Happy Tenants</div>
               </div>
             </motion.div>
           </motion.div>
@@ -132,11 +132,11 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
+              className="absolute -top-6 xl:-top-8 left-1/2 -translate-x-1/2 z-20"
             >
               <div className="relative">
                 {/* Hook shape */}
-                <svg width="40" height="40" viewBox="0 0 40 40" className="text-muted-foreground">
+                <svg width="30" height="30" viewBox="0 0 40 40" className="text-muted-foreground xl:w-10 xl:h-10">
                   <path
                     d="M20 5 L20 15 Q20 20 25 20 L30 20"
                     stroke="currentColor"
@@ -159,7 +159,7 @@ export default function HeroSection() {
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut"
               }}
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-12 bg-muted-foreground/40 origin-top z-10"
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 xl:w-1 h-8 xl:h-12 bg-muted-foreground/40 origin-top z-10"
               style={{ transformOrigin: 'top center' }}
             />
 
@@ -174,7 +174,7 @@ export default function HeroSection() {
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut"
               }}
-              className="relative rounded-2xl overflow-hidden shadow-hover"
+              className="relative rounded-xl xl:rounded-2xl overflow-hidden shadow-hover"
               style={{ transformOrigin: 'top center' }}
             >
               <AnimatePresence mode="wait">
@@ -198,7 +198,7 @@ export default function HeroSection() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold"
+                    className="absolute top-2 right-2 xl:top-4 xl:right-4 bg-primary/90 backdrop-blur-sm text-primary-foreground px-2.5 py-1.5 xl:px-3 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-semibold"
                   >
                     {heroImages[currentImageIndex].label}
                   </motion.div>
@@ -208,10 +208,10 @@ export default function HeroSection() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="absolute bottom-6 left-6 right-6 bg-card/90 backdrop-blur-sm rounded-lg p-4 border border-border"
+                    className="absolute bottom-3 left-3 right-3 xl:bottom-6 xl:left-6 xl:right-6 bg-card/90 backdrop-blur-sm rounded-lg p-2.5 xl:p-4 border border-border"
                   >
-                    <p className="text-sm font-semibold">✨ Verified Properties</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs xl:text-sm font-semibold">✨ Verified Properties</p>
+                    <p className="text-[10px] xl:text-xs text-muted-foreground mt-0.5 xl:mt-1">
                       All properties are verified by RoomSaathi for your safety
                     </p>
                   </motion.div>
@@ -219,15 +219,15 @@ export default function HeroSection() {
               </AnimatePresence>
 
               {/* Image indicators */}
-              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div className="absolute bottom-14 xl:bottom-20 left-1/2 -translate-x-1/2 flex gap-1.5 xl:gap-2 z-10">
                 {heroImages.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`h-2 rounded-full transition-all ${
+                    className={`h-1.5 xl:h-2 rounded-full transition-all ${
                       index === currentImageIndex 
-                        ? 'bg-primary w-8' 
-                        : 'bg-white/60 w-2 hover:bg-white/80'
+                        ? 'bg-primary w-6 xl:w-8' 
+                        : 'bg-white/60 w-1.5 xl:w-2 hover:bg-white/80'
                     }`}
                     aria-label={`View image ${index + 1}`}
                   />
@@ -239,16 +239,16 @@ export default function HeroSection() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
-              className="absolute -top-4 -right-4 bg-primary text-primary-foreground rounded-full p-4 shadow-lg hidden xl:block"
+              className="absolute -top-4 -right-4 bg-primary text-primary-foreground rounded-full p-3 xl:p-4 shadow-lg hidden xl:block"
             >
-              <span className="text-2xl">🏠</span>
+              <span className="text-base xl:text-2xl">🏠</span>
             </motion.div>
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
-              className="absolute -bottom-4 -left-4 bg-secondary text-secondary-foreground rounded-full p-4 shadow-lg hidden xl:block"
+              className="absolute -bottom-4 -left-4 bg-secondary text-secondary-foreground rounded-full p-3 xl:p-4 shadow-lg hidden xl:block"
             >
-              <span className="text-2xl">🔑</span>
+              <span className="text-base xl:text-2xl">🔑</span>
             </motion.div>
           </motion.div>
         </div>

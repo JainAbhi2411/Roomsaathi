@@ -27,6 +27,7 @@ import ScheduleVisitDialog from '@/components/property/ScheduleVisitDialog';
 import GoogleMap from '@/components/common/GoogleMap';
 import VideoPlayer from '@/components/ui/video-player';
 import RoomImageSlider from '@/components/property/RoomImageSlider';
+import RoomSpecifications from '@/components/property/RoomSpecifications';
 import NearbyMessSection from '@/components/mess/NearbyMessSection';
 import { NeighborhoodAmenities } from '@/components/property/NeighborhoodAmenities';
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
@@ -512,119 +513,12 @@ export default function PropertyDetailsPage() {
                       roomsData={mockRoomsData}
                     />
 
-                    {/* Detailed Room Information */}
+                    {/* Detailed Room Information - New Perfect Display */}
                     {property.rooms && property.rooms.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Bed className="h-5 w-5" />
-                            Room Types & Pricing
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="grid gap-6">
-                            {property.rooms.map((room) => {
-                              // Prepare room images - use room images if available, otherwise fallback
-                              const roomImages = room.images && room.images.length > 0 
-                                ? room.images 
-                                : [roomTypeImages[room.room_type] || property.images[0]];
-                              
-                              return (
-                                <Card key={room.id} className="overflow-hidden @container">
-                                  <div className="grid @md:grid-cols-[280px_1fr] gap-4">
-                                    {/* Room Image Slider */}
-                                    <div className="relative h-56 @md:h-full">
-                                      <RoomImageSlider 
-                                        images={roomImages}
-                                        roomType={`${room.room_type} Sharing`}
-                                        className="h-full w-full rounded-l-lg"
-                                      />
-                                      {!room.available && (
-                                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
-                                          <Badge variant="destructive">Not Available</Badge>
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Room Details */}
-                                    <CardContent className="p-4 space-y-4">
-                                    <div className="flex items-start justify-between">
-                                      <div>
-                                        <h3 className="text-xl font-bold mb-1">{room.room_type} Sharing</h3>
-                                        {room.description && (
-                                          <p className="text-sm text-muted-foreground">{room.description}</p>
-                                        )}
-                                      </div>
-                                      <div className="text-right">
-                                        <div className="text-2xl font-bold text-primary">
-                                          ₹{room.price.toLocaleString()}
-                                        </div>
-                                        <div className="text-xs text-muted-foreground">per seat/month</div>
-                                      </div>
-                                    </div>
-
-                                    {/* Room Specifications */}
-                                    {room.specifications && (
-                                      <div>
-                                        <p className="text-sm font-semibold mb-2">Room Specifications:</p>
-                                        <div className="grid grid-cols-2 @md:grid-cols-4 gap-3">
-                                          {room.specifications.size && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                              <Maximize className="h-4 w-4 text-muted-foreground" />
-                                              <span>{room.specifications.size}</span>
-                                            </div>
-                                          )}
-                                          {room.specifications.bed && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                              <Bed className="h-4 w-4 text-muted-foreground" />
-                                              <span>{room.specifications.bed}</span>
-                                            </div>
-                                          )}
-                                          {room.specifications.bathroom && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                              <Bath className="h-4 w-4 text-muted-foreground" />
-                                              <span>{room.specifications.bathroom}</span>
-                                            </div>
-                                          )}
-                                          {room.specifications.ac && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                              <Wind className="h-4 w-4 text-muted-foreground" />
-                                              <span>AC</span>
-                                            </div>
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    {/* Furniture & Amenities in Room */}
-                                    <div>
-                                      <p className="text-sm font-semibold mb-2">Provided in Room:</p>
-                                      <div className="flex flex-wrap gap-2">
-                                        {['Bed', 'Almirah', 'Study Table', 'Chair', 'Shoe Rack'].map((item) => {
-                                          const Icon = furnitureIcons[item] || CheckCircle2;
-                                          return (
-                                            <div key={item} className="flex items-center gap-1 bg-muted px-3 py-1.5 rounded-full text-sm">
-                                              <Icon className="h-3 w-3 text-primary" />
-                                              <span>{item}</span>
-                                            </div>
-                                          );
-                                        })}
-                                      </div>
-                                    </div>
-
-                                    {room.available && (
-                                      <Button className="w-full @md:w-auto">
-                                        Book This Room
-                                      </Button>
-                                    )}
-                                  </CardContent>
-                                </div>
-                              </Card>
-                            );
-                            })}
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <RoomSpecifications 
+                        rooms={property.rooms} 
+                        propertyName={property.name}
+                      />
                     )}
                   </TabsContent>
 

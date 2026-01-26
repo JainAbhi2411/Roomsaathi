@@ -28,6 +28,8 @@ export interface Property {
   suitable_for?: string[];
   latitude?: number;
   longitude?: number;
+  total_floors?: number;
+  rooms_per_floor?: number;
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +50,12 @@ export interface Room {
     [key: string]: string | boolean | undefined;
   };
   available: boolean;
+  floor_number?: number;
+  room_number?: string;
+  seats?: number;
+  rent_per_seat?: number;
+  short_term_available?: boolean;
+  amenities?: string[];
   created_at: string;
 }
 
@@ -109,6 +117,9 @@ export interface UserQuery {
   message: string;
   property_id?: string;
   property_name?: string;
+  query_type?: 'property' | 'mess_booking' | 'general';
+  mess_center_id?: string;
+  mess_center_name?: string;
   status: 'pending' | 'in-progress' | 'resolved';
   admin_notes?: string;
   created_at: string;
@@ -135,6 +146,13 @@ export interface FilterOptions {
   amenities?: string[];
   suitable_for?: string;
   food_included?: boolean;
+  availability_status?: string;
+  furnishing_type?: string;
+  occupancy_type?: string;
+  parking_available?: boolean;
+  floor_preference?: string;
+  deposit_min?: number;
+  deposit_max?: number;
 }
 
 export interface User {
@@ -179,6 +197,47 @@ export interface MessCenter {
   updated_at: string;
 }
 
+export interface MessCoupon {
+  id: string;
+  code: string;
+  description?: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  min_booking_amount: number;
+  max_discount?: number;
+  valid_from: string;
+  valid_to: string;
+  usage_limit?: number;
+  used_count: number;
+  active: boolean;
+  applicable_cities: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MessBooking {
+  id: string;
+  user_id?: string;
+  user_session_id?: string;
+  mess_id: string;
+  coupon_id?: string;
+  user_name: string;
+  user_email?: string;
+  user_phone: string;
+  meal_plan: string;
+  start_date: string;
+  end_date?: string;
+  total_amount: number;
+  discount_amount: number;
+  final_amount: number;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+  mess_center?: MessCenter;
+  coupon?: MessCoupon;
+}
+
 export interface NearbyAmenity {
   id: string;
   name: string;
@@ -198,5 +257,18 @@ export enum AmenityType {
   BUS_STATION = 'bus_station',
   RAILWAY_STATION = 'railway_station',
   COLLEGE = 'college',
+}
+
+export interface ChatbotFeedback {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  looking_for: string;
+  problem: string;
+  status: 'new' | 'read' | 'resolved';
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
 }
 

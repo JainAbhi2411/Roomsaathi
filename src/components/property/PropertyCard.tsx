@@ -70,7 +70,7 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
     >
       <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 h-full flex flex-col">
         <Link to={`/property/${property.id}`} className="block">
-          <div className="relative h-44 xl:h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+          <div className="relative h-40 xl:h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
             {property.images.length > 0 ? (
               <img
                 src={property.images[currentImageIndex]}
@@ -78,7 +78,7 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
+              <div className="flex h-full items-center justify-center text-muted-foreground text-xs">
                 No image available
               </div>
             )}
@@ -87,32 +87,32 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
             
             {/* Top badges */}
-            <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+            <div className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 flex flex-col gap-1">
               <VerifiedBadge verified={property.verified} />
               {hasOffer && (
-                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg text-xs">
-                  <Tag className="h-3 w-3 mr-1" />
+                <Badge className="bg-accent text-accent-foreground border-0 shadow-accent font-semibold text-[10px] xl:text-xs px-1.5 py-0.5">
+                  <Tag className="h-2.5 w-2.5 xl:h-3 xl:w-3 mr-0.5" />
                   {discountPercentage}% OFF
                 </Badge>
               )}
             </div>
             
-            <div className="absolute top-2 right-2">
-              <Badge variant="secondary" className="backdrop-blur-sm bg-background/90 shadow-md text-xs">
+            <div className="absolute top-1.5 right-1.5 xl:top-2 xl:right-2">
+              <Badge variant="secondary" className="backdrop-blur-sm bg-background/90 shadow-md text-[10px] xl:text-xs px-1.5 py-0.5">
                 {property.type}
               </Badge>
             </div>
 
             {/* Image indicators */}
             {property.images.length > 1 && (
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+              <div className="absolute bottom-1.5 xl:bottom-2 left-1/2 -translate-x-1/2 flex gap-0.5 xl:gap-1">
                 {property.images.map((_, index) => (
                   <div
                     key={index}
-                    className={`h-1 rounded-full transition-all duration-300 ${
+                    className={`h-0.5 xl:h-1 rounded-full transition-all duration-300 ${
                       index === currentImageIndex 
-                        ? 'bg-white w-5 shadow-lg' 
-                        : 'bg-white/50 w-1'
+                        ? 'bg-accent w-4 xl:w-5 shadow-accent' 
+                        : 'bg-white/50 w-0.5 xl:w-1'
                     }`}
                   />
                 ))}
@@ -121,52 +121,52 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
           </div>
         </Link>
 
-        <CardContent className="p-3.5 flex-1 flex flex-col">
-          <Link to={`/property/${property.id}`} className="block mb-2">
-            <h3 className="font-bold text-base xl:text-lg mb-1.5 hover:text-primary transition-colors line-clamp-2 leading-tight">
+        <CardContent className="p-2.5 xl:p-3.5 flex-1 flex flex-col">
+          <Link to={`/property/${property.id}`} className="block mb-1.5 xl:mb-2">
+            <h3 className="font-bold text-sm xl:text-base leading-tight xl:leading-tight mb-1 xl:mb-1.5 hover:text-primary transition-colors line-clamp-2">
               {property.name}
             </h3>
           </Link>
 
           {/* Location */}
-          <div className="flex items-start gap-1 text-xs text-muted-foreground mb-2">
-            <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-1 text-[11px] xl:text-xs text-muted-foreground mb-1.5 xl:mb-2">
+            <MapPin className="h-3 w-3 xl:h-3.5 xl:w-3.5 mt-0.5 shrink-0" />
             <span className="line-clamp-1">{property.locality}, {property.city}</span>
           </div>
           
           {/* Distance Badge (if available) */}
           {hasDistance && (
-            <div className="mb-2">
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs gap-1">
-                <Navigation className="h-3 w-3" />
+            <div className="mb-1.5 xl:mb-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px] xl:text-xs gap-0.5 xl:gap-1 px-1.5 py-0.5">
+                <Navigation className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
                 {formatDistance(propertyWithDetails.distance!)} away
               </Badge>
             </div>
           )}
           
           {/* Accommodation Type & Suitable For */}
-          <div className="space-y-1.5 mb-2">
+          <div className="space-y-1 xl:space-y-1.5 mb-1.5 xl:mb-2">
             {property.accommodation_type && (
-              <div className="flex items-center gap-1 text-xs">
-                <Users className="h-3 w-3 text-primary" />
+              <div className="flex items-center gap-1 text-[11px] xl:text-xs">
+                <Users className="h-2.5 w-2.5 xl:h-3 xl:w-3 text-primary" />
                 <span className="font-medium text-foreground">{property.accommodation_type}</span>
               </div>
             )}
 
             {property.suitable_for && property.suitable_for.length > 0 && (
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-0.5 xl:gap-1">
                 {property.suitable_for.slice(0, 2).map((type) => (
                   <Badge
                     key={type}
                     variant="outline"
-                    className="text-xs bg-primary/5 border-primary/30 text-primary hover:bg-primary/10 py-0"
+                    className="text-[10px] xl:text-xs bg-primary/5 border-primary/30 text-primary hover:bg-primary/10 py-0 px-1.5"
                   >
-                    <UserCheck className="h-2.5 w-2.5 mr-0.5" />
+                    <UserCheck className="h-2 w-2 xl:h-2.5 xl:w-2.5 mr-0.5" />
                     {type}
                   </Badge>
                 ))}
                 {property.suitable_for.length > 2 && (
-                  <Badge variant="outline" className="text-xs bg-muted py-0">
+                  <Badge variant="outline" className="text-[10px] xl:text-xs bg-muted py-0 px-1.5">
                     +{property.suitable_for.length - 2}
                   </Badge>
                 )}
@@ -176,22 +176,22 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
 
           {/* Amenities */}
           {displayAmenities.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
+            <div className="flex flex-wrap gap-0.5 xl:gap-1 mb-2 xl:mb-3">
               {displayAmenities.map((amenity) => {
                 const IconComponent = amenityIconMap[amenity.amenity_name] || Shield;
                 return (
                   <div
                     key={amenity.id}
-                    className="flex items-center gap-1 text-xs bg-secondary/60 text-secondary-foreground px-2 py-1 rounded-lg hover:bg-secondary transition-colors"
+                    className="flex items-center gap-0.5 xl:gap-1 text-[10px] xl:text-xs bg-secondary/60 text-secondary-foreground px-1.5 xl:px-2 py-0.5 xl:py-1 rounded-lg hover:bg-secondary transition-colors"
                     title={amenity.amenity_name}
                   >
-                    <IconComponent className="h-3 w-3" />
+                    <IconComponent className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
                     <span className="hidden xl:inline font-medium">{amenity.amenity_name}</span>
                   </div>
                 );
               })}
               {amenities.length > 4 && (
-                <div className="flex items-center text-xs text-muted-foreground px-1.5 py-1">
+                <div className="flex items-center text-[10px] xl:text-xs text-muted-foreground px-1 xl:px-1.5 py-0.5 xl:py-1">
                   +{amenities.length - 4}
                 </div>
               )}
@@ -202,41 +202,41 @@ export default function PropertyCard({ property, onFavoriteToggle }: PropertyCar
           <div className="flex-1" />
 
           {/* Price Section */}
-          <div className="mb-2.5">
+          <div className="mb-2 xl:mb-2.5">
             {hasOffer ? (
               <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-0.5 text-xl xl:text-2xl font-bold text-primary">
-                    <IndianRupee className="h-4 w-4 xl:h-5 xl:w-5" />
+                <div className="flex items-center gap-1.5 xl:gap-2">
+                  <div className="flex items-center gap-0.5 text-sm xl:text-lg xl:text-sm xl:text-lg xl:text-2xl font-bold text-primary">
+                    <IndianRupee className="h-3.5 w-3.5 xl:h-5 xl:w-5" />
                     <span>{property.offer_price!.toLocaleString()}</span>
                   </div>
-                  <div className="flex items-center gap-0.5 text-xs text-muted-foreground line-through">
-                    <IndianRupee className="h-3 w-3" />
+                  <div className="flex items-center gap-0.5 text-[10px] xl:text-xs text-muted-foreground line-through">
+                    <IndianRupee className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
                     <span>{property.price_from.toLocaleString()}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Sparkles className="h-3 w-3 text-orange-500" />
+                <div className="flex items-center gap-0.5 xl:gap-1 text-[10px] xl:text-xs text-muted-foreground">
+                  <Sparkles className="h-2.5 w-2.5 xl:h-3 xl:w-3 text-orange-500" />
                   <span>Special Offer</span>
                   <span className="font-semibold">• /month</span>
                 </div>
               </div>
             ) : (
-              <div className="flex items-baseline gap-1">
-                <div className="flex items-center gap-0.5 text-xl xl:text-2xl font-bold text-primary">
-                  <IndianRupee className="h-4 w-4 xl:h-5 xl:w-5" />
+              <div className="flex items-baseline gap-0.5 xl:gap-1">
+                <div className="flex items-center gap-0.5 text-sm xl:text-lg xl:text-sm xl:text-lg xl:text-2xl font-bold text-primary">
+                  <IndianRupee className="h-3.5 w-3.5 xl:h-5 xl:w-5" />
                   <span>{priceDisplay}</span>
                 </div>
-                <span className="text-xs font-medium text-muted-foreground">/month</span>
+                <span className="text-[10px] xl:text-xs font-medium text-muted-foreground">/month</span>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center pt-2.5 border-t">
+          <div className="flex justify-between items-center pt-2 xl:pt-2.5 border-t">
             <Badge 
               variant={property.availability_status === 'Available' ? 'default' : 'secondary'} 
-              className="text-xs font-medium"
+              className="text-[10px] xl:text-xs font-medium px-1.5 xl:px-2 py-0.5"
             >
               {property.availability_status}
             </Badge>

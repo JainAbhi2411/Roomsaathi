@@ -63,12 +63,12 @@ export default function WhyChooseUsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <Card className="h-full hover:shadow-hover transition-shadow duration-300 border-l-4 border-l-primary">
+              <Card className={`h-full hover:shadow-hover transition-shadow duration-300 border-l-4 ${index % 2 === 0 ? 'border-l-primary' : 'border-l-accent'}`}>
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
-                        <feature.icon className="h-6 w-6 text-primary" />
+                      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${index % 2 === 0 ? 'bg-primary/10' : 'bg-accent/10'}`}>
+                        <feature.icon className={`h-6 w-6 ${index % 2 === 0 ? 'text-primary' : 'text-accent'}`} />
                       </div>
                     </div>
                     <div>

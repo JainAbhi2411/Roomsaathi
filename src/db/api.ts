@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions, MessCenter } from '@/types/index';
+import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions, MessCenter, ChatbotFeedback } from '@/types/index';
 
 // Get user session ID from localStorage or generate new one
 const getUserSessionId = (): string => {
@@ -300,17 +300,6 @@ export const getBlogBySlug = async (slug: string) => {
   if (error) throw error;
   return data;
 };
-export const getBlogById = async (id: string) => {
-  const { data, error } = await supabase
-    .from('blogs')
-    .select('*')
-    .eq('id', id)
-    .eq('published', true)
-    .maybeSingle();
-
-  if (error) throw error;
-  return data;
-};
 
 // User Query Management
 export const createUserQuery = async (query: {
@@ -320,6 +309,9 @@ export const createUserQuery = async (query: {
   message: string;
   property_id?: string;
   property_name?: string;
+  query_type?: 'property' | 'mess_booking' | 'general';
+  mess_center_id?: string;
+  mess_center_name?: string;
 }) => {
   const { error } = await supabase
     .from('user_queries')
@@ -330,11 +322,29 @@ export const createUserQuery = async (query: {
       message: query.message,
       property_id: query.property_id || null,
       property_name: query.property_name || null,
+      query_type: query.query_type || 'property',
+      mess_center_id: query.mess_center_id || null,
+      mess_center_name: query.mess_center_name || null,
       status: 'pending'
     });
 
   if (error) throw error;
   return { success: true };
+};
+
+// Create mess booking query
+export const createMessBookingQuery = async (query: {
+  name: string;
+  email?: string | null;
+  phone: string;
+  message: string;
+  mess_center_id: string;
+  mess_center_name: string;
+}) => {
+  return createUserQuery({
+    ...query,
+    query_type: 'mess_booking'
+  });
 };
 
 // Calculate distance between two coordinates using Haversine formula
@@ -422,4 +432,203 @@ export const getMessCenters = async (filters?: {
   const { data, error } = await query;
   if (error) throw error;
   return Array.isArray(data) ? data : [];
+};
+
+// Validate and apply coupon
+export const validateCoupon = async (code: string, messId: string, amount: number, city: string) => {
+  const { data, error } = await supabase
+    .from('mess_coupons')
+    .select('*')
+    .eq('code', code.toUpperCase())
+    .eq('active', true)
+    .lte('valid_from', new Date().toISOString())
+    .gte('valid_to', new Date().toISOString())
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) {
+    throw new Error('Invalid or expired coupon code');
+  }
+
+  // Check if coupon is applicable to the city
+  if (data.applicable_cities && data.applicable_cities.length > 0 && !data.applicable_cities.includes(city)) {
+    throw new Error('Coupon not applicable for this city');
+  }
+
+  // Check minimum booking amount
+  if (amount < data.min_booking_amount) {
+    throw new Error(`Minimum booking amount of ₹${data.min_booking_amount} required`);
+  }
+
+  // Check usage limit
+  if (data.usage_limit && data.used_count >= data.usage_limit) {
+    throw new Error('Coupon usage limit reached');
+  }
+
+  // Calculate discount
+  let discountAmount = 0;
+  if (data.discount_type === 'percentage') {
+    discountAmount = (amount * data.discount_value) / 100;
+    if (data.max_discount && discountAmount > data.max_discount) {
+      discountAmount = data.max_discount;
+    }
+  } else {
+    discountAmount = data.discount_value;
+  }
+
+  return {
+    coupon: data,
+    discountAmount: Math.min(discountAmount, amount)
+  };
+};
+
+// Create mess booking
+export const createMessBooking = async (booking: {
+  mess_id: string;
+  coupon_id?: string;
+  user_name: string;
+  user_email?: string;
+  user_phone: string;
+  meal_plan: string;
+  start_date: string;
+  end_date?: string;
+  total_amount: number;
+  discount_amount: number;
+  final_amount: number;
+}) => {
+  const sessionId = getUserSessionId();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const bookingData = {
+    ...booking,
+    user_id: user?.id,
+    user_session_id: sessionId,
+    status: 'pending'
+  };
+
+  const { data, error } = await supabase
+    .from('mess_bookings')
+    .insert(bookingData)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  // Update coupon usage count if coupon was used
+  if (booking.coupon_id) {
+    await supabase.rpc('increment_coupon_usage', { coupon_id: booking.coupon_id });
+  }
+
+  return data;
+};
+
+// Get user's mess bookings
+export const getUserMessBookings = async (): Promise<any[]> => {
+  const sessionId = getUserSessionId();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let query = supabase
+    .from('mess_bookings')
+    .select(`
+      *,
+      mess_center:mess_centers!mess_bookings_mess_id_fkey(*),
+      coupon:mess_coupons!mess_bookings_coupon_id_fkey(*)
+    `)
+    .order('created_at', { ascending: false });
+
+  if (user) {
+    query = query.eq('user_id', user.id);
+  } else {
+    query = query.eq('user_session_id', sessionId);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+// Get active coupons
+export const getActiveCoupons = async (city?: string) => {
+  let query = supabase
+    .from('mess_coupons')
+    .select('*')
+    .eq('active', true)
+    .lte('valid_from', new Date().toISOString())
+    .gte('valid_to', new Date().toISOString())
+    .order('discount_value', { ascending: false });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  
+  let coupons = Array.isArray(data) ? data : [];
+  
+  // Filter by city if provided
+  if (city) {
+    coupons = coupons.filter(coupon => 
+      !coupon.applicable_cities || 
+      coupon.applicable_cities.length === 0 || 
+      coupon.applicable_cities.includes(city)
+    );
+  }
+  
+  return coupons;
+};
+
+// Chatbot Feedback APIs
+export const submitChatbotFeedback = async (feedback: {
+  name: string;
+  email: string;
+  phone?: string;
+  looking_for: string;
+  problem: string;
+}): Promise<ChatbotFeedback> => {
+  const { data, error } = await supabase
+    .from('chatbot_feedback')
+    .insert([feedback])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getChatbotFeedbacks = async (): Promise<ChatbotFeedback[]> => {
+  const { data, error } = await supabase
+    .from('chatbot_feedback')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+export const updateChatbotFeedbackStatus = async (
+  id: string,
+  status: 'new' | 'read' | 'resolved',
+  admin_notes?: string
+): Promise<void> => {
+  const updateData: { status: string; admin_notes?: string; updated_at: string } = {
+    status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (admin_notes !== undefined) {
+    updateData.admin_notes = admin_notes;
+  }
+
+  const { error } = await supabase
+    .from('chatbot_feedback')
+    .update(updateData)
+    .eq('id', id);
+
+  if (error) throw error;
+};
+
+export const deleteChatbotFeedback = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('chatbot_feedback')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 };

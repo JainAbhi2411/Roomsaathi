@@ -13,6 +13,7 @@ import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import StatsSection from '@/components/home/StatsSection';
 import CTASection from '@/components/home/CTASection';
+import GallerySection from '@/components/home/GallerySection';
 import { Separator } from '@/components/ui/separator';
 
 export default function HomePage() {
@@ -34,6 +35,8 @@ export default function HomePage() {
         <CitiesSection />
         <Separator />
         <WhyChooseUsSection />
+        <Separator />
+        <GallerySection />
         <Separator />
         <StatsSection />
         <Separator />

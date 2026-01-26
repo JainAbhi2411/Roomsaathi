@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { Plus, Edit, Trash2, MapPin, IndianRupee, Eye } from 'lucide-react';
+import { Plus, Edit, Trash2, MapPin, IndianRupee, Eye, DoorOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -160,6 +160,11 @@ export default function Properties() {
                       <Button variant="outline" size="sm" className="w-full">
                         <Edit className="mr-2 h-4 w-4" />
                         Edit
+                      </Button>
+                    </Link>
+                    <Link to={`/admin/properties/${property.id}/rooms`}>
+                      <Button variant="outline" size="sm">
+                        <DoorOpen className="h-4 w-4" />
                       </Button>
                     </Link>
                     <AlertDialog>

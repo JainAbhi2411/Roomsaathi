@@ -10,7 +10,10 @@ import {
   Menu,
   X,
   ChevronRight,
-  Calendar
+  Calendar,
+  Utensils,
+  Tag,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -23,9 +26,12 @@ interface AdminLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Properties', href: '/admin/properties', icon: Building2 },
+  { name: 'Mess Centers', href: '/admin/mess', icon: Utensils },
+  { name: 'Coupons', href: '/admin/coupons', icon: Tag },
   { name: 'Blogs', href: '/admin/blogs', icon: FileText },
   { name: 'Visits', href: '/admin/visits', icon: Calendar },
-  { name: 'Queries', href: '/admin/queries', icon: MessageSquare }
+  { name: 'Queries', href: '/admin/queries', icon: MessageSquare },
+  { name: 'Chatbot Feedback', href: '/admin/chatbot-feedback', icon: MessageCircle }
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {

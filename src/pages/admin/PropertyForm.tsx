@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,10 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { createProperty, updateProperty, getAllPropertiesAdmin } from '@/db/adminApi';
+import { createProperty, updateProperty, getAllPropertiesAdmin, bulkCreatePropertyPolicies, bulkDeletePropertyPolicies } from '@/db/adminApi';
+import { getPoliciesByPropertyId } from '@/db/api';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
-import type { Property } from '@/types/index';
+import type { Property, PropertyPolicy } from '@/types/index';
 
 export default function PropertyForm() {
   const navigate = useNavigate();
@@ -32,8 +33,16 @@ export default function PropertyForm() {
     description: '',
     verified: false,
     images: [] as string[],
-    availability_status: 'available'
+    availability_status: 'available',
+    total_floors: 1,
+    rooms_per_floor: 1
   });
+
+  const [policies, setPolicies] = useState<Array<Omit<PropertyPolicy, 'id' | 'property_id' | 'created_at' | 'updated_at'>>>([
+    { policy_title: 'Check-in & Check-out', policy_description: '', policy_icon: 'Clock', display_order: 1 },
+    { policy_title: 'Guest Policy', policy_description: '', policy_icon: 'Users', display_order: 2 },
+    { policy_title: 'Payment Terms', policy_description: '', policy_icon: 'CreditCard', display_order: 3 },
+  ]);
 
   useEffect(() => {
     if (isEdit && id) {
@@ -57,8 +66,25 @@ export default function PropertyForm() {
         description: property.description || '',
         verified: property.verified || false,
         images: property.images || [],
-        availability_status: property.availability_status || 'available'
+        availability_status: property.availability_status || 'available',
+        total_floors: property.total_floors || 1,
+        rooms_per_floor: property.rooms_per_floor || 1
       });
+
+      // Load existing policies
+      try {
+        const existingPolicies = await getPoliciesByPropertyId(id!);
+        if (existingPolicies.length > 0) {
+          setPolicies(existingPolicies.map(p => ({
+            policy_title: p.policy_title,
+            policy_description: p.policy_description,
+            policy_icon: p.policy_icon,
+            display_order: p.display_order
+          })));
+        }
+      } catch (error) {
+        console.error('Error loading policies:', error);
+      }
     }
   };
 
@@ -67,23 +93,57 @@ export default function PropertyForm() {
     setIsLoading(true);
 
     try {
-      const result = isEdit
-        ? await updateProperty(id!, formData)
-        : await createProperty(formData as any);
+      let propertyId: string | undefined;
 
-      if (result.success) {
-        toast({
-          title: 'Success',
-          description: `Property ${isEdit ? 'updated' : 'created'} successfully`
-        });
-        navigate('/admin/properties');
+      if (isEdit) {
+        const result = await updateProperty(id!, formData);
+        if (!result.success) {
+          toast({
+            title: 'Error',
+            description: result.error || 'Failed to update property',
+            variant: 'destructive'
+          });
+          return;
+        }
+        propertyId = id!;
       } else {
-        toast({
-          title: 'Error',
-          description: result.error || 'Failed to save property',
-          variant: 'destructive'
-        });
+        const result = await createProperty(formData as any);
+        if (!result.success) {
+          toast({
+            title: 'Error',
+            description: result.error || 'Failed to create property',
+            variant: 'destructive'
+          });
+          return;
+        }
+        propertyId = result.data?.id;
       }
+
+      // Save policies if property was created or updated
+      if (propertyId && policies.length > 0) {
+        // Delete existing policies and create new ones
+        await bulkDeletePropertyPolicies(propertyId);
+        
+        const policiesToCreate = policies
+          .filter(p => p.policy_title && p.policy_description)
+          .map((p, index) => ({
+            property_id: propertyId!,
+            policy_title: p.policy_title,
+            policy_description: p.policy_description,
+            policy_icon: p.policy_icon || '',
+            display_order: index + 1
+          }));
+
+        if (policiesToCreate.length > 0) {
+          await bulkCreatePropertyPolicies(policiesToCreate);
+        }
+      }
+
+      toast({
+        title: 'Success',
+        description: `Property ${isEdit ? 'updated' : 'created'} successfully`
+      });
+      navigate('/admin/properties');
     } catch (error) {
       toast({
         title: 'Error',
@@ -103,6 +163,25 @@ export default function PropertyForm() {
   const handleImagesChange = (value: string) => {
     const urls = value.split('\n').map(url => url.trim()).filter(url => url);
     setFormData(prev => ({ ...prev, images: urls }));
+  };
+
+  const addPolicy = () => {
+    setPolicies(prev => [...prev, {
+      policy_title: '',
+      policy_description: '',
+      policy_icon: 'FileText',
+      display_order: prev.length + 1
+    }]);
+  };
+
+  const removePolicy = (index: number) => {
+    setPolicies(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const updatePolicy = (index: number, field: string, value: string) => {
+    setPolicies(prev => prev.map((policy, i) => 
+      i === index ? { ...policy, [field]: value } : policy
+    ));
   };
 
   const commonAmenities = [
@@ -219,6 +298,42 @@ export default function PropertyForm() {
                   Set a special offer price lower than the regular price to show discount badge
                 </p>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="total_floors">Total Floors *</Label>
+                <Input
+                  id="total_floors"
+                  type="number"
+                  min="1"
+                  value={formData.total_floors}
+                  onChange={(e) => setFormData(prev => ({ ...prev, total_floors: Number(e.target.value) }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="rooms_per_floor">Rooms Per Floor *</Label>
+                <Input
+                  id="rooms_per_floor"
+                  type="number"
+                  min="1"
+                  value={formData.rooms_per_floor}
+                  onChange={(e) => setFormData(prev => ({ ...prev, rooms_per_floor: Number(e.target.value) }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Total Rooms</Label>
+                <div className="p-3 bg-muted rounded-md">
+                  <p className="text-lg font-semibold text-foreground">
+                    {formData.total_floors * formData.rooms_per_floor} rooms
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Calculated: {formData.total_floors} floors × {formData.rooms_per_floor} rooms/floor
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -249,6 +364,84 @@ export default function PropertyForm() {
               <p className="text-sm text-muted-foreground">
                 Amenities are managed through the amenities table. Add them after creating the property.
               </p>
+            </div>
+
+            {/* Property Policies */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Property Policies</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Add property-specific policies and rules for guests
+                  </p>
+                </div>
+                <Button type="button" variant="outline" size="sm" onClick={addPolicy}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Policy
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {policies.map((policy, index) => (
+                  <Card key={index} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 space-y-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                              <Label htmlFor={`policy-title-${index}`}>Policy Title</Label>
+                              <Input
+                                id={`policy-title-${index}`}
+                                value={policy.policy_title}
+                                onChange={(e) => updatePolicy(index, 'policy_title', e.target.value)}
+                                placeholder="e.g., Check-in & Check-out"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`policy-icon-${index}`}>Icon Name (optional)</Label>
+                              <Input
+                                id={`policy-icon-${index}`}
+                                value={policy.policy_icon || ''}
+                                onChange={(e) => updatePolicy(index, 'policy_icon', e.target.value)}
+                                placeholder="e.g., Clock, Users, Shield"
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`policy-description-${index}`}>Policy Description</Label>
+                            <Textarea
+                              id={`policy-description-${index}`}
+                              value={policy.policy_description}
+                              onChange={(e) => updatePolicy(index, 'policy_description', e.target.value)}
+                              rows={3}
+                              placeholder="Describe the policy in detail..."
+                            />
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removePolicy(index)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {policies.length === 0 && (
+                <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">No policies added yet</p>
+                  <Button type="button" variant="outline" size="sm" onClick={addPolicy}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Your First Policy
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Images */}

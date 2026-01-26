@@ -8,24 +8,28 @@ const steps = [
     title: 'Search Properties',
     description: 'Browse through our extensive collection of verified properties across multiple cities',
     color: 'text-primary',
+    bgColor: 'bg-primary',
   },
   {
     icon: CheckCircle2,
     title: 'Compare & Select',
     description: 'Compare amenities, prices, and locations to find the perfect match for your needs',
-    color: 'text-primary',
+    color: 'text-accent',
+    bgColor: 'bg-accent',
   },
   {
     icon: Home,
     title: 'Visit & Verify',
     description: 'Schedule a visit to inspect the property and meet the owner in person',
     color: 'text-primary',
+    bgColor: 'bg-primary',
   },
   {
     icon: ThumbsUp,
     title: 'Move In',
     description: 'Complete the formalities and move into your new home hassle-free',
-    color: 'text-primary',
+    color: 'text-accent',
+    bgColor: 'bg-accent',
   },
 ];
 
@@ -60,11 +64,11 @@ export default function HowItWorksSection() {
             >
               <Card className="relative h-full hover:shadow-hover transition-shadow duration-300 w-full">
                 <CardContent className="p-3 xl:p-5 text-center flex flex-col h-full">
-                  <div className="absolute -top-2 xl:-top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full w-6 h-6 xl:w-8 xl:h-8 flex items-center justify-center font-bold text-xs xl:text-sm shadow-md">
+                  <div className={`absolute -top-2 xl:-top-3 left-1/2 -translate-x-1/2 ${step.bgColor} ${step.bgColor === 'bg-accent' ? 'text-accent-foreground' : 'text-primary-foreground'} rounded-full w-6 h-6 xl:w-8 xl:h-8 flex items-center justify-center font-bold text-xs xl:text-sm shadow-md`}>
                     {index + 1}
                   </div>
                   <div className="mb-2 xl:mb-3 mt-2 xl:mt-3">
-                    <div className="inline-flex items-center justify-center w-10 h-10 xl:w-14 xl:h-14 rounded-full bg-primary/10">
+                    <div className={`inline-flex items-center justify-center w-10 h-10 xl:w-14 xl:h-14 rounded-full ${step.bgColor}/10`}>
                       <step.icon className={`h-5 w-5 xl:h-7 xl:w-7 ${step.color}`} />
                     </div>
                   </div>

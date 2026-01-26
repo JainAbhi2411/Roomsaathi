@@ -71,9 +71,9 @@ export default function CitiesSection() {
                 </div>
                 <CardContent className="p-4 xl:p-5 flex-1 flex flex-col">
                   <div className="flex items-center justify-between mb-3 xl:mb-4">
-                    <div className="flex items-center gap-1.5 xl:gap-2 text-primary">
+                    <div className="flex items-center gap-1.5 xl:gap-2 text-accent font-semibold">
                       <MapPin className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
-                      <span className="font-semibold text-sm xl:text-base">{city.properties} Properties</span>
+                      <span className="text-sm xl:text-base">{city.properties} Properties</span>
                     </div>
                   </div>
                   <div className="mb-4 xl:mb-5 flex-1">

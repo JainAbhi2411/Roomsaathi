@@ -10,7 +10,7 @@ export default function VerifiedBadge({ verified, className }: VerifiedBadgeProp
   if (!verified) return null;
 
   return (
-    <Badge variant="default" className={`bg-primary text-primary-foreground ${className}`}>
+    <Badge variant="default" className={`bg-accent text-accent-foreground font-semibold shadow-accent ${className}`}>
       <CheckCircle2 className="mr-1 h-3 w-3" />
       RoomSaathi Verified
     </Badge>

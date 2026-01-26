@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import type { AdminLoginResponse, UserQuery, DashboardStats, PropertyVisit } from '@/types/admin';
-import type { Property, Blog, PropertyPolicy } from '@/types/index';
+import type { Property, Blog, PropertyPolicy, Room } from '@/types/index';
 
 // Admin Authentication
 export async function adminLogin(email: string, password: string): Promise<AdminLoginResponse> {
@@ -364,6 +364,234 @@ export async function deleteVisit(visitId: string): Promise<{ success: boolean; 
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting visit:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Room Management
+export async function getRoomsByPropertyId(propertyId: string): Promise<Room[]> {
+  try {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select('*')
+      .eq('property_id', propertyId)
+      .order('floor_number', { ascending: true })
+      .order('room_number', { ascending: true });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching rooms:', error);
+    return [];
+  }
+}
+
+export async function createRoom(room: Omit<Room, 'id' | 'created_at'>): Promise<{ success: boolean; error?: string; data?: Room }> {
+  try {
+    const { data, error } = await supabase
+      .from('rooms')
+      .insert([room])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error: any) {
+    console.error('Error creating room:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateRoom(id: string, room: Partial<Room>): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('rooms')
+      .update(room)
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating room:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteRoom(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('rooms')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting room:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Mess Center Management
+export async function getAllMessCentersAdmin() {
+  try {
+    const { data, error } = await supabase
+      .from('mess_centers')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching mess centers:', error);
+    return [];
+  }
+}
+
+export async function createMessCenter(messCenter: any) {
+  try {
+    const { data, error } = await supabase
+      .from('mess_centers')
+      .insert([messCenter])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error: any) {
+    console.error('Error creating mess center:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateMessCenter(id: string, messCenter: any) {
+  try {
+    const { error } = await supabase
+      .from('mess_centers')
+      .update(messCenter)
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating mess center:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteMessCenter(id: string) {
+  try {
+    const { error } = await supabase
+      .from('mess_centers')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting mess center:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Coupon Management
+export async function getAllCoupons() {
+  try {
+    const { data, error } = await supabase
+      .from('mess_coupons')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching coupons:', error);
+    return [];
+  }
+}
+
+export async function createCoupon(coupon: any) {
+  try {
+    const { data, error } = await supabase
+      .from('mess_coupons')
+      .insert([coupon])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error: any) {
+    console.error('Error creating coupon:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateCoupon(id: string, coupon: any) {
+  try {
+    const { error } = await supabase
+      .from('mess_coupons')
+      .update(coupon)
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating coupon:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteCoupon(id: string) {
+  try {
+    const { error } = await supabase
+      .from('mess_coupons')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting coupon:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Mess Booking Management
+export async function getAllMessBookings() {
+  try {
+    const { data, error } = await supabase
+      .from('mess_bookings')
+      .select(`
+        *,
+        mess_center:mess_centers!mess_bookings_mess_id_fkey(*),
+        coupon:mess_coupons!mess_bookings_coupon_id_fkey(*)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching mess bookings:', error);
+    return [];
+  }
+}
+
+export async function updateMessBookingStatus(id: string, status: string, adminNotes?: string) {
+  try {
+    const updateData: any = { status, updated_at: new Date().toISOString() };
+    if (adminNotes !== undefined) {
+      updateData.admin_notes = adminNotes;
+    }
+
+    const { error } = await supabase
+      .from('mess_bookings')
+      .update(updateData)
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating booking status:', error);
     return { success: false, error: error.message };
   }
 }

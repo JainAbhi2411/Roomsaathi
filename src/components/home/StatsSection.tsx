@@ -6,25 +6,25 @@ const stats = [
     icon: Building2,
     value: '500+',
     label: 'Properties Listed',
-    color: 'text-orange-500',
+    color: 'text-primary',
   },
   {
     icon: Users,
     value: '1000+',
     label: 'Happy Tenants',
-    color: 'text-blue-500',
+    color: 'text-accent',
   },
   {
     icon: MapPin,
     value: '3',
     label: 'Cities Covered',
-    color: 'text-green-500',
+    color: 'text-primary',
   },
   {
     icon: CheckCircle2,
     value: '100%',
     label: 'Verified Properties',
-    color: 'text-purple-500',
+    color: 'text-accent',
   },
 ];
 

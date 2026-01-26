@@ -6,14 +6,13 @@ import type { PropertyWithDetails } from '@/types/index';
 import type { FilterOptions } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCard from '@/components/property/PropertyCard';
-import AdvancedFilterBar from '@/components/property/AdvancedFilterBar';
+import FilterModal from '@/components/property/FilterModal';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
@@ -46,7 +45,7 @@ export default function BrowsePropertiesPage() {
     return (sortParam as SortOption) || 'newest';
   });
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [isSearchBarSticky, setIsSearchBarSticky] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<number | undefined>(undefined);
@@ -199,6 +198,13 @@ export default function BrowsePropertiesPage() {
     }
     if (contextFilters.suitable_for) params.set('suitable_for', contextFilters.suitable_for);
     if (contextFilters.food_included) params.set('food_included', 'true');
+    if (contextFilters.availability_status) params.set('availability_status', contextFilters.availability_status);
+    if (contextFilters.furnishing_type) params.set('furnishing_type', contextFilters.furnishing_type);
+    if (contextFilters.occupancy_type) params.set('occupancy_type', contextFilters.occupancy_type);
+    if (contextFilters.parking_available) params.set('parking_available', 'true');
+    if (contextFilters.floor_preference) params.set('floor_preference', contextFilters.floor_preference);
+    if (contextFilters.deposit_min) params.set('deposit_min', contextFilters.deposit_min.toString());
+    if (contextFilters.deposit_max) params.set('deposit_max', contextFilters.deposit_max.toString());
     
     // Add sort parameter to URL
     if (sortBy !== 'newest') {
@@ -214,7 +220,6 @@ export default function BrowsePropertiesPage() {
       updateFilter(key as keyof FilterOptions, newFilters[key as keyof FilterOptions]);
     });
     updateUrlParams();
-    setMobileFiltersOpen(false);
   };
 
   const clearAllFilters = () => {
@@ -265,17 +270,17 @@ export default function BrowsePropertiesPage() {
       <Header />
       <main className="flex-1">
         {/* Page Header */}
-        <section className="bg-muted/30 py-8 xl:py-12 border-b border-border">
-          <div className="container mx-auto px-4">
+        <section className="bg-muted/30 py-6 xl:py-6 xl:py-12 border-b border-border">
+          <div className="container mx-auto px-3 xl:px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl xl:text-4xl font-bold mb-2">
+              <h1 className="text-lg xl:text-2xl xl:text-lg xl:text-2xl xl:text-4xl font-bold mb-1.5 xl:mb-2">
                 Browse <span className="gradient-text">Properties</span>
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-sm xl:text-base text-muted-foreground">
                 Discover your perfect accommodation from our extensive collection
               </p>
             </motion.div>
@@ -286,68 +291,61 @@ export default function BrowsePropertiesPage() {
         <div
           ref={searchBarRef}
           className={`bg-background border-b border-border transition-all duration-300 ${
-            isSearchBarSticky ? 'sticky top-16 z-40 shadow-md' : ''
+            isSearchBarSticky ? 'sticky top-14 xl:top-16 z-40 shadow-md' : ''
           }`}
         >
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex gap-3">
+          <div className="container mx-auto px-3 xl:px-3 xl:px-4 py-3 xl:py-4">
+            <div className="flex gap-2 xl:gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2.5 xl:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 xl:h-4 xl:w-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search by property name, locality, or amenities..."
+                  placeholder="Search properties..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-10"
+                  className="pl-9 xl:pl-10 pr-9 xl:pr-10 h-9 xl:h-10 text-sm"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-2.5 xl:right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
                   </button>
                 )}
               </div>
-              <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="xl:hidden">
-                    <SlidersHorizontal className="mr-2 h-4 w-4" />
-                    Filters
-                    {activeFilterCount > 0 && (
-                      <Badge variant="default" className="ml-2">
-                        {activeFilterCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-full @sm:w-96 overflow-y-auto">
-                  <SheetHeader>
-                    <SheetTitle>Filter Properties</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <AdvancedFilterBar filters={contextFilters} onFilterChange={handleFilterChange} />
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setFilterModalOpen(true)}
+                className="h-9 px-3 xl:px-4 gap-2"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                <span className="hidden @md:inline">Filters</span>
+                {activeFilterCount > 0 && (
+                  <Badge variant="default" className="ml-1 text-xs px-1.5 py-0">
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
             </div>
 
             {/* Active Filter Chips */}
             {activeFilterCount > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-1.5 xl:gap-2 mt-2 xl:mt-3">
                 {contextFilters.city && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-[10px] xl:text-xs px-1.5 xl:px-2 py-0.5">
                     City: {contextFilters.city}
-                    <button type="button" onClick={() => removeFilter('city')} className="ml-1 hover:text-destructive">
-                      <X className="h-3 w-3" />
+                    <button type="button" onClick={() => removeFilter('city')} className="ml-0.5 xl:ml-1 hover:text-destructive">
+                      <X className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.locality && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-[10px] xl:text-xs px-1.5 xl:px-2 py-0.5">
                     Locality: {contextFilters.locality}
-                    <button type="button" onClick={() => removeFilter('locality')} className="ml-1 hover:text-destructive">
-                      <X className="h-3 w-3" />
+                    <button type="button" onClick={() => removeFilter('locality')} className="ml-0.5 xl:ml-1 hover:text-destructive">
+                      <X className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
                     </button>
                   </Badge>
                 )}
@@ -402,6 +400,30 @@ export default function BrowsePropertiesPage() {
                     </button>
                   </Badge>
                 )}
+                {contextFilters.furnishing_type && (
+                  <Badge variant="secondary" className="gap-1">
+                    {contextFilters.furnishing_type}
+                    <button type="button" onClick={() => removeFilter('furnishing_type')} className="ml-1 hover:text-destructive">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
+                {contextFilters.occupancy_type && (
+                  <Badge variant="secondary" className="gap-1">
+                    {contextFilters.occupancy_type} Occupancy
+                    <button type="button" onClick={() => removeFilter('occupancy_type')} className="ml-1 hover:text-destructive">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
+                {contextFilters.parking_available && (
+                  <Badge variant="secondary" className="gap-1">
+                    Parking Available
+                    <button type="button" onClick={() => removeFilter('parking_available')} className="ml-1 hover:text-destructive">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -415,56 +437,37 @@ export default function BrowsePropertiesPage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid xl:grid-cols-[300px_1fr] gap-8">
-            {/* Desktop Sidebar Filters */}
-            <aside className="hidden xl:block">
-              <div className="sticky top-32">
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <Filter className="h-5 w-5" />
-                    Advanced Filters
-                    {activeFilterCount > 0 && (
-                      <Badge variant="default" className="ml-auto">
-                        {activeFilterCount}
-                      </Badge>
-                    )}
-                  </h3>
-                  <AdvancedFilterBar filters={contextFilters} onFilterChange={handleFilterChange} />
-                </div>
-              </div>
-            </aside>
-
-            {/* Main Content */}
-            <div className="flex-1">
-              {/* Toolbar */}
-              <div className="flex flex-col @md:flex-row justify-between items-start @md:items-center gap-4 mb-6">
-                <div className="text-sm text-muted-foreground">
-                  {loading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span>
-                      <strong className="text-foreground">{filteredProperties.length}</strong> properties found
-                      {sortBy === 'distance' && contextUserLocation && (
-                        <span className="ml-2 text-primary">• Sorted by distance</span>
+        <div className="container mx-auto px-3 xl:px-3 xl:px-4 py-6 xl:py-8">
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Toolbar */}
+            <div className="flex flex-col @md:flex-row justify-between items-start @md:items-center gap-3 xl:gap-4 mb-4 xl:mb-6">
+              <div className="text-xs xl:text-sm text-muted-foreground">
+                {loading ? (
+                  <span>Loading...</span>
+                ) : (
+                  <span>
+                    <strong className="text-foreground">{filteredProperties.length}</strong> properties found
+                    {sortBy === 'distance' && contextUserLocation && (
+                      <span className="ml-2 text-primary">• Sorted by distance</span>
                       )}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 xl:gap-3 flex-wrap">
                   {/* Near Me Button */}
                   <Button
                     variant={sortBy === 'distance' ? 'default' : 'outline'}
                     size="sm"
                     onClick={handleNearMeClick}
                     disabled={locationLoading}
-                    className="gap-2"
+                    className="gap-1.5 xl:gap-2 h-8 xl:h-9 text-xs xl:text-sm px-2.5 xl:px-3"
                   >
                     {locationLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-3 w-3 xl:h-4 xl:w-4 animate-spin" />
                     ) : (
-                      <Navigation className="h-4 w-4" />
+                      <Navigation className="h-3 w-3 xl:h-4 xl:w-4" />
                     )}
                     Near Me
                   </Button>
@@ -481,7 +484,7 @@ export default function BrowsePropertiesPage() {
                       setTimeout(updateUrlParams, 0);
                     }}
                   >
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="w-36 xl:w-48 h-8 xl:h-9 text-xs xl:text-sm">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
@@ -556,21 +559,28 @@ export default function BrowsePropertiesPage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-16"
+                  className="text-center py-4 xl:py-8 xl:py-16"
                 >
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
                     <Search className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">No properties found</h3>
+                  <h3 className="text-base xl:text-xl font-semibold mb-2">No properties found</h3>
                   <p className="text-muted-foreground mb-6">
                     Try adjusting your filters or search query
                   </p>
                   <Button onClick={clearAllFilters}>Clear All Filters</Button>
                 </motion.div>
               )}
-            </div>
           </div>
         </div>
+
+        {/* Filter Modal */}
+        <FilterModal
+          open={filterModalOpen}
+          onOpenChange={setFilterModalOpen}
+          filters={contextFilters}
+          onApplyFilters={handleFilterChange}
+        />
       </main>
       <Footer />
     </div>

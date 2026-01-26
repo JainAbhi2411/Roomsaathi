@@ -1,19 +1,66 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Bed, Building2, Home, DoorOpen, Hotel, Calendar } from 'lucide-react';
 import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
-import { supabase } from '@/db/supabase';
 
 const categories = [
-  { value: 'PG', label: 'PG', fullLabel: 'Paying Guest', icon: Bed, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/ad358b0c-8e3b-481f-a8c0-56b7976bb017.jpg', color: 'from-orange-500/20 to-orange-600/20', iconColor: 'text-orange-500' },
-  { value: 'Apartment', label: 'Apartments', fullLabel: 'Luxury Apartments', icon: Building2, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/495d4fbd-6b6f-4b12-aa9f-35357572918d.jpg', color: 'from-blue-500/20 to-blue-600/20', iconColor: 'text-blue-500' },
-  { value: 'Flat', label: 'Flats', fullLabel: 'Independent Flats', icon: Home, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/72f7c747-f507-4823-b1cc-5718e6e0f0e9.jpg', color: 'from-green-500/20 to-green-600/20', iconColor: 'text-green-500' },
-  { value: 'Room', label: 'Rooms', fullLabel: 'Private Rooms', icon: DoorOpen, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/3f8497d2-4bb2-4d61-89d4-7947175ec3d3.jpg', color: 'from-purple-500/20 to-purple-600/20', iconColor: 'text-purple-500' },
-  { value: 'Hostel', label: 'Hostels', fullLabel: 'Student Hostels', icon: Hotel, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/c6bd8b53-d617-4e0d-bb3d-43c39bc9a1d5.jpg', color: 'from-pink-500/20 to-pink-600/20', iconColor: 'text-pink-500' },
-  { value: 'Short Term Stay', label: 'Short Term', fullLabel: 'Short Term Stays', icon: Calendar, image: 'https://miaoda-site-img.s3cdn.medo.dev/images/d3e9a292-70ad-4572-bcdc-da47694ea772.jpg', color: 'from-yellow-500/20 to-yellow-600/20', iconColor: 'text-yellow-500' },
+  {
+    value: 'PG',
+    label: 'PG',
+    fullLabel: 'Paying Guest',
+    icon: Bed,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/ad358b0c-8e3b-481f-a8c0-56b7976bb017.jpg',
+    color: 'from-primary/20 to-primary/30',
+    iconColor: 'text-primary',
+  },
+  {
+    value: 'Apartment',
+    label: 'Apartments',
+    fullLabel: 'Luxury Apartments',
+    icon: Building2,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/495d4fbd-6b6f-4b12-aa9f-35357572918d.jpg',
+    color: 'from-accent/20 to-accent/30',
+    iconColor: 'text-accent',
+  },
+  {
+    value: 'Flat',
+    label: 'Flats',
+    fullLabel: 'Independent Flats',
+    icon: Home,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/72f7c747-f507-4823-b1cc-5718e6e0f0e9.jpg',
+    color: 'from-primary/20 to-primary/30',
+    iconColor: 'text-primary',
+  },
+  {
+    value: 'Room',
+    label: 'Rooms',
+    fullLabel: 'Private Rooms',
+    icon: DoorOpen,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/3f8497d2-4bb2-4d61-89d4-7947175ec3d3.jpg',
+    color: 'from-accent/20 to-accent/30',
+    iconColor: 'text-accent',
+  },
+  {
+    value: 'Hostel',
+    label: 'Hostels',
+    fullLabel: 'Student Hostels',
+    icon: Hotel,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/c6bd8b53-d617-4e0d-bb3d-43c39bc9a1d5.jpg',
+    color: 'from-primary/20 to-primary/30',
+    iconColor: 'text-primary',
+  },
+  {
+    value: 'Short Term Stay',
+    label: 'Short Term',
+    fullLabel: 'Short Term Stays',
+    icon: Calendar,
+    image: 'https://miaoda-site-img.s3cdn.medo.dev/images/d3e9a292-70ad-4572-bcdc-da47694ea772.jpg',
+    color: 'from-accent/20 to-accent/30',
+    iconColor: 'text-accent',
+  },
 ];
 
 export default function CategoryBrowseSection() {
@@ -21,7 +68,14 @@ export default function CategoryBrowseSection() {
   const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadCategoryProperties = useCallback(async () => {
+  useEffect(() => {
+    loadCategoryProperties();
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadCategoryProperties, 30000);
+    return () => clearInterval(interval);
+  }, [selectedCategory]);
+
+  const loadCategoryProperties = async () => {
     setLoading(true);
     try {
       const data = await getProperties({ type: selectedCategory });
@@ -31,61 +85,9 @@ export default function CategoryBrowseSection() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory]);
+  };
 
-  // Initial load on category change
-  useEffect(() => {
-    loadCategoryProperties();
-  }, [loadCategoryProperties]);
-
-  // 🔥 Supabase Realtime
-  useEffect(() => {
-    const channel = supabase
-      .channel('category-properties-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'properties' },
-        (payload) => {
-          const newRow = payload.new as PropertyWithDetails | null;
-          const oldRow = payload.old as PropertyWithDetails | null;
-
-          // INSERT / DELETE → reload if category matches
-          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
-            if (newRow?.type === selectedCategory || oldRow?.type === selectedCategory) {
-              loadCategoryProperties();
-            }
-            return;
-          }
-
-          // UPDATE → reload only if meaningful change
-          if (payload.eventType === 'UPDATE' && newRow && oldRow) {
-            const hasMeaningfulChange =
-              newRow.price_from !== oldRow.price_from ||
-              newRow.price_to !== oldRow.price_to ||
-              newRow.verified !== oldRow.verified ||
-           
-              newRow.type !== oldRow.type;
-
-            if (!hasMeaningfulChange) return;
-
-            // If property moved in/out of this category
-            if (
-              newRow.type === selectedCategory ||
-              oldRow.type === selectedCategory
-            ) {
-              loadCategoryProperties();
-            }
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [selectedCategory, loadCategoryProperties]);
-
-  const selectedCategoryData = categories.find(c => c.value === selectedCategory);
+  const selectedCategoryData = categories.find(cat => cat.value === selectedCategory);
 
   return (
     <section className="py-12 xl:py-16 bg-muted/30">

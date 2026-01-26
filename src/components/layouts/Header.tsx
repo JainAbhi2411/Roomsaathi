@@ -23,35 +23,25 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-14 xl:h-16 items-center justify-between px-3 xl:px-4">
         {/* Left Section - Logo and Main Navigation */}
-        <div className="flex items-center gap-6">
-         <Link to="/" className="flex items-center justify-center">
-  <div className="relative flex flex-col items-center">
-
-    {/* Hanging string */}
-    <div
-      className="w-[2px] h-30 bg-gray-400/40 group-hover:bg-yellow-400/70 transition-colors rounded-full"
-      style={{ transformOrigin: 'top' }}
-    />
-
-    {/* Logo with swinging animation */}
-    <motion.div
-      initial={{ y: -30, opacity: 0, rotate: -15 }}
-      animate={{ y: 0, opacity: 1, rotate: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut', type: 'spring', stiffness: 120 }}
-      className="animate-swing cursor-pointer group-hover:scale-110 transition-transform"
-    >
-      <img
-        src="/mainwebsitelogo.png" // your transparent logo in public folder
-        alt="RoomSaathi Logo"
-        className="h-40 w-auto"
-      />
-    </motion.div>
-
-  </div>
-</Link>
-
+        <div className="flex items-center gap-3 xl:gap-6">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="relative">
+              {/* Hanging string */}
+              <div className="absolute left-1/2 top-0 h-3 xl:h-4 w-0.5 -translate-x-1/2 -translate-y-3 xl:-translate-y-4 bg-muted-foreground/30 group-hover:bg-primary/50 transition-colors" />
+              
+              {/* Logo with hanging animation */}
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="animate-swing"
+              >
+                <span className="text-lg xl:text-2xl font-bold gradient-text group-hover:scale-105 transition-transform inline-block">RoomSaathi</span>
+              </motion.div>
+            </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
@@ -285,20 +275,20 @@ export default function Header() {
         {/* Mobile Navigation */}
         <Sheet>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors">
+            <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors h-9 w-9">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80">
-            <nav className="flex flex-col gap-4 mt-8">
-              <div className="space-y-2">
+          <SheetContent side="right" className="w-[85vw] max-w-sm">
+            <nav className="flex flex-col gap-3 mt-6">
+              <div className="space-y-1.5">
                 <p className="text-xs font-semibold text-muted-foreground uppercase">Navigation</p>
-                <Link to="/browse" className="block text-lg font-medium transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
+                <Link to="/browse" className="block text-base font-medium transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
                   Browse Properties
                 </Link>
               </div>
 
-              <div className="border-t pt-4 space-y-2">
+              <div className="border-t pt-3 space-y-1.5">
                 <p className="text-xs font-semibold text-muted-foreground uppercase">RoomSaathi Properties</p>
                 <Link to="/browse?verified=true" className="block text-sm font-medium transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
                   <BadgeCheck className="inline-block mr-2 h-4 w-4" />
@@ -312,37 +302,37 @@ export default function Header() {
                 </Link>
               </div>
 
-              <div className="border-t pt-4 space-y-2">
+              <div className="border-t pt-3 space-y-1.5">
                 <p className="text-xs font-semibold text-muted-foreground uppercase">For Owners</p>
-                <div className="text-sm space-y-2">
+                <div className="text-sm space-y-1.5">
                   <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
-                    <div className="font-medium">Website Listing</div>
+                    <div className="font-medium text-sm">Website Listing</div>
                     <div className="text-xs text-muted-foreground">Get your property online</div>
                   </div>
                   <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
-                    <div className="font-medium">Management Software</div>
+                    <div className="font-medium text-sm">Management Software</div>
                     <div className="text-xs text-muted-foreground">Track bookings & payments</div>
                   </div>
                   <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
-                    <div className="font-medium">Verification Service</div>
+                    <div className="font-medium text-sm">Verification Service</div>
                     <div className="text-xs text-muted-foreground">Get verified badge</div>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t pt-4 space-y-3">
-                <Button variant="outline" className="w-full justify-start hover:bg-primary/10 transition-colors">
+              <div className="border-t pt-3 space-y-2">
+                <Button variant="outline" size="sm" className="w-full justify-start hover:bg-primary/10 transition-colors">
                   <Headphones className="mr-2 h-4 w-4" />
                   Support
                 </Button>
-                <Button variant="outline" className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Button variant="outline" size="sm" className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
                   <PlusCircle className="mr-2 h-4 w-4" />
                   List Your Property
                 </Button>
                 {user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button className="w-full justify-start hover:scale-105 transition-transform gap-1">
+                      <Button size="sm" className="w-full justify-start hover:scale-105 transition-transform gap-1">
                         <User className="h-4 w-4" />
                         {profile?.username || 'Account'}
                         <ChevronDown className="h-3 w-3 ml-auto" />
@@ -387,7 +377,7 @@ export default function Header() {
                   </DropdownMenu>
                 ) : (
                   <Link to="/login">
-                    <Button className="w-full justify-start hover:scale-105 transition-transform">
+                    <Button size="sm" className="w-full justify-start hover:scale-105 transition-transform">
                       <LogIn className="mr-2 h-4 w-4" />
                       Login
                     </Button>

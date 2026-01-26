@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface RouteGuardProps {
@@ -24,7 +24,6 @@ const PUBLIC_ROUTES = [
   '/help-center',
   '/how-to-use',
   '/owner-features'
-  
 ];
 
 function matchPublicRoute(path: string, patterns: string[]) {
