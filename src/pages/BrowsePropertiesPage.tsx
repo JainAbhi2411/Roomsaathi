@@ -9,6 +9,7 @@ import PropertyCard from '@/components/property/PropertyCard';
 import FilterModal from '@/components/property/FilterModal';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import PromotionalBanner from '@/components/common/PromotionalBanner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -268,6 +269,7 @@ export default function BrowsePropertiesPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <PromotionalBanner />
       <main className="flex-1">
         {/* Page Header */}
         <section className="bg-muted/30 py-6 xl:py-6 xl:py-12 border-b border-border">
