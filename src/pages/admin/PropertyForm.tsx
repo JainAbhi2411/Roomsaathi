@@ -33,7 +33,16 @@ export default function PropertyForm() {
     description: '',
     verified: false,
     images: [] as string[],
+    video_url: '',
+    contact_phone: '',
+    contact_email: '',
+    owner_name: '',
+    owner_details: '',
     availability_status: 'available',
+    accommodation_type: '',
+    suitable_for: [] as string[],
+    latitude: undefined as number | undefined,
+    longitude: undefined as number | undefined,
     total_floors: 1,
     rooms_per_floor: 1
   });
@@ -66,7 +75,16 @@ export default function PropertyForm() {
         description: property.description || '',
         verified: property.verified || false,
         images: property.images || [],
+        video_url: property.video_url || '',
+        contact_phone: property.contact_phone || '',
+        contact_email: property.contact_email || '',
+        owner_name: property.owner_name || '',
+        owner_details: property.owner_details || '',
         availability_status: property.availability_status || 'available',
+        accommodation_type: property.accommodation_type || '',
+        suitable_for: property.suitable_for || [],
+        latitude: property.latitude,
+        longitude: property.longitude,
         total_floors: property.total_floors || 1,
         rooms_per_floor: property.rooms_per_floor || 1
       });
@@ -141,9 +159,18 @@ export default function PropertyForm() {
 
       toast({
         title: 'Success',
-        description: `Property ${isEdit ? 'updated' : 'created'} successfully`
+        description: `Property ${isEdit ? 'updated' : 'created'} successfully${!isEdit ? '. You can now add room details from the Room Management section.' : ''}`,
+        duration: 5000
       });
-      navigate('/admin/properties');
+      
+      // Navigate to room management if creating new property, otherwise back to properties list
+      if (!isEdit && propertyId) {
+        setTimeout(() => {
+          navigate(`/admin/rooms?property=${propertyId}`);
+        }, 1500);
+      } else {
+        navigate('/admin/properties');
+      }
     } catch (error) {
       toast({
         title: 'Error',
@@ -334,6 +361,138 @@ export default function PropertyForm() {
                   </p>
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="accommodation_type">Accommodation Type</Label>
+                <Select 
+                  value={formData.accommodation_type} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, accommodation_type: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select accommodation type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Boys">Boys</SelectItem>
+                    <SelectItem value="Girls">Girls</SelectItem>
+                    <SelectItem value="Co-living">Co-living</SelectItem>
+                    <SelectItem value="Family">Family</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="video_url">Video URL</Label>
+                <Input
+                  id="video_url"
+                  type="url"
+                  value={formData.video_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, video_url: e.target.value }))}
+                  placeholder="https://youtube.com/watch?v=..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  YouTube or other video platform URL
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="latitude">Latitude</Label>
+                <Input
+                  id="latitude"
+                  type="number"
+                  step="any"
+                  value={formData.latitude || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, latitude: e.target.value ? Number(e.target.value) : undefined }))}
+                  placeholder="27.6172"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="longitude">Longitude</Label>
+                <Input
+                  id="longitude"
+                  type="number"
+                  step="any"
+                  value={formData.longitude || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, longitude: e.target.value ? Number(e.target.value) : undefined }))}
+                  placeholder="75.1389"
+                />
+              </div>
+            </div>
+
+            {/* Suitable For - Multi-select */}
+            <div className="space-y-2">
+              <Label>Suitable For</Label>
+              <div className="grid grid-cols-2 @md:grid-cols-4 gap-3">
+                {['Students', 'Working Professionals', 'Families', 'Bachelors'].map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`suitable-${type}`}
+                      checked={formData.suitable_for.includes(type)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setFormData(prev => ({ ...prev, suitable_for: [...prev.suitable_for, type] }));
+                        } else {
+                          setFormData(prev => ({ ...prev, suitable_for: prev.suitable_for.filter(t => t !== type) }));
+                        }
+                      }}
+                    />
+                    <label htmlFor={`suitable-${type}`} className="text-sm cursor-pointer">
+                      {type}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Contact Information</h3>
+              </div>
+              <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="owner_name">Owner/Manager Name</Label>
+                  <Input
+                    id="owner_name"
+                    value={formData.owner_name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, owner_name: e.target.value }))}
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="contact_phone">Contact Phone</Label>
+                  <Input
+                    id="contact_phone"
+                    type="tel"
+                    value={formData.contact_phone}
+                    onChange={(e) => setFormData(prev => ({ ...prev, contact_phone: e.target.value }))}
+                    placeholder="+91 98765 43210"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="contact_email">Contact Email</Label>
+                  <Input
+                    id="contact_email"
+                    type="email"
+                    value={formData.contact_email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, contact_email: e.target.value }))}
+                    placeholder="owner@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="owner_details">Owner Details</Label>
+                  <Textarea
+                    id="owner_details"
+                    value={formData.owner_details}
+                    onChange={(e) => setFormData(prev => ({ ...prev, owner_details: e.target.value }))}
+                    rows={2}
+                    placeholder="Additional owner information..."
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -360,10 +519,15 @@ export default function PropertyForm() {
 
             {/* Amenities - Note: These should be managed in amenities table */}
             <div className="space-y-2">
-              <Label>Amenities (Managed separately via amenities table)</Label>
-              <p className="text-sm text-muted-foreground">
-                Amenities are managed through the amenities table. Add them after creating the property.
-              </p>
+              <div className="p-4 bg-muted/50 border border-border rounded-lg">
+                <h3 className="font-semibold mb-2">📝 Important Notes</h3>
+                <ul className="space-y-1 text-sm text-muted-foreground">
+                  <li>• <strong>Amenities:</strong> Managed separately via the amenities table after property creation</li>
+                  <li>• <strong>Room Details:</strong> Add individual room specifications using the "Room Management" section after creating the property</li>
+                  <li>• <strong>Images:</strong> Provide direct URLs to property images (one per line)</li>
+                  <li>• <strong>Location:</strong> Add latitude/longitude for map integration (optional but recommended)</li>
+                </ul>
+              </div>
             </div>
 
             {/* Property Policies */}
