@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import PromotionalBanner from '@/components/common/PromotionalBanner';
 import HeroSection from '@/components/home/HeroSection';
 import HowItWorksSection from '@/components/home/HowItWorksSection';
 import CitiesSection from '@/components/home/CitiesSection';
@@ -20,6 +21,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <PromotionalBanner />
       <main className="flex-1">
         <HeroSection />
         <FeaturedPropertiesSection />
