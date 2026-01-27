@@ -33,6 +33,7 @@ import { NeighborhoodAmenities } from '@/components/property/NeighborhoodAmeniti
 import { useSearchFilter } from '@/contexts/SearchFilterContext';
 import { calculateDistance, formatDistance } from '@/lib/geolocation';
 import Header from '@/components/layouts/Header';
+import PromotionalBanner from '@/components/common/PromotionalBanner';
 import Footer from '@/components/layouts/Footer';
 
 // Amenity icons mapping
@@ -136,8 +137,8 @@ export default function PropertyDetailsPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <Skeleton className="h-96 w-full mb-8 bg-muted" />
+        <main className="flex-1 container mx-auto px-3 xl:px-4 py-8">
+          <Skeleton className="h-96 w-full mb-4 xl:mb-8 bg-muted" />
           <div className="grid xl:grid-cols-3 gap-8">
             <div className="xl:col-span-2">
               <Skeleton className="h-12 w-3/4 mb-4 bg-muted" />
@@ -157,8 +158,8 @@ export default function PropertyDetailsPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 container mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Property not found</h1>
+        <main className="flex-1 container mx-auto px-3 xl:px-4 py-4 xl:py-8 text-center">
+          <h1 className="text-lg xl:text-2xl font-bold mb-4">Property not found</h1>
           <Button onClick={() => navigate('/browse')}>Back to Browse</Button>
         </main>
         <Footer />
@@ -197,8 +198,9 @@ export default function PropertyDetailsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <PromotionalBanner />
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 xl:px-4 py-8">
           {/* Back Button */}
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -300,7 +302,7 @@ export default function PropertyDetailsPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <h1 className="text-3xl xl:text-4xl font-bold">{property.name}</h1>
+                        <h1 className="text-base xl:text-xl xl:text-3xl xl:text-lg xl:text-2xl xl:text-4xl font-bold">{property.name}</h1>
                         <VerifiedBadge verified={property.verified} />
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground mb-3">
@@ -350,7 +352,7 @@ export default function PropertyDetailsPage() {
                   </div>
 
                   <div className="flex items-baseline gap-2 mb-4">
-                    <span className="text-3xl font-bold text-primary">{priceDisplay}</span>
+                    <span className="text-base xl:text-xl xl:text-3xl font-bold text-primary">{priceDisplay}</span>
                     <span className="text-muted-foreground">/month</span>
                   </div>
 
@@ -772,7 +774,7 @@ export default function PropertyDetailsPage() {
             {/* Similar Properties */}
             {similarProperties.length > 0 && (
               <div className="mt-16">
-                <h2 className="text-2xl xl:text-3xl font-bold mb-8">
+                <h2 className="text-lg xl:text-2xl xl:text-base xl:text-xl xl:text-3xl font-bold mb-8">
                   Similar <span className="gradient-text">Properties</span>
                 </h2>
                 <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-4 gap-6">
