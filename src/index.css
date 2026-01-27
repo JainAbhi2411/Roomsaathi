@@ -210,6 +210,16 @@ All colors MUST be HSL.
     to { transform: translateY(0); opacity: 1; }
   }
 
+  @keyframes shimmer {
+    0% { background-position: -250% 0; }
+    100% { background-position: 250% 0; }
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
   .animate-swing {
     animation: swing 3s ease-in-out infinite;
     transform-origin: top center;
@@ -225,6 +235,10 @@ All colors MUST be HSL.
 
   .animate-slide-in-bottom {
     animation: slideInFromBottom 0.4s ease-out forwards;
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
   }
 
   /* Mobile-optimized typography */
