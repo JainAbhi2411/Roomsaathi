@@ -168,7 +168,7 @@ export default function ChatbotFeedbackPage() {
   };
 
   return (
-    <AdminLayout>
+   
       <div className="space-y-6">
         {/* Header */}
         <div>
