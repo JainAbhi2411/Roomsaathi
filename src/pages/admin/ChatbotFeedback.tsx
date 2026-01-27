@@ -319,7 +319,7 @@ export default function ChatbotFeedbackPage() {
         </div>
       </div>
 
-      {/* View Dialog */}
+    
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
