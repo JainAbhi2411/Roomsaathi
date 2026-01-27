@@ -23,7 +23,8 @@ const PUBLIC_ROUTES = [
   '/contact',
   '/help-center',
   '/how-to-use',
-  '/owner-features'
+  '/owner-features',
+  '/admin/*' // Admin routes have their own authentication guard (ProtectedAdminRoute)
 ];
 
 function matchPublicRoute(path: string, patterns: string[]) {
