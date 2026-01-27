@@ -33,64 +33,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   const refreshProfile = async () => {
     if (!user) {
       setProfile(null);
       return;
     }
-
     const profileData = await getProfile(user.id);
     setProfile(profileData);
   };
 
   useEffect(() => {
-    // Only initialize once
-    if (initialized) return;
+    let isMounted = true;
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        getProfile(session.user.id).then(setProfile);
+    // 1) Load initial session once
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!isMounted) return;
+
+      if (error) console.error('getSession error:', error);
+
+      const u = session?.user ?? null;
+      setUser(u);
+
+      if (u) {
+        getProfile(u.id).then(p => {
+          if (isMounted) setProfile(p);
+        });
+      } else {
+        setProfile(null);
       }
+
       setLoading(false);
-      setInitialized(true);
     });
-    
-    // In this function, do NOT use any await calls. Use `.then()` instead to avoid deadlocks.
+
+    // 2) Keep auth listener alive for the lifetime of the app
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Only update on specific events to prevent unnecessary refreshes
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        setUser(session?.user ?? null);
-        if (session?.user && event !== 'TOKEN_REFRESHED') {
-          // Don't fetch profile on token refresh, only on sign in or user update
-          getProfile(session.user.id).then(setProfile);
-        } else if (!session?.user) {
-          setProfile(null);
-        }
+      // Helpful debug (remove later)
+      console.log('[Auth] event:', event);
+
+      const u = session?.user ?? null;
+      setUser(u);
+
+      if (!u) {
+        setProfile(null);
+        return;
+      }
+
+      // Avoid DB hit on every refresh if you want
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        getProfile(u.id).then(setProfile);
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [initialized]);
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const signIn = async (username: string, password: string) => {
     try {
-      // Validate username format (only letters, digits, and underscore)
       if (!/^[a-zA-Z0-9_]+$/.test(username)) {
         throw new Error('Username can only contain letters, digits, and underscore');
       }
-
-      // Convert username to email format
       const email = `${username}@miaoda.com`;
-      
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
 
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+
       return { error: null };
     } catch (error) {
       console.error('SignIn Error:', error);
@@ -100,36 +110,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (username: string, password: string) => {
     try {
-      // Validate username format (only letters, digits, and underscore)
       if (!/^[a-zA-Z0-9_]+$/.test(username)) {
         throw new Error('Username can only contain letters, digits, and underscore');
       }
-
-      // Convert username to email format
       const email = `${username}@miaoda.com`;
-      
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            username: username,
-          },
-        },
+        options: { data: { username } },
       });
 
       if (error) throw error;
 
-      // Auto-login after successful signup
+      // OPTIONAL: You usually don't need to manually sign in right after signUp.
+      // Supabase can create a session depending on your auth settings.
       if (data.user) {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        if (signInError) {
-          console.error('Auto-login failed:', signInError);
-        }
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) console.error('Auto-login failed:', signInError);
       }
 
       return { error: null };
@@ -154,8 +152,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 }
