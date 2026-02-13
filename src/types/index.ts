@@ -384,3 +384,28 @@ export interface ChatbotFeedback {
   created_at: string;
   updated_at: string;
 }
+
+export interface PropertyListingRequest {
+  id: string;
+  owner_name: string;
+  owner_email: string;
+  owner_phone: string;
+  owner_alternate_phone?: string;
+  property_name: string;
+  property_type: 'PG' | 'Flat' | 'Apartment' | 'Room' | 'Hostel' | 'Short Term Stay';
+  city: 'Sikar' | 'Jaipur' | 'Kota';
+  locality: string;
+  address: string;
+  total_rooms?: number;
+  available_rooms?: number;
+  price_range_min?: number;
+  price_range_max?: number;
+  amenities?: string[];
+  description?: string;
+  property_images?: string[];
+  status: 'pending' | 'approved' | 'rejected' | 'contacted';
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+

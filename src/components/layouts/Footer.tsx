@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import PolicyModal from '@/components/ui/PolicyModal';
+import ListPropertyModal from '@/components/modals/ListPropertyModal';
 import { policies } from '@/data/policies';
 import type { PolicyContent } from '@/data/policies';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPolicy, setSelectedPolicy] = useState<PolicyContent | null>(null);
+  const [isListPropertyModalOpen, setIsListPropertyModalOpen] = useState(false);
 
   const openPolicy = (policyId: string) => {
     setSelectedPolicy(policies[policyId]);
@@ -22,14 +24,14 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-muted/50 border-t border-border">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-5 gap-8 mb-8">
+        <div className="container mx-auto px-3 xl:px-4 py-8 xl:py-12">
+          <div className="grid grid-cols-1 @md:grid-cols-2 xl:grid-cols-5 gap-4 xl:gap-8 mb-8">
             {/* Brand Section */}
             <div className="xl:col-span-1">
               <Link to="/" className="inline-block mb-4">
-                <span className="text-2xl font-bold gradient-text">RoomSaathi</span>
+                <span className="text-lg xl:text-2xl font-bold gradient-text">RoomSaathi</span>
               </Link>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-xs xl:text-sm text-muted-foreground mb-4">
                 Your trusted companion for finding the perfect student accommodation in Sikar, Jaipur, and Kota.
               </p>
               <div className="flex gap-3">
@@ -73,27 +75,27 @@ export default function Footer() {
               <h3 className="font-semibold text-foreground mb-4">Company</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/about" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/our-story" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/our-story" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Our Story
                   </Link>
                 </li>
                 <li>
-                  <Link to="/blogs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/blogs" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Blogs
                   </Link>
                 </li>
                 <li>
-                  <Link to="/community" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/community" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Community
                   </Link>
                 </li>
                 <li>
-                  <Link to="/careers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/careers" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Careers
                   </Link>
                 </li>
@@ -105,29 +107,32 @@ export default function Footer() {
               <h3 className="font-semibold text-foreground mb-4">Support</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link to="/faqs" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/faqs" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     FAQs
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/contact" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/help-center" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/help-center" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Help Center
                   </Link>
                 </li>
                 <li>
-                  <Link to="/browse" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/browse" className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Browse Properties
                   </Link>
                 </li>
                 <li>
-                  <Link to="/list-property" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <button
+                    onClick={() => setIsListPropertyModalOpen(true)}
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
                     List Your Property
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -139,7 +144,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('terms-and-conditions')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Terms and Conditions
                   </button>
@@ -147,7 +152,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('service-terms')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Service Terms
                   </button>
@@ -155,7 +160,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('privacy-policy')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Privacy Policy
                   </button>
@@ -163,7 +168,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('refund-policy')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Guest Refund Policy
                   </button>
@@ -171,7 +176,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('non-discrimination')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Non Discrimination Policy
                   </button>
@@ -179,7 +184,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={() => openPolicy('booking-policy')}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                    className="text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors text-left"
                   >
                     Booking Policy
                   </button>
@@ -191,21 +196,21 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2 text-xs xl:text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <span>Sikar, Jaipur, Kota, Rajasthan, India</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <li className="flex items-center gap-2 text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Phone className="h-4 w-4 flex-shrink-0" />
                 <a href="tel:+917374035907">+91 7374035907</a>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <li className="flex items-center gap-2 text-xs xl:text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="h-4 w-4 flex-shrink-0" />
                 <a href="mailto:jainabhi7374@gmail.com">jainabhi7374@gmail.com</a>
               </li>
             </ul>
             <div className="mt-6">
-              <h4 className="font-semibold text-sm text-foreground mb-2">Operating Cities</h4>
+              <h4 className="font-semibold text-xs xl:text-sm text-foreground mb-2">Operating Cities</h4>
               <div className="flex flex-wrap gap-2">
                 <span className="px-3 py-1 bg-background rounded-full text-xs font-medium">Sikar</span>
                 <span className="px-3 py-1 bg-background rounded-full text-xs font-medium">Jaipur</span>
@@ -218,7 +223,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col @md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground text-center @md:text-left">
+            <p className="text-xs xl:text-sm text-muted-foreground text-center @md:text-left">
               © 2026 RoomSaathi. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -239,6 +244,12 @@ export default function Footer() {
 
     {/* Policy Modal */}
     <PolicyModal isOpen={isModalOpen} onClose={closeModal} policy={selectedPolicy} />
+    
+    {/* List Property Modal */}
+    <ListPropertyModal 
+      open={isListPropertyModalOpen} 
+      onOpenChange={setIsListPropertyModalOpen} 
+    />
     </>
   );
 }

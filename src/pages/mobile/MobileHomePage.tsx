@@ -1,23 +1,26 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Mic, Home, Heart, User } from 'lucide-react';
+import { Search, SlidersHorizontal, Mic, Home, Heart, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'motion/react';
 import { supabase } from '@/db/supabase';
+import { useSearchFilter } from '@/contexts/SearchFilterContext';
+import { useAuth } from '@/contexts/AuthContext';
 import type { Property } from '@/types';
+import MobileAdvancedFilters from '@/components/mobile/MobileAdvancedFilters';
 
 export default function MobileHomePage() {
   const navigate = useNavigate();
+  const { filters, updateFilter } = useSearchFilter();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState<string>('');
-  const [selectedType, setSelectedType] = useState<string>('');
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     loadFeaturedProperties();
@@ -47,6 +50,13 @@ export default function MobileHomePage() {
     navigate(`/mobile/property/${propertyId}`);
   };
 
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      updateFilter('search', searchQuery);
+    }
+    navigate('/mobile/search');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -66,7 +76,7 @@ export default function MobileHomePage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/favorites')}
+              onClick={() => navigate('/mobile/favorites')}
             >
               <Heart className="w-5 h-5" />
             </Button>
@@ -74,61 +84,36 @@ export default function MobileHomePage() {
 
           {/* Search Bar */}
           <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div 
+              className="flex-1 relative cursor-pointer"
+              onClick={() => navigate('/mobile/search')}
+            >
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               <Input
                 placeholder="Search properties..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 className="pl-9"
               />
             </div>
-            <Sheet>
+            <Sheet open={showFilters} onOpenChange={setShowFilters}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <SlidersHorizontal className="w-4 h-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-[80vh]">
+              <SheetContent side="bottom" className="h-[90vh] overflow-y-auto">
                 <SheetHeader>
-                  <SheetTitle>Filters</SheetTitle>
+                  <SheetTitle>Advanced Filters</SheetTitle>
                 </SheetHeader>
-                <div className="space-y-4 mt-6">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">City</label>
-                    <Select value={selectedCity} onValueChange={setSelectedCity}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select city" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Cities</SelectItem>
-                        <SelectItem value="Sikar">Sikar</SelectItem>
-                        <SelectItem value="Jaipur">Jaipur</SelectItem>
-                        <SelectItem value="Kota">Kota</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Property Type</label>
-                    <Select value={selectedType} onValueChange={setSelectedType}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="PG">PG</SelectItem>
-                        <SelectItem value="Flat">Flat</SelectItem>
-                        <SelectItem value="Apartment">Apartment</SelectItem>
-                        <SelectItem value="Room">Room</SelectItem>
-                        <SelectItem value="Hostel">Hostel</SelectItem>
-                        <SelectItem value="Short Term Stay">Short Term Stay</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button className="w-full" onClick={() => loadFeaturedProperties()}>
-                    Apply Filters
-                  </Button>
-                </div>
+                <MobileAdvancedFilters 
+                  onApply={() => {
+                    setShowFilters(false);
+                    navigate('/mobile/search');
+                  }}
+                  onClose={() => setShowFilters(false)}
+                />
               </SheetContent>
             </Sheet>
           </div>
@@ -223,14 +208,29 @@ export default function MobileHomePage() {
         </Button>
       </motion.div>
 
+      {/* Floating AI Chat Button */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.5, type: 'spring' }}
+        className="fixed bottom-20 right-4 z-20"
+      >
+        <Button
+          size="icon"
+          onClick={() => navigate('/mobile/chat')}
+          className="h-14 w-14 rounded-full shadow-lg bg-gradient-to-br from-primary to-secondary hover:shadow-xl transition-shadow"
+        >
+          <Sparkles className="h-6 w-6" />
+        </Button>
+      </motion.div>
+
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-        <div className="flex items-center justify-around p-3">
+        <div className="flex items-center justify-around p-2">
           <Button
             variant="ghost"
             size="sm"
-            className="flex-col h-auto py-2"
-            onClick={() => navigate('/mobile')}
+            className="flex-col h-auto py-2 text-primary"
           >
             <Home className="w-5 h-5 mb-1" />
             <span className="text-xs">Home</span>
@@ -239,16 +239,16 @@ export default function MobileHomePage() {
             variant="ghost"
             size="sm"
             className="flex-col h-auto py-2"
-            onClick={() => navigate('/mobile/chat')}
+            onClick={() => navigate('/mobile/search')}
           >
-            <Mic className="w-5 h-5 mb-1" />
-            <span className="text-xs">Chat</span>
+            <Search className="w-5 h-5 mb-1" />
+            <span className="text-xs">Search</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             className="flex-col h-auto py-2"
-            onClick={() => navigate('/favorites')}
+            onClick={() => navigate('/mobile/favorites')}
           >
             <Heart className="w-5 h-5 mb-1" />
             <span className="text-xs">Favorites</span>
@@ -257,10 +257,16 @@ export default function MobileHomePage() {
             variant="ghost"
             size="sm"
             className="flex-col h-auto py-2"
-            onClick={() => navigate('/login')}
+            onClick={() => {
+              if (user) {
+                navigate('/mobile/profile');
+              } else {
+                navigate('/mobile/login');
+              }
+            }}
           >
             <User className="w-5 h-5 mb-1" />
-            <span className="text-xs">Profile</span>
+            <span className="text-xs">{user ? 'Profile' : 'Login'}</span>
           </Button>
         </div>
       </div>

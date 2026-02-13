@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router';
 import { BadgeCheck, Building2, FileText, BarChart3, Headphones, PlusCircle, LogIn, LogOut, User, ChevronDown, Menu, MessageCircle, Phone, Mail, HelpCircle, BookOpen } from 'lucide-react';
@@ -11,10 +12,12 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import ListPropertyModal from '@/components/modals/ListPropertyModal';
 
 export default function Header() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const [isListPropertyModalOpen, setIsListPropertyModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
@@ -23,13 +26,13 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-14 xl:h-16 items-center justify-between px-3 xl:px-4">
+      <div className="container mx-auto flex h-16 md:h-14 lg:h-16 items-center justify-between px-4 md:px-3 lg:px-4">
         {/* Left Section - Logo and Main Navigation */}
-        <div className="flex items-center gap-3 xl:gap-6">
+        <div className="flex items-center gap-4 md:gap-3 lg:gap-6">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="relative">
               {/* Hanging string */}
-              <div className="absolute left-1/2 top-0 h-3 xl:h-4 w-0.5 -translate-x-1/2 -translate-y-3 xl:-translate-y-4 bg-muted-foreground/30 group-hover:bg-primary/50 transition-colors" />
+              <div className="absolute left-1/2 top-0 h-3 md:h-3 lg:h-4 w-0.5 -translate-x-1/2 -translate-y-3 md:-translate-y-3 lg:-translate-y-4 bg-muted-foreground/30 group-hover:bg-primary/50 transition-colors" />
               
               {/* Logo with hanging animation */}
               <motion.div
@@ -38,7 +41,7 @@ export default function Header() {
                 transition={{ duration: 0.8, ease: 'easeOut' }}
                 className="animate-swing"
               >
-                <span className="text-lg xl:text-2xl font-bold gradient-text group-hover:scale-105 transition-transform inline-block">RoomSaathi</span>
+                <span className="text-xl md:text-lg lg:text-2xl font-bold gradient-text group-hover:scale-105 transition-transform inline-block">RoomSaathi</span>
               </motion.div>
             </div>
           </Link>
@@ -211,7 +214,12 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="outline" size="sm" className="hover:bg-primary hover:text-primary-foreground transition-all">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="hover:bg-primary hover:text-primary-foreground transition-all"
+            onClick={() => setIsListPropertyModalOpen(true)}
+          >
             <PlusCircle className="mr-2 h-4 w-4" />
             List Your Property
           </Button>
@@ -275,109 +283,112 @@ export default function Header() {
         {/* Mobile Navigation */}
         <Sheet>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors h-9 w-9">
-              <Menu className="h-5 w-5" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="hover:bg-primary/10 transition-colors h-11 w-11 min-h-[44px] min-w-[44px]"
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[85vw] max-w-sm">
-            <nav className="flex flex-col gap-3 mt-6">
-              <div className="space-y-1.5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Navigation</p>
-                <Link to="/browse" className="block text-base font-medium transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
+          <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto">
+            <nav className="flex flex-col gap-4 mt-6">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Navigation</p>
+                <Link to="/browse" className="block text-base font-medium transition-colors hover:text-primary py-3 hover:bg-primary/10 rounded-md px-3 min-h-[44px] flex items-center">
                   Browse Properties
                 </Link>
               </div>
 
-              <div className="border-t pt-3 space-y-1.5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">RoomSaathi Properties</p>
-                <Link to="/browse?verified=true" className="block text-sm font-medium transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
+              <div className="border-t pt-4 space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">RoomSaathi Properties</p>
+                <Link to="/browse?verified=true" className="block text-sm font-medium transition-colors hover:text-primary py-3 hover:bg-primary/10 rounded-md px-3 min-h-[44px] flex items-center">
                   <BadgeCheck className="inline-block mr-2 h-4 w-4" />
                   All Verified Properties
                 </Link>
-                <Link to="/browse?type=PG&verified=true" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
+                <Link to="/browse?type=PG&verified=true" className="block text-sm transition-colors hover:text-primary py-3 hover:bg-primary/10 rounded-md px-3 min-h-[44px] flex items-center">
                   Verified PG
                 </Link>
-                <Link to="/browse?type=Hostels&verified=true" className="block text-sm transition-colors hover:text-primary py-2 hover:bg-primary/10 rounded px-2">
+                <Link to="/browse?type=Hostels&verified=true" className="block text-sm transition-colors hover:text-primary py-3 hover:bg-primary/10 rounded-md px-3 min-h-[44px] flex items-center">
                   Verified Hostels
                 </Link>
               </div>
 
-              <div className="border-t pt-3 space-y-1.5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">For Owners</p>
-                <div className="text-sm space-y-1.5">
-                  <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
+              <div className="border-t pt-4 space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">For Owners</p>
+                <div className="text-sm space-y-2">
+                  <Link to="/owner-features" className="block py-3 px-3 hover:bg-primary/10 rounded-md transition-colors min-h-[44px]">
                     <div className="font-medium text-sm">Website Listing</div>
                     <div className="text-xs text-muted-foreground">Get your property online</div>
-                  </div>
-                  <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
+                  </Link>
+                  <Link to="/owner-features" className="block py-3 px-3 hover:bg-primary/10 rounded-md transition-colors min-h-[44px]">
                     <div className="font-medium text-sm">Management Software</div>
                     <div className="text-xs text-muted-foreground">Track bookings & payments</div>
-                  </div>
-                  <div className="py-2 px-2 hover:bg-primary/10 rounded transition-colors cursor-pointer">
+                  </Link>
+                  <Link to="/owner-features" className="block py-3 px-3 hover:bg-primary/10 rounded-md transition-colors min-h-[44px]">
                     <div className="font-medium text-sm">Verification Service</div>
                     <div className="text-xs text-muted-foreground">Get verified badge</div>
-                  </div>
+                  </Link>
                 </div>
               </div>
 
-              <div className="border-t pt-3 space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start hover:bg-primary/10 transition-colors">
-                  <Headphones className="mr-2 h-4 w-4" />
-                  Support
+              <div className="border-t pt-4 space-y-3">
+                <Button variant="outline" size="sm" className="w-full justify-start hover:bg-primary/10 transition-colors min-h-[44px] h-auto py-3" asChild>
+                  <Link to="/contact">
+                    <Headphones className="mr-2 h-4 w-4" />
+                    Support
+                  </Link>
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full justify-start hover:bg-primary hover:text-primary-foreground transition-colors min-h-[44px] h-auto py-3"
+                  onClick={() => setIsListPropertyModalOpen(true)}
+                >
                   <PlusCircle className="mr-2 h-4 w-4" />
                   List Your Property
                 </Button>
                 {user ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="sm" className="w-full justify-start hover:scale-105 transition-transform gap-1">
-                        <User className="h-4 w-4" />
-                        {profile?.username || 'Account'}
-                        <ChevronDown className="h-3 w-3 ml-auto" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <div className="px-2 py-2">
-                        <p className="text-sm font-semibold">{profile?.username || 'User'}</p>
-                        <p className="text-xs text-muted-foreground">{profile?.email}</p>
-                        {profile?.role === 'admin' && (
-                          <p className="text-xs font-medium text-primary mt-1">Admin</p>
-                        )}
-                      </div>
-                      <DropdownMenuSeparator />
+                  <div className="space-y-3">
+                    <div className="px-3 py-2 bg-muted/50 rounded-md">
+                      <p className="text-sm font-semibold">{profile?.username || 'User'}</p>
+                      <p className="text-xs text-muted-foreground">{profile?.email}</p>
                       {profile?.role === 'admin' && (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link to="/admin/dashboard" className="cursor-pointer">
-                              <BarChart3 className="mr-2 h-4 w-4" />
-                              Admin Dashboard
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                        </>
+                        <p className="text-xs font-medium text-primary mt-1">Admin</p>
                       )}
-                      <DropdownMenuItem asChild>
-                        <Link to="/favorites" className="cursor-pointer">
-                          My Favorites
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/my-visits" className="cursor-pointer">
-                          My Visits
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </div>
+                    {profile?.role === 'admin' && (
+                      <Link to="/admin/dashboard">
+                        <Button variant="outline" size="sm" className="w-full justify-start min-h-[44px] h-auto py-3">
+                          <BarChart3 className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Button>
+                      </Link>
+                    )}
+                    <Link to="/favorites">
+                      <Button variant="outline" size="sm" className="w-full justify-start min-h-[44px] h-auto py-3">
+                        My Favorites
+                      </Button>
+                    </Link>
+                    <Link to="/my-visits">
+                      <Button variant="outline" size="sm" className="w-full justify-start min-h-[44px] h-auto py-3">
+                        My Visits
+                      </Button>
+                    </Link>
+                    <Button 
+                      onClick={handleLogout} 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 min-h-[44px] h-auto py-3"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </div>
                 ) : (
                   <Link to="/login">
-                    <Button size="sm" className="w-full justify-start hover:scale-105 transition-transform">
+                    <Button size="sm" className="w-full justify-start hover:scale-105 transition-transform min-h-[44px] h-auto py-3">
                       <LogIn className="mr-2 h-4 w-4" />
                       Login
                     </Button>
@@ -388,6 +399,12 @@ export default function Header() {
           </SheetContent>
         </Sheet>
       </div>
+
+      {/* List Property Modal */}
+      <ListPropertyModal 
+        open={isListPropertyModalOpen} 
+        onOpenChange={setIsListPropertyModalOpen} 
+      />
     </header>
   );
 }

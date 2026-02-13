@@ -322,20 +322,21 @@ export default function BrowsePropertiesPage() {
           <div className="container mx-auto px-3 xl:px-3 xl:px-4 py-3 xl:py-4">
             <div className="flex gap-2 xl:gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-2.5 xl:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 xl:h-4 xl:w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Input
                   type="text"
                   placeholder="Search properties..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 xl:pl-10 pr-9 xl:pr-10 h-9 xl:h-10 text-sm"
+                  className="pl-10 pr-10 h-11 md:h-10 text-base md:text-sm"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 xl:right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground h-10 w-10 flex items-center justify-center"
+                    aria-label="Clear search"
                   >
-                    <X className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
+                    <X className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -343,10 +344,10 @@ export default function BrowsePropertiesPage() {
                 variant="outline" 
                 size="sm" 
                 onClick={() => setFilterModalOpen(true)}
-                className="h-9 px-3 xl:px-4 gap-2"
+                className="h-11 md:h-10 px-4 gap-2 min-h-[44px]"
               >
                 <SlidersHorizontal className="h-4 w-4" />
-                <span className="hidden @md:inline">Filters</span>
+                <span className="hidden sm:inline">Filters</span>
                 {activeFilterCount > 0 && (
                   <Badge variant="default" className="ml-1 text-xs px-1.5 py-0">
                     {activeFilterCount}
@@ -357,94 +358,149 @@ export default function BrowsePropertiesPage() {
 
             {/* Active Filter Chips */}
             {activeFilterCount > 0 && (
-              <div className="flex flex-wrap gap-1.5 xl:gap-2 mt-2 xl:mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {contextFilters.city && (
-                  <Badge variant="secondary" className="gap-1 text-[10px] xl:text-xs px-1.5 xl:px-2 py-0.5">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     City: {contextFilters.city}
-                    <button type="button" onClick={() => removeFilter('city')} className="ml-0.5 xl:ml-1 hover:text-destructive">
-                      <X className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('city')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove city filter"
+                    >
+                      <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.locality && (
-                  <Badge variant="secondary" className="gap-1 text-[10px] xl:text-xs px-1.5 xl:px-2 py-0.5">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Locality: {contextFilters.locality}
-                    <button type="button" onClick={() => removeFilter('locality')} className="ml-0.5 xl:ml-1 hover:text-destructive">
-                      <X className="h-2.5 w-2.5 xl:h-3 xl:w-3" />
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('locality')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove locality filter"
+                    >
+                      <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.type && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Type: {contextFilters.type}
-                    <button type="button" onClick={() => removeFilter('type')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('type')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove type filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.verified && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Verified Only
-                    <button type="button" onClick={() => removeFilter('verified')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('verified')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove verified filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {(contextFilters.price_min || contextFilters.price_max) && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Price: ₹{contextFilters.price_min || 0} - ₹{contextFilters.price_max || '∞'}
-                    <button type="button" onClick={() => {
-                      updateFilter('price_min', undefined);
-                      updateFilter('price_max', undefined);
-                    }} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        updateFilter('price_min', undefined);
+                        updateFilter('price_max', undefined);
+                      }} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove price filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.suitable_for && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Suitable for: {contextFilters.suitable_for}
-                    <button type="button" onClick={() => removeFilter('suitable_for')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('suitable_for')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove suitable for filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.food_included && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Food Included
-                    <button type="button" onClick={() => removeFilter('food_included')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('food_included')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove food included filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.amenities && contextFilters.amenities.length > 0 && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     {contextFilters.amenities.length} Amenities
-                    <button type="button" onClick={() => removeFilter('amenities')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('amenities')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove amenities filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.furnishing_type && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     {contextFilters.furnishing_type}
-                    <button type="button" onClick={() => removeFilter('furnishing_type')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('furnishing_type')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove furnishing type filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.occupancy_type && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     {contextFilters.occupancy_type} Occupancy
-                    <button type="button" onClick={() => removeFilter('occupancy_type')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('occupancy_type')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove occupancy type filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {contextFilters.parking_available && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs px-2 py-1 h-8 flex items-center">
                     Parking Available
-                    <button type="button" onClick={() => removeFilter('parking_available')} className="ml-1 hover:text-destructive">
+                    <button 
+                      type="button" 
+                      onClick={() => removeFilter('parking_available')} 
+                      className="ml-1 hover:text-destructive h-6 w-6 flex items-center justify-center"
+                      aria-label="Remove parking filter"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -467,7 +523,7 @@ export default function BrowsePropertiesPage() {
           <div className="flex-1">
             {/* Toolbar */}
             <div className="flex flex-col @md:flex-row justify-between items-start @md:items-center gap-3 xl:gap-4 mb-4 xl:mb-6">
-              <div className="text-xs xl:text-sm text-muted-foreground">
+              <div className="text-sm md:text-sm text-muted-foreground">
                 {loading ? (
                   <span>Loading...</span>
                 ) : (
@@ -480,19 +536,19 @@ export default function BrowsePropertiesPage() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 xl:gap-3 flex-wrap">
+                <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                   {/* Near Me Button */}
                   <Button
                     variant={sortBy === 'distance' ? 'default' : 'outline'}
                     size="sm"
                     onClick={handleNearMeClick}
                     disabled={locationLoading}
-                    className="gap-1.5 xl:gap-2 h-8 xl:h-9 text-xs xl:text-sm px-2.5 xl:px-3"
+                    className="gap-2 h-10 md:h-9 text-sm px-4 min-h-[40px]"
                   >
                     {locationLoading ? (
-                      <Loader2 className="h-3 w-3 xl:h-4 xl:w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Navigation className="h-3 w-3 xl:h-4 xl:w-4" />
+                      <Navigation className="h-4 w-4" />
                     )}
                     Near Me
                   </Button>
@@ -509,7 +565,7 @@ export default function BrowsePropertiesPage() {
                       setTimeout(updateUrlParams, 0);
                     }}
                   >
-                    <SelectTrigger className="w-36 xl:w-48 h-8 xl:h-9 text-xs xl:text-sm">
+                    <SelectTrigger className="w-40 md:w-48 h-10 md:h-9 text-sm min-h-[40px]">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
@@ -523,12 +579,13 @@ export default function BrowsePropertiesPage() {
                   </Select>
 
                   {/* View Mode Toggle */}
-                  <div className="hidden @md:flex border border-border rounded-lg">
+                  <div className="hidden sm:flex border border-border rounded-lg">
                     <Button
                       variant={viewMode === 'grid' ? 'default' : 'ghost'}
                       size="icon"
                       onClick={() => setViewMode('grid')}
-                      className="rounded-r-none"
+                      className="rounded-r-none h-10 w-10 min-h-[40px] min-w-[40px]"
+                      aria-label="Grid view"
                     >
                       <Grid3x3 className="h-4 w-4" />
                     </Button>
@@ -536,7 +593,8 @@ export default function BrowsePropertiesPage() {
                       variant={viewMode === 'list' ? 'default' : 'ghost'}
                       size="icon"
                       onClick={() => setViewMode('list')}
-                      className="rounded-l-none"
+                      className="rounded-l-none h-10 w-10 min-h-[40px] min-w-[40px]"
+                      aria-label="List view"
                     >
                       <List className="h-4 w-4" />
                     </Button>
@@ -584,16 +642,16 @@ export default function BrowsePropertiesPage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-4 xl:py-8 xl:py-16"
+                  className="text-center py-12 md:py-16"
                 >
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
                     <Search className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <h3 className="text-base xl:text-xl font-semibold mb-2">No properties found</h3>
+                  <h3 className="text-lg md:text-xl font-semibold mb-2">No properties found</h3>
                   <p className="text-muted-foreground mb-6">
                     Try adjusting your filters or search query
                   </p>
-                  <Button onClick={clearAllFilters}>Clear All Filters</Button>
+                  <Button onClick={clearAllFilters} className="min-h-[44px]">Clear All Filters</Button>
                 </motion.div>
               )}
           </div>

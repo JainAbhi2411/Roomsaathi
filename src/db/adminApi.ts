@@ -745,3 +745,26 @@ export async function updateMessBookingStatus(id: string, status: string, adminN
     return { success: false, error: error.message };
   }
 }
+
+// Property Listing Requests
+export async function updatePropertyListingRequestStatus(
+  id: string,
+  status: string,
+  adminNotes?: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('property_listing_requests')
+      .update({
+        status,
+        admin_notes: adminNotes || null,
+      })
+      .eq('id', id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating listing request:', error);
+    return { success: false, error: error.message };
+  }
+}

@@ -31,12 +31,21 @@ import MessCenters from './pages/admin/MessCenters';
 import MessForm from './pages/admin/MessForm';
 import Coupons from './pages/admin/Coupons';
 import ChatbotFeedback from './pages/admin/ChatbotFeedback';
+import PropertyListingRequests from './pages/admin/PropertyListingRequests';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import AdminLayout from './components/layouts/AdminLayout';
 import WelcomePage from './pages/mobile/WelcomePage';
 import MobileHomePage from './pages/mobile/MobileHomePage';
 import ChatPage from './pages/mobile/ChatPage';
 import MobilePropertyDetailPage from './pages/mobile/MobilePropertyDetailPage';
+import MobileProfilePage from './pages/mobile/MobileProfilePage';
+import MobileSearchPage from './pages/mobile/MobileSearchPage';
+import MobileLoginPage from './pages/mobile/MobileLoginPage';
+import MobileSignupPage from './pages/mobile/MobileSignupPage';
+import MobileFavoritesPage from './pages/mobile/MobileFavoritesPage';
+import MobilePrivacyPolicyPage from './pages/mobile/MobilePrivacyPolicyPage';
+import MobileTermsOfServicePage from './pages/mobile/MobileTermsOfServicePage';
+import MobileHelpCenterPage from './pages/mobile/MobileHelpCenterPage';
 import type { ReactNode } from 'react';
 
 // Lazy load BlogPostPage to avoid react-markdown loading issues
@@ -203,6 +212,54 @@ const routes: RouteConfig[] = [
     element: <MobilePropertyDetailPage />,
     visible: false
   },
+  {
+    name: 'Mobile Profile',
+    path: '/mobile/profile',
+    element: <MobileProfilePage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Search',
+    path: '/mobile/search',
+    element: <MobileSearchPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Login',
+    path: '/mobile/login',
+    element: <MobileLoginPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Signup',
+    path: '/mobile/signup',
+    element: <MobileSignupPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Favorites',
+    path: '/mobile/favorites',
+    element: <MobileFavoritesPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Privacy Policy',
+    path: '/mobile/privacy-policy',
+    element: <MobilePrivacyPolicyPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Terms of Service',
+    path: '/mobile/terms-of-service',
+    element: <MobileTermsOfServicePage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Help Center',
+    path: '/mobile/help-center',
+    element: <MobileHelpCenterPage />,
+    visible: false
+  },
   // Admin Routes
   {
     name: 'Admin Login',
@@ -313,6 +370,18 @@ const routes: RouteConfig[] = [
       <ProtectedAdminRoute>
         <AdminLayout>
           <Queries />
+        </AdminLayout>
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
+  {
+    name: 'Admin Property Listing Requests',
+    path: '/admin/listing-requests',
+    element: (
+      <ProtectedAdminRoute>
+        <AdminLayout>
+          <PropertyListingRequests />
         </AdminLayout>
       </ProtectedAdminRoute>
     ),

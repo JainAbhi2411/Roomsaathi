@@ -24,6 +24,15 @@ const PUBLIC_ROUTES = [
   '/help-center',
   '/how-to-use',
   '/owner-features',
+  '/terms',
+  '/privacy',
+  '/test-auth',
+  '/mess',
+  '/mess/*',
+  '/install',
+  '/welcome',
+  '/mobile',
+  '/mobile/*', // All mobile routes are public
   '/admin/*' // Admin routes have their own authentication guard (ProtectedAdminRoute)
 ];
 

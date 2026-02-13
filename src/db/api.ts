@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions, MessCenter, ChatbotFeedback } from '@/types/index';
+import type { Property, PropertyWithDetails, Room, Amenity, PropertyPolicy, Favorite, FilterOptions, MessCenter, ChatbotFeedback, PropertyListingRequest } from '@/types/index';
 
 // Get user session ID from localStorage or generate new one
 const getUserSessionId = (): string => {
@@ -289,11 +289,11 @@ export const getPublishedBlogs = async () => {
   return Array.isArray(data) ? data : [];
 };
 
-export const getBlogById = async (id: string) => {
+export const getBlogBySlug = async (slug: string) => {
   const { data, error } = await supabase
     .from('blogs')
     .select('*')
-    .eq('id', id)
+    .eq('slug', slug)
     .eq('published', true)
     .maybeSingle();
 
@@ -631,4 +631,105 @@ export const deleteChatbotFeedback = async (id: string): Promise<void> => {
     .eq('id', id);
 
   if (error) throw error;
+};
+
+// Chat Session APIs
+export const createChatSession = async (userId?: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .insert({
+      user_session_id: userId || null,
+      title: 'New Chat',
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getChatSessions = async (userId?: string): Promise<any[]> => {
+  let query = supabase
+    .from('chat_sessions')
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (userId) {
+    query = query.eq('user_session_id', userId);
+  } else {
+    query = query.is('user_session_id', null);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+export const getChatMessages = async (sessionId: string): Promise<any[]> => {
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .select('*')
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+};
+
+export const saveChatMessage = async (message: {
+  session_id: string;
+  role: 'user' | 'model' | 'system';
+  content: string;
+  property_recommendations?: any;
+}): Promise<any> => {
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .insert(message)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteChatSession = async (sessionId: string): Promise<void> => {
+  const { error } = await supabase
+    .from('chat_sessions')
+    .delete()
+    .eq('id', sessionId);
+
+  if (error) throw error;
+};
+
+// Property Listing Requests
+export const submitPropertyListingRequest = async (
+  requestData: Omit<PropertyListingRequest, 'id' | 'status' | 'admin_notes' | 'created_at' | 'updated_at'>
+): Promise<PropertyListingRequest> => {
+  const { data, error } = await supabase
+    .from('property_listing_requests')
+    .insert({
+      owner_name: requestData.owner_name,
+      owner_email: requestData.owner_email,
+      owner_phone: requestData.owner_phone,
+      owner_alternate_phone: requestData.owner_alternate_phone || null,
+      property_name: requestData.property_name,
+      property_type: requestData.property_type,
+      city: requestData.city,
+      locality: requestData.locality,
+      address: requestData.address,
+      total_rooms: requestData.total_rooms || null,
+      available_rooms: requestData.available_rooms || null,
+      price_range_min: requestData.price_range_min || null,
+      price_range_max: requestData.price_range_max || null,
+      amenities: requestData.amenities || [],
+      description: requestData.description || null,
+      property_images: requestData.property_images || [],
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  if (!data) throw new Error('Failed to submit listing request');
+  
+  return data as PropertyListingRequest;
 };

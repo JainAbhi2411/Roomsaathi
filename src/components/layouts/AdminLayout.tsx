@@ -13,7 +13,8 @@ import {
   Calendar,
   Utensils,
   Tag,
-  MessageCircle
+  MessageCircle,
+  ClipboardList
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -26,6 +27,7 @@ interface AdminLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Properties', href: '/admin/properties', icon: Building2 },
+  { name: 'Listing Requests', href: '/admin/listing-requests', icon: ClipboardList },
   { name: 'Mess Centers', href: '/admin/mess', icon: Utensils },
   { name: 'Coupons', href: '/admin/coupons', icon: Tag },
   { name: 'Blogs', href: '/admin/blogs', icon: FileText },
