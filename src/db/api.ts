@@ -289,11 +289,11 @@ export const getPublishedBlogs = async () => {
   return Array.isArray(data) ? data : [];
 };
 
-export const getBlogBySlug = async (slug: string) => {
+export const getBlogById = async (id: string) => {
   const { data, error } = await supabase
     .from('blogs')
     .select('*')
-    .eq('slug', slug)
+    .eq('id', id)
     .eq('published', true)
     .maybeSingle();
 
