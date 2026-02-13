@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Mic, Home, Heart, User, Sparkles } from 'lucide-react';
+import { Search, SlidersHorizontal, Mic, Home, Heart, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -15,29 +15,28 @@ import MobileAdvancedFilters from '@/components/mobile/MobileAdvancedFilters';
 
 export default function MobileHomePage() {
   const navigate = useNavigate();
-  const { filters, updateFilter } = useSearchFilter();
+  const { updateFilter } = useSearchFilter();
   const { user } = useAuth();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    loadFeaturedProperties();
-  }, []);
-
+  // 🔥 Load All Verified + Published Properties
   const loadFeaturedProperties = async () => {
     try {
       setLoading(true);
+
       const { data, error } = await supabase
         .from('properties')
         .select('*')
         .eq('published', true)
         .eq('verified', true)
-        .order('created_at', { ascending: false })
-        .limit(10);
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
+
       setFeaturedProperties(data || []);
     } catch (error) {
       console.error('Error loading properties:', error);
@@ -45,6 +44,58 @@ export default function MobileHomePage() {
       setLoading(false);
     }
   };
+
+  // 🔥 Realtime Subscription
+  useEffect(() => {
+    loadFeaturedProperties();
+
+    const channel = supabase
+      .channel('properties-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties',
+        },
+        (payload) => {
+          const newProperty = payload.new as Property;
+          const oldProperty = payload.old as Property;
+
+          // INSERT
+          if (
+            payload.eventType === 'INSERT' &&
+            newProperty.published &&
+            newProperty.verified
+          ) {
+            setFeaturedProperties((prev) => [newProperty, ...prev]);
+          }
+
+          // UPDATE
+          if (payload.eventType === 'UPDATE') {
+            setFeaturedProperties((prev) =>
+              prev
+                .map((property) =>
+                  property.id === newProperty.id ? newProperty : property
+                )
+                .filter((property) => property.published && property.verified)
+            );
+          }
+
+          // DELETE
+          if (payload.eventType === 'DELETE') {
+            setFeaturedProperties((prev) =>
+              prev.filter((property) => property.id !== oldProperty.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handlePropertyClick = (propertyId: string) => {
     navigate(`/mobile/property/${propertyId}`);
@@ -62,7 +113,6 @@ export default function MobileHomePage() {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-card border-b border-border">
         <div className="p-4 space-y-3">
-          {/* Logo and Title */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
@@ -70,7 +120,9 @@ export default function MobileHomePage() {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-foreground">RoomSaathi</h1>
-                <p className="text-xs text-muted-foreground">Find your perfect home</p>
+                <p className="text-xs text-muted-foreground">
+                  Find your perfect home
+                </p>
               </div>
             </div>
             <Button
@@ -82,9 +134,9 @@ export default function MobileHomePage() {
             </Button>
           </div>
 
-          {/* Search Bar */}
+          {/* Search */}
           <div className="flex gap-2">
-            <div 
+            <div
               className="flex-1 relative cursor-pointer"
               onClick={() => navigate('/mobile/search')}
             >
@@ -97,6 +149,7 @@ export default function MobileHomePage() {
                 className="pl-9"
               />
             </div>
+
             <Sheet open={showFilters} onOpenChange={setShowFilters}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -107,7 +160,7 @@ export default function MobileHomePage() {
                 <SheetHeader>
                   <SheetTitle>Advanced Filters</SheetTitle>
                 </SheetHeader>
-                <MobileAdvancedFilters 
+                <MobileAdvancedFilters
                   onApply={() => {
                     setShowFilters(false);
                     navigate('/mobile/search');
@@ -122,11 +175,14 @@ export default function MobileHomePage() {
 
       {/* Content */}
       <div className="p-4 pb-24">
-        {/* Featured Properties */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Featured Properties</h2>
-            <Badge variant="secondary">RoomSaathi Verified</Badge>
+            <h2 className="text-lg font-semibold">
+              Verified Properties
+            </h2>
+            <Badge variant="secondary">
+              Live Updates Enabled
+            </Badge>
           </div>
 
           {loading ? (
@@ -134,13 +190,13 @@ export default function MobileHomePage() {
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="overflow-hidden">
                   <div className="h-48 bg-muted animate-pulse" />
-                  <CardContent className="p-4 space-y-2">
-                    <div className="h-4 bg-muted rounded animate-pulse" />
-                    <div className="h-3 bg-muted rounded w-2/3 animate-pulse" />
-                  </CardContent>
                 </Card>
               ))}
             </div>
+          ) : featuredProperties.length === 0 ? (
+            <p className="text-muted-foreground text-sm">
+              No verified properties available.
+            </p>
           ) : (
             <div className="space-y-4">
               {featuredProperties.map((property, index) => (
@@ -148,7 +204,7 @@ export default function MobileHomePage() {
                   key={property.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Card
                     className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -156,33 +212,30 @@ export default function MobileHomePage() {
                   >
                     <div className="relative h-48">
                       <img
-                        src={property.images[0] || '/placeholder-property.jpg'}
+                        src={
+                          property.images?.[0] ||
+                          '/placeholder-property.jpg'
+                        }
                         alt={property.name}
                         className="w-full h-full object-cover"
                       />
-                      {property.verified && (
-                        <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
-                          Verified
-                        </Badge>
-                      )}
+                      <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
+                        Verified
+                      </Badge>
                     </div>
+
                     <CardContent className="p-4">
-                      <h3 className="font-semibold text-foreground mb-1">{property.name}</h3>
+                      <h3 className="font-semibold mb-1">
+                        {property.name}
+                      </h3>
                       <p className="text-sm text-muted-foreground mb-2">
                         {property.locality}, {property.city}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-lg font-bold text-primary">
-                            ₹{property.price_from.toLocaleString()}
-                            {property.price_to && ` - ₹${property.price_to.toLocaleString()}`}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{property.type}</p>
-                        </div>
-                        <Button size="sm" variant="outline">
-                          View Details
-                        </Button>
-                      </div>
+                      <p className="text-lg font-bold text-primary">
+                        ₹{property.price_from.toLocaleString()}
+                        {property.price_to &&
+                          ` - ₹${property.price_to.toLocaleString()}`}
+                      </p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -192,7 +245,7 @@ export default function MobileHomePage() {
         </div>
       </div>
 
-      {/* Voice Chat FAB */}
+      {/* Floating Voice Chat Button */}
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -202,71 +255,52 @@ export default function MobileHomePage() {
         <Button
           size="lg"
           onClick={() => navigate('/mobile/chat')}
-          className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-accent shadow-lg hover:shadow-xl"
+          className="w-16 h-16 rounded-full shadow-lg bg-gradient-to-r from-primary to-accent hover:shadow-xl"
         >
           <Mic className="w-6 h-6 text-primary-foreground" />
-        </Button>
-      </motion.div>
-
-      {/* Floating AI Chat Button */}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.5, type: 'spring' }}
-        className="fixed bottom-20 right-4 z-20"
-      >
-        <Button
-          size="icon"
-          onClick={() => navigate('/mobile/chat')}
-          className="h-14 w-14 rounded-full shadow-lg bg-gradient-to-br from-primary to-secondary hover:shadow-xl transition-shadow"
-        >
-          <Sparkles className="h-6 w-6" />
         </Button>
       </motion.div>
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
         <div className="flex items-center justify-around p-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-col h-auto py-2 text-primary"
-          >
+          <Button variant="ghost" size="sm" className="flex-col text-primary">
             <Home className="w-5 h-5 mb-1" />
             <span className="text-xs">Home</span>
           </Button>
+
           <Button
             variant="ghost"
             size="sm"
-            className="flex-col h-auto py-2"
+            className="flex-col"
             onClick={() => navigate('/mobile/search')}
           >
             <Search className="w-5 h-5 mb-1" />
             <span className="text-xs">Search</span>
           </Button>
+
           <Button
             variant="ghost"
             size="sm"
-            className="flex-col h-auto py-2"
+            className="flex-col"
             onClick={() => navigate('/mobile/favorites')}
           >
             <Heart className="w-5 h-5 mb-1" />
             <span className="text-xs">Favorites</span>
           </Button>
+
           <Button
             variant="ghost"
             size="sm"
-            className="flex-col h-auto py-2"
-            onClick={() => {
-              if (user) {
-                navigate('/mobile/profile');
-              } else {
-                navigate('/mobile/login');
-              }
-            }}
+            className="flex-col"
+            onClick={() =>
+              navigate(user ? '/mobile/profile' : '/mobile/login')
+            }
           >
             <User className="w-5 h-5 mb-1" />
-            <span className="text-xs">{user ? 'Profile' : 'Login'}</span>
+            <span className="text-xs">
+              {user ? 'Profile' : 'Login'}
+            </span>
           </Button>
         </div>
       </div>
