@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { PropertyWithDetails, Property } from '@/types/index';
 import { getPropertyById, getProperties } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import VerifiedBadge from '@/components/property/VerifiedBadge';
 import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
@@ -84,6 +85,31 @@ export default function PropertyDetailsPage() {
   useEffect(() => {
     if (id) {
       loadProperty(id);
+
+      // Set up real-time subscription for rooms table
+      console.log('Setting up real-time subscription for property rooms:', id);
+      
+      const channel = supabase
+        .channel(`public-rooms-${id}`)
+        .on('postgres_changes', { 
+          event: '*', 
+          schema: 'public', 
+          table: 'rooms',
+          filter: `property_id=eq.${id}`
+        }, (payload) => {
+          console.log('Room change detected on public site:', payload);
+          // Reload property to get updated rooms
+          loadProperty(id);
+        })
+        .subscribe((status) => {
+          console.log('Public subscription status:', status);
+        });
+
+      // Cleanup subscription on unmount
+      return () => {
+        console.log('Cleaning up public subscription');
+        supabase.removeChannel(channel);
+      };
     }
   }, [id]);
 
@@ -380,6 +406,7 @@ export default function PropertyDetailsPage() {
 
                   {/* Property Details Tab */}
                   <TabsContent value="details" className="space-y-6 mt-6">
+                    {/* Basic Property Information */}
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -415,6 +442,30 @@ export default function PropertyDetailsPage() {
                               <p className="font-semibold">{property.accommodation_type}</p>
                             </div>
                           )}
+                          {property.property_size && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Property Size</p>
+                              <p className="font-semibold">{property.property_size} sq ft</p>
+                            </div>
+                          )}
+                          {property.food_included !== undefined && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Food Included</p>
+                              <p className="font-semibold">{property.food_included ? 'Yes' : 'No'}</p>
+                            </div>
+                          )}
+                          {property.total_floors && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Total Floors</p>
+                              <p className="font-semibold">{property.total_floors}</p>
+                            </div>
+                          )}
+                          {property.total_rooms && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Total Rooms</p>
+                              <p className="font-semibold">{property.total_rooms}</p>
+                            </div>
+                          )}
                         </div>
                         {property.suitable_for && property.suitable_for.length > 0 && (
                           <>
@@ -440,9 +491,436 @@ export default function PropertyDetailsPage() {
                         <div>
                           <p className="text-sm text-muted-foreground mb-2">Full Address</p>
                           <p className="font-medium">{property.address}</p>
+                          {property.state && property.pincode && (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {property.state} - {property.pincode}
+                            </p>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
+
+                    {/* Flat & Apartment Specific Details */}
+                    {(property.type === 'Flat' || property.type === 'Apartment') && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Home className="h-5 w-5" />
+                            {property.type} Specifications
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                            {property.bedrooms !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Bedrooms</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Bed className="h-4 w-4" />
+                                  {property.bedrooms}
+                                </p>
+                              </div>
+                            )}
+                            {property.bathrooms !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Bathrooms</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Bath className="h-4 w-4" />
+                                  {property.bathrooms}
+                                </p>
+                              </div>
+                            )}
+                            {property.balconies !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Balconies</p>
+                                <p className="font-semibold">{property.balconies}</p>
+                              </div>
+                            )}
+                            {property.floor_number !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Floor Number</p>
+                                <p className="font-semibold">{property.floor_number}</p>
+                              </div>
+                            )}
+                            {property.furnishing_status && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Furnishing</p>
+                                <p className="font-semibold">{property.furnishing_status}</p>
+                              </div>
+                            )}
+                            {property.parking_type && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Parking</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Car className="h-4 w-4" />
+                                  {property.parking_type}
+                                </p>
+                              </div>
+                            )}
+                            {property.carpet_area && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Carpet Area</p>
+                                <p className="font-semibold">{property.carpet_area} sq ft</p>
+                              </div>
+                            )}
+                            {property.built_up_area && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Built-up Area</p>
+                                <p className="font-semibold">{property.built_up_area} sq ft</p>
+                              </div>
+                            )}
+                            {property.property_age !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Property Age</p>
+                                <p className="font-semibold">{property.property_age} years</p>
+                              </div>
+                            )}
+                            {property.facing_direction && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Facing</p>
+                                <p className="font-semibold">{property.facing_direction}</p>
+                              </div>
+                            )}
+                            {property.lift_available !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Lift</p>
+                                <p className="font-semibold">{property.lift_available ? 'Available' : 'Not Available'}</p>
+                              </div>
+                            )}
+                            {property.power_backup !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Power Backup</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Zap className="h-4 w-4" />
+                                  {property.power_backup ? 'Yes' : 'No'}
+                                </p>
+                              </div>
+                            )}
+                            {property.water_supply && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Water Supply</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Droplet className="h-4 w-4" />
+                                  {property.water_supply}
+                                </p>
+                              </div>
+                            )}
+                            {property.maintenance_charges !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Maintenance</p>
+                                <p className="font-semibold">₹{property.maintenance_charges}/month</p>
+                              </div>
+                            )}
+                            {property.security_deposit_months !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Security Deposit</p>
+                                <p className="font-semibold">{property.security_deposit_months} months</p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* PG Specific Details */}
+                    {property.type === 'PG' && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Users className="h-5 w-5" />
+                            PG Details
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                            {property.gender_preference && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Gender Preference</p>
+                                <p className="font-semibold">{property.gender_preference}</p>
+                              </div>
+                            )}
+                            {property.sharing_type && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Sharing Type</p>
+                                <p className="font-semibold">{property.sharing_type}</p>
+                              </div>
+                            )}
+                            {property.room_type && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Room Type</p>
+                                <p className="font-semibold">{property.room_type}</p>
+                              </div>
+                            )}
+                            {property.attached_bathroom !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Attached Bathroom</p>
+                                <p className="font-semibold">{property.attached_bathroom ? 'Yes' : 'No'}</p>
+                              </div>
+                            )}
+                            {property.laundry_service !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Laundry Service</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <WashingMachine className="h-4 w-4" />
+                                  {property.laundry_service ? 'Available' : 'Not Available'}
+                                </p>
+                              </div>
+                            )}
+                            {property.meal_charges !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Meal Charges</p>
+                                <p className="font-semibold">₹{property.meal_charges}/month</p>
+                              </div>
+                            )}
+                            {property.notice_period_days !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Notice Period</p>
+                                <p className="font-semibold">{property.notice_period_days} days</p>
+                              </div>
+                            )}
+                            {property.lock_in_period_months !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Lock-in Period</p>
+                                <p className="font-semibold">{property.lock_in_period_months} months</p>
+                              </div>
+                            )}
+                            {property.gate_closing_time && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Gate Closing Time</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Clock className="h-4 w-4" />
+                                  {property.gate_closing_time}
+                                </p>
+                              </div>
+                            )}
+                            {property.visitor_policy && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Visitor Policy</p>
+                                <p className="font-semibold">{property.visitor_policy}</p>
+                              </div>
+                            )}
+                          </div>
+                          {property.meal_options && property.meal_options.length > 0 && (
+                            <>
+                              <Separator className="my-4" />
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-2">Meal Options</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {property.meal_options.map((meal) => (
+                                    <Badge key={meal} variant="outline" className="bg-primary/5 border-primary/20">
+                                      <Utensils className="h-3 w-3 mr-1" />
+                                      {meal}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Hostel Specific Details */}
+                    {property.type === 'Hostel' && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Home className="h-5 w-5" />
+                            Hostel Details
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                            {property.total_capacity !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Total Capacity</p>
+                                <p className="font-semibold">{property.total_capacity} students</p>
+                              </div>
+                            )}
+                            {property.current_occupancy !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Current Occupancy</p>
+                                <p className="font-semibold">{property.current_occupancy} students</p>
+                              </div>
+                            )}
+                            {property.hostel_gender && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Gender</p>
+                                <p className="font-semibold">{property.hostel_gender}</p>
+                              </div>
+                            )}
+                            {property.warden_available !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Warden</p>
+                                <p className="font-semibold">{property.warden_available ? 'Available' : 'Not Available'}</p>
+                              </div>
+                            )}
+                            {property.study_room !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Study Room</p>
+                                <p className="font-semibold">{property.study_room ? 'Available' : 'Not Available'}</p>
+                              </div>
+                            )}
+                            {property.common_area !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Common Area</p>
+                                <p className="font-semibold">{property.common_area ? 'Available' : 'Not Available'}</p>
+                              </div>
+                            )}
+                            {property.security_hours && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Security</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Shield className="h-4 w-4" />
+                                  {property.security_hours}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          {property.meal_plans && property.meal_plans.length > 0 && (
+                            <>
+                              <Separator className="my-4" />
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-2">Meal Plans</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {property.meal_plans.map((plan) => (
+                                    <Badge key={plan} variant="outline" className="bg-primary/5 border-primary/20">
+                                      <Utensils className="h-3 w-3 mr-1" />
+                                      {plan}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                          {property.room_types_available && property.room_types_available.length > 0 && (
+                            <>
+                              <Separator className="my-4" />
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-2">Room Types Available</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {property.room_types_available.map((roomType) => (
+                                    <Badge key={roomType} variant="outline" className="bg-primary/5 border-primary/20">
+                                      <Bed className="h-3 w-3 mr-1" />
+                                      {roomType}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Room Specific Details */}
+                    {property.type === 'Room' && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Bed className="h-5 w-5" />
+                            Room Details
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                            {property.kitchen_access !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Kitchen Access</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Utensils className="h-4 w-4" />
+                                  {property.kitchen_access ? 'Available' : 'Not Available'}
+                                </p>
+                              </div>
+                            )}
+                            {property.separate_entrance !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Separate Entrance</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <DoorOpen className="h-4 w-4" />
+                                  {property.separate_entrance ? 'Yes' : 'No'}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Short Term Stay Specific Details */}
+                    {property.type === 'Short Term Stay' && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Clock className="h-5 w-5" />
+                            Short Term Stay Details
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-2 @md:grid-cols-3 gap-4">
+                            {property.min_stay_duration !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Minimum Stay</p>
+                                <p className="font-semibold">{property.min_stay_duration} days</p>
+                              </div>
+                            )}
+                            {property.max_stay_duration !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Maximum Stay</p>
+                                <p className="font-semibold">{property.max_stay_duration} days</p>
+                              </div>
+                            )}
+                            {property.daily_rate !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Daily Rate</p>
+                                <p className="font-semibold">₹{property.daily_rate}/day</p>
+                              </div>
+                            )}
+                            {property.weekly_rate !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Weekly Rate</p>
+                                <p className="font-semibold">₹{property.weekly_rate}/week</p>
+                              </div>
+                            )}
+                            {property.monthly_rate !== undefined && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Monthly Rate</p>
+                                <p className="font-semibold">₹{property.monthly_rate}/month</p>
+                              </div>
+                            )}
+                            {property.cancellation_policy && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Cancellation Policy</p>
+                                <p className="font-semibold">{property.cancellation_policy}</p>
+                              </div>
+                            )}
+                            {property.check_in_time && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Check-in Time</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Clock className="h-4 w-4" />
+                                  {property.check_in_time}
+                                </p>
+                              </div>
+                            )}
+                            {property.check_out_time && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Check-out Time</p>
+                                <p className="font-semibold flex items-center gap-1">
+                                  <Clock className="h-4 w-4" />
+                                  {property.check_out_time}
+                                </p>
+                              </div>
+                            )}
+                            {property.cleaning_service && (
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-1">Cleaning Service</p>
+                                <p className="font-semibold">{property.cleaning_service}</p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
 
                     {/* Owner Contact */}
                     {(property.owner_name || property.contact_phone || property.contact_email) && (

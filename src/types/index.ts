@@ -12,11 +12,14 @@ export interface Property {
   city: 'Sikar' | 'Jaipur' | 'Kota';
   locality: string;
   address: string;
+  state?: string;
+  pincode?: string;
   price_from: number;
   price_to?: number;
   offer_price?: number;
   description: string;
   verified: boolean;
+  published?: boolean;
   images: string[];
   video_url?: string;
   contact_phone?: string;
@@ -26,10 +29,70 @@ export interface Property {
   availability_status: string;
   accommodation_type?: string;
   suitable_for?: string[];
+  property_size?: number;
+  food_included?: boolean;
   latitude?: number;
   longitude?: number;
   total_floors?: number;
   rooms_per_floor?: number;
+  total_rooms?: number;
+  
+  // Flat & Apartment specific fields
+  bedrooms?: number;
+  bathrooms?: number;
+  balconies?: number;
+  floor_number?: number;
+  furnishing_status?: 'Unfurnished' | 'Semi-Furnished' | 'Fully Furnished';
+  parking_type?: 'None' | 'Two-Wheeler' | 'Four-Wheeler' | 'Both';
+  carpet_area?: number;
+  built_up_area?: number;
+  property_age?: number;
+  facing_direction?: 'North' | 'South' | 'East' | 'West' | 'North-East' | 'North-West' | 'South-East' | 'South-West';
+  lift_available?: boolean;
+  power_backup?: boolean;
+  water_supply?: '24/7' | 'Limited Hours';
+  maintenance_charges?: number;
+  security_deposit_months?: number;
+  
+  // PG specific fields
+  gender_preference?: 'Boys' | 'Girls' | 'Co-living';
+  sharing_type?: 'Single' | 'Double' | 'Triple' | '4+ Sharing';
+  meal_options?: string[];
+  meal_charges?: number;
+  room_type?: 'AC' | 'Non-AC' | 'Both';
+  attached_bathroom?: boolean;
+  laundry_service?: boolean;
+  notice_period_days?: number;
+  lock_in_period_months?: number;
+  gate_closing_time?: string;
+  visitor_policy?: 'Allowed' | 'Not Allowed' | 'Restricted';
+  
+  // Hostel specific fields
+  total_capacity?: number;
+  current_occupancy?: number;
+  hostel_gender?: 'Boys' | 'Girls' | 'Co-ed';
+  meal_plans?: string[];
+  room_types_available?: string[];
+  warden_available?: boolean;
+  study_room?: boolean;
+  common_area?: boolean;
+  security_hours?: '24/7' | 'Limited Hours';
+  
+  // Room specific fields
+  kitchen_access?: boolean;
+  separate_entrance?: boolean;
+  
+  // Short Term Stay specific fields
+  min_stay_duration?: number;
+  max_stay_duration?: number;
+  daily_rate?: number;
+  weekly_rate?: number;
+  monthly_rate?: number;
+  cancellation_policy?: 'Flexible' | 'Moderate' | 'Strict';
+  check_in_time?: string;
+  check_out_time?: string;
+  cleaning_service?: 'Daily' | 'Weekly' | 'On Request';
+  
   created_at: string;
   updated_at: string;
 }
@@ -49,7 +112,14 @@ export interface Room {
     furniture?: string;
     [key: string]: string | boolean | undefined;
   };
-  available: boolean;
+  is_available: boolean;
+  capacity?: number;
+  sharing_type?: string;
+  occupied_seats?: number;
+  room_size?: number;
+  has_attached_bathroom?: boolean;
+  has_balcony?: boolean;
+  furnishing_status?: string;
   floor_number?: number;
   room_number?: string;
   seats?: number;
@@ -57,6 +127,7 @@ export interface Room {
   short_term_available?: boolean;
   amenities?: string[];
   created_at: string;
+  updated_at?: string;
 }
 
 export interface Amenity {
@@ -124,6 +195,48 @@ export interface UserQuery {
   admin_notes?: string;
   created_at: string;
   updated_at: string;
+}
+
+// Mobile Chat Types
+export interface ChatMessage {
+  id: string;
+  conversation_id: string;
+  role: 'user' | 'model';
+  content: string;
+  audio_url?: string;
+  created_at: string;
+}
+
+export interface ChatConversation {
+  id: string;
+  user_id?: string;
+  session_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PropertyRecommendation {
+  id: string;
+  conversation_id: string;
+  property_id: string;
+  score: number;
+  reasoning: string;
+  created_at: string;
+  property?: Property;
+}
+
+export interface VisitSchedule {
+  id: string;
+  user_id?: string;
+  property_id: string;
+  preferred_date: string;
+  preferred_time: string;
+  phone: string;
+  notes?: string;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  created_at: string;
+  updated_at: string;
+  property?: Property;
 }
 
 export interface Profile {
@@ -271,4 +384,3 @@ export interface ChatbotFeedback {
   created_at: string;
   updated_at: string;
 }
-

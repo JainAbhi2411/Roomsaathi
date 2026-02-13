@@ -72,11 +72,10 @@ export async function getAllPropertiesAdmin(): Promise<Property[]> {
 
 export async function createProperty(property: Omit<Property, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: Property }> {
   try {
-    const { data, error } = await supabase
-      .from('properties')
-      .insert([property])
-      .select()
-      .single();
+    // Use RPC function to bypass RLS
+    const { data, error } = await supabase.rpc('admin_create_property', {
+      property_data: property
+    });
 
     if (error) throw error;
     return { success: true, data };
@@ -86,18 +85,26 @@ export async function createProperty(property: Omit<Property, 'id' | 'created_at
   }
 }
 
-export async function updateProperty(id: string, property: Partial<Property>): Promise<{ success: boolean; error?: string }> {
+export async function updateProperty(id: string, property: Partial<Property>): Promise<{ success: boolean; error?: string; data?: Property }> {
   try {
-    const { error } = await supabase
-      .from('properties')
-      .update(property)
-      .eq('id', id);
-
-    if (error) throw error;
-    return { success: true };
+    console.log('Updating property:', id, property);
+    
+    // Use RPC function to bypass RLS for all updates
+    const { data, error } = await supabase.rpc('admin_update_property', {
+      property_id: id,
+      property_data: property
+    });
+    
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+    
+    console.log('Property updated successfully:', data);
+    return { success: true, data };
   } catch (error: any) {
     console.error('Error updating property:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to update property' };
   }
 }
 
@@ -231,6 +238,22 @@ export async function submitUserQuery(query: Omit<UserQuery, 'id' | 'status' | '
 }
 
 // Property Policies Management
+export async function getPropertyPolicies(propertyId: string): Promise<PropertyPolicy[]> {
+  try {
+    const { data, error } = await supabase
+      .from('property_policies')
+      .select('*')
+      .eq('property_id', propertyId)
+      .order('display_order', { ascending: true });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching policies:', error);
+    return [];
+  }
+}
+
 export async function createPropertyPolicy(policy: Omit<PropertyPolicy, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: PropertyPolicy }> {
   try {
     const { data, error } = await supabase
@@ -302,6 +325,128 @@ export async function bulkDeletePropertyPolicies(propertyId: string): Promise<{ 
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting policies:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Room Management
+export async function createRoom(room: Omit<Room, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: Room }> {
+  try {
+    console.log('Creating room:', room);
+    
+    const { data, error } = await supabase.rpc('admin_create_room', {
+      room_data: room as any
+    });
+
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to create room');
+    }
+
+    console.log('Room created successfully:', data.data);
+    return { success: true, data: data.data };
+  } catch (error: any) {
+    console.error('Error creating room:', error);
+    return { success: false, error: error.message || 'Failed to create room' };
+  }
+}
+
+export async function bulkCreateRooms(rooms: Omit<Room, 'id' | 'created_at' | 'updated_at'>[]): Promise<{ success: boolean; error?: string; count?: number }> {
+  try {
+    console.log('Bulk creating rooms:', rooms.length);
+    
+    const { data, error } = await supabase.rpc('admin_bulk_create_rooms', {
+      rooms_data: rooms as any
+    });
+
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to create rooms');
+    }
+
+    console.log('Rooms created successfully:', data.count);
+    return { success: true, count: data.count };
+  } catch (error: any) {
+    console.error('Error creating rooms:', error);
+    return { success: false, error: error.message || 'Failed to create rooms' };
+  }
+}
+
+export async function bulkDeleteRooms(propertyId: string): Promise<{ success: boolean; error?: string; count?: number }> {
+  try {
+    console.log('Bulk deleting rooms for property:', propertyId);
+    
+    const { data, error } = await supabase.rpc('admin_bulk_delete_rooms', {
+      property_id_param: propertyId
+    });
+
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to delete rooms');
+    }
+
+    console.log('Rooms deleted successfully:', data.count);
+    return { success: true, count: data.count };
+  } catch (error: any) {
+    console.error('Error deleting rooms:', error);
+    return { success: false, error: error.message || 'Failed to delete rooms' };
+  }
+}
+
+// Amenities Management
+export async function getPropertyAmenities(propertyId: string): Promise<{ property_id: string; amenity_name: string; amenity_icon: string; id: string; created_at: string }[]> {
+  try {
+    const { data, error } = await supabase
+      .from('amenities')
+      .select('*')
+      .eq('property_id', propertyId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching amenities:', error);
+    return [];
+  }
+}
+
+export async function bulkCreateAmenities(amenities: { property_id: string; amenity_name: string; amenity_icon: string }[]): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('amenities')
+      .insert(amenities);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error creating amenities:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function bulkDeleteAmenities(propertyId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('amenities')
+      .delete()
+      .eq('property_id', propertyId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting amenities:', error);
     return { success: false, error: error.message };
   }
 }
@@ -386,49 +531,54 @@ export async function getRoomsByPropertyId(propertyId: string): Promise<Room[]> 
   }
 }
 
-export async function createRoom(room: Omit<Room, 'id' | 'created_at'>): Promise<{ success: boolean; error?: string; data?: Room }> {
+export async function updateRoom(id: string, room: Partial<Room>): Promise<{ success: boolean; error?: string; data?: Room }> {
   try {
-    const { data, error } = await supabase
-      .from('rooms')
-      .insert([room])
-      .select()
-      .single();
+    console.log('Updating room:', id, room);
+    
+    const { data, error } = await supabase.rpc('admin_update_room', {
+      room_id: id,
+      room_data: room as any
+    });
 
-    if (error) throw error;
-    return { success: true, data };
-  } catch (error: any) {
-    console.error('Error creating room:', error);
-    return { success: false, error: error.message };
-  }
-}
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
 
-export async function updateRoom(id: string, room: Partial<Room>): Promise<{ success: boolean; error?: string }> {
-  try {
-    const { error } = await supabase
-      .from('rooms')
-      .update(room)
-      .eq('id', id);
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to update room');
+    }
 
-    if (error) throw error;
-    return { success: true };
+    console.log('Room updated successfully:', data.data);
+    return { success: true, data: data.data };
   } catch (error: any) {
     console.error('Error updating room:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to update room' };
   }
 }
 
 export async function deleteRoom(id: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const { error } = await supabase
-      .from('rooms')
-      .delete()
-      .eq('id', id);
+    console.log('Deleting room:', id);
+    
+    const { data, error } = await supabase.rpc('admin_delete_room', {
+      room_id: id
+    });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to delete room');
+    }
+
+    console.log('Room deleted successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting room:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to delete room' };
   }
 }
 

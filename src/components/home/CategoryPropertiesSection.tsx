@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -25,6 +26,31 @@ export default function CategoryPropertiesSection() {
 
   useEffect(() => {
     loadCategoryProperties();
+  }, [selectedCategory]);
+
+  // Set up real-time subscription for properties
+  useEffect(() => {
+    const channel = supabase
+      .channel('category-section-properties-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties',
+          filter: 'published=eq.true'
+        },
+        (payload) => {
+          console.log('Category section property change detected:', payload);
+          // Reload properties when any change occurs
+          loadCategoryProperties();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [selectedCategory]);
 
   const loadCategoryProperties = async () => {
@@ -53,17 +79,17 @@ export default function CategoryPropertiesSection() {
   const selectedCategoryData = categories.find(cat => cat.value === selectedCategory);
 
   return (
-    <section className="py-16 xl:py-24 bg-muted/30">
+    <section className="py-8 xl:py-16 xl:py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-8 gap-4"
+          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-2 xl:mb-4 xl:mb-8 gap-4"
         >
           <div className="flex-1">
-            <h2 className="text-3xl xl:text-4xl font-bold mb-2">
+            <h2 className="text-xl xl:text-4xl font-bold mb-2">
               Browse by <span className="gradient-text">Category</span>
             </h2>
             <p className="text-lg text-muted-foreground">

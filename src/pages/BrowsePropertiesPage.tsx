@@ -5,6 +5,7 @@ import { Grid3x3, List, SlidersHorizontal, Search, X, Filter, Navigation, Loader
 import type { PropertyWithDetails } from '@/types/index';
 import type { FilterOptions } from '@/types/index';
 import { getProperties } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import PropertyCard from '@/components/property/PropertyCard';
 import FilterModal from '@/components/property/FilterModal';
 import Header from '@/components/layouts/Header';
@@ -95,9 +96,31 @@ export default function BrowsePropertiesPage() {
   // Load properties when filters change
   useEffect(() => {
     loadProperties();
-    // Poll for updates every 30 seconds
-    const interval = setInterval(loadProperties, 30000);
-    return () => clearInterval(interval);
+  }, [contextFilters]);
+
+  // Set up real-time subscription for properties
+  useEffect(() => {
+    const channel = supabase
+      .channel('public-properties-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties',
+          filter: 'published=eq.true'
+        },
+        (payload) => {
+          console.log('Property change detected:', payload);
+          // Reload properties when any change occurs
+          loadProperties();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [contextFilters]);
 
   // Sort properties when sort option changes or user location changes

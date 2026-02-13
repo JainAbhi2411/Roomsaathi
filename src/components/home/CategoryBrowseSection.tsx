@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Bed, Building2, Home, DoorOpen, Hotel, Calendar } from 'lucide-react';
 import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -70,9 +71,31 @@ export default function CategoryBrowseSection() {
 
   useEffect(() => {
     loadCategoryProperties();
-    // Poll for updates every 30 seconds
-    const interval = setInterval(loadCategoryProperties, 30000);
-    return () => clearInterval(interval);
+  }, [selectedCategory]);
+
+  // Set up real-time subscription for properties
+  useEffect(() => {
+    const channel = supabase
+      .channel('category-properties-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties',
+          filter: 'published=eq.true'
+        },
+        (payload) => {
+          console.log('Category property change detected:', payload);
+          // Reload properties when any change occurs
+          loadCategoryProperties();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [selectedCategory]);
 
   const loadCategoryProperties = async () => {
@@ -90,7 +113,7 @@ export default function CategoryBrowseSection() {
   const selectedCategoryData = categories.find(cat => cat.value === selectedCategory);
 
   return (
-    <section className="py-12 xl:py-16 bg-muted/30">
+    <section className="py-12 xl:py-8 xl:py-16 bg-muted/30">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -99,7 +122,7 @@ export default function CategoryBrowseSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <h2 className="text-2xl xl:text-3xl font-bold mb-2">
+          <h2 className="text-lg xl:text-3xl font-bold mb-2">
             Browse by <span className="gradient-text">Category</span>
           </h2>
           <p className="text-sm xl:text-base text-muted-foreground">

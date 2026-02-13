@@ -13,7 +13,7 @@ const getUserSessionId = (): string => {
 
 // Fetch all properties with optional filters and amenities
 export const getProperties = async (filters?: FilterOptions): Promise<PropertyWithDetails[]> => {
-  let query = supabase.from('properties').select('*').order('created_at', { ascending: false });
+  let query = supabase.from('properties').select('*').eq('published', true).order('created_at', { ascending: false });
 
   if (filters?.city) {
     query = query.eq('city', filters.city);

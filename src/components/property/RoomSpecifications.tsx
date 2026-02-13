@@ -29,9 +29,9 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
   if (!rooms || rooms.length === 0) {
     return (
       <Card>
-        <CardContent className="py-12 text-center">
+        <CardContent className="py-6 xl:py-12 text-center">
           <Bed className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No Room Information Available</h3>
+          <h3 className="text-sm xl:text-lg font-semibold mb-2">No Room Information Available</h3>
           <p className="text-sm text-muted-foreground">
             Room details for this property are currently being updated.
           </p>
@@ -51,9 +51,9 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
   }
 
   if (filterAvailability === 'available') {
-    filteredRooms = filteredRooms.filter(room => room.available);
+    filteredRooms = filteredRooms.filter(room => room.is_available);
   } else if (filterAvailability === 'unavailable') {
-    filteredRooms = filteredRooms.filter(room => !room.available);
+    filteredRooms = filteredRooms.filter(room => !room.is_available);
   }
 
   // Sort rooms
@@ -66,14 +66,14 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
       case 'type':
         return a.room_type.localeCompare(b.room_type);
       case 'availability':
-        return (b.available ? 1 : 0) - (a.available ? 1 : 0);
+        return (b.is_available ? 1 : 0) - (a.is_available ? 1 : 0);
       default:
         return 0;
     }
   });
 
   // Calculate statistics
-  const availableRooms = rooms.filter(r => r.available).length;
+  const availableRooms = rooms.filter(r => r.is_available).length;
   const priceRange = rooms.length > 0 
     ? {
         min: Math.min(...rooms.map(r => r.price)),
@@ -91,7 +91,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
       >
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
+            <h2 className="text-base xl:text-xl xl:text-3xl font-bold mb-2 flex items-center gap-3">
               <Bed className="h-8 w-8 text-primary" />
               Room Specifications
             </h2>
@@ -102,7 +102,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-2.5 xl:p-4 mb-6">
           <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
                   <Bed className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{rooms.length}</p>
+                  <p className="text-sm xl:text-lg xl:text-2xl font-bold">{rooms.length}</p>
                   <p className="text-xs text-muted-foreground">Total Rooms</p>
                 </div>
               </div>
@@ -124,7 +124,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
                   <Users className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{availableRooms}</p>
+                  <p className="text-sm xl:text-lg xl:text-2xl font-bold">{availableRooms}</p>
                   <p className="text-xs text-muted-foreground">Available</p>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
                   <IndianRupee className="h-5 w-5 text-accent-foreground" />
                 </div>
                 <div>
-                  <p className="text-lg font-bold">₹{priceRange.min.toLocaleString()}</p>
+                  <p className="text-sm xl:text-lg font-bold">₹{priceRange.min.toLocaleString()}</p>
                   <p className="text-xs text-muted-foreground">Starting From</p>
                 </div>
               </div>
@@ -152,7 +152,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
                   <Filter className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{roomTypes.length - 1}</p>
+                  <p className="text-sm xl:text-lg xl:text-2xl font-bold">{roomTypes.length - 1}</p>
                   <p className="text-xs text-muted-foreground">Room Types</p>
                 </div>
               </div>
@@ -163,7 +163,7 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
         {/* Filters and Controls */}
         <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-between">
+            <div className="flex flex-col xl:flex-row gap-2 xl:gap-2.5 xl:p-4 items-start xl:items-center justify-between">
               <div className="flex flex-wrap gap-3 flex-1">
                 {/* Room Type Filter */}
                 <Select value={filterType} onValueChange={setFilterType}>
@@ -259,9 +259,9 @@ export default function RoomSpecifications({ rooms, propertyName }: RoomSpecific
       {/* Rooms Display */}
       {filteredRooms.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
+          <CardContent className="py-6 xl:py-12 text-center">
             <Filter className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Rooms Found</h3>
+            <h3 className="text-sm xl:text-lg font-semibold mb-2">No Rooms Found</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Try adjusting your filters to see more results.
             </p>

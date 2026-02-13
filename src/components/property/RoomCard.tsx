@@ -74,20 +74,20 @@ export default function RoomCard({ room, index }: RoomCardProps) {
             />
             
             {/* Availability Badge */}
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-2.5 xl:p-4 left-4">
               <Badge 
-                className={room.available 
+                className={room.is_available 
                   ? "bg-success text-white" 
                   : "bg-destructive text-white"
                 }
               >
-                {room.available ? '✓ Available' : '✗ Not Available'}
+                {room.is_available ? '✓ Available' : '✗ Not Available'}
               </Badge>
             </div>
 
             {/* Short Term Badge */}
             {room.short_term_available && (
-              <div className="absolute top-4 right-4">
+              <div className="absolute top-2.5 xl:p-4 right-4">
                 <Badge className="bg-accent text-accent-foreground">
                   <Calendar className="mr-1 h-3 w-3" />
                   Short Term
@@ -123,7 +123,7 @@ export default function RoomCard({ room, index }: RoomCardProps) {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-2xl font-bold mb-2">
+              <CardTitle className="text-sm xl:text-lg xl:text-2xl font-bold mb-2">
                 {room.room_type} Room
               </CardTitle>
               {room.room_number && (
@@ -136,7 +136,7 @@ export default function RoomCard({ room, index }: RoomCardProps) {
             
             {/* Price Display */}
             <div className="text-right">
-              <div className="flex items-center gap-1 text-2xl font-bold text-primary">
+              <div className="flex items-center gap-1 text-sm xl:text-lg xl:text-2xl font-bold text-primary">
                 <IndianRupee className="h-5 w-5" />
                 <span>{room.price.toLocaleString()}</span>
               </div>
@@ -162,7 +162,7 @@ export default function RoomCard({ room, index }: RoomCardProps) {
 
           {/* Occupancy Info */}
           {room.seats && (
-            <div className="flex items-center gap-4 p-3 bg-secondary/30 rounded-lg">
+            <div className="flex items-center gap-2 xl:gap-2.5 xl:p-4 p-3 bg-secondary/30 rounded-lg">
               <Users className="h-5 w-5 text-primary" />
               <div className="flex-1">
                 <p className="text-sm font-medium">Occupancy</p>
@@ -255,9 +255,9 @@ export default function RoomCard({ room, index }: RoomCardProps) {
           <Button 
             className="w-full" 
             size="lg"
-            disabled={!room.available}
+            disabled={!room.is_available}
           >
-            {room.available ? 'Inquire Now' : 'Currently Unavailable'}
+            {room.is_available ? 'Inquire Now' : 'Currently Unavailable'}
           </Button>
         </CardContent>
       </Card>

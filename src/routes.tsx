@@ -17,6 +17,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TestAuthPage from './pages/TestAuthPage';
 import MessCentersPage from './pages/MessCentersPage';
 import MessDetailPage from './pages/MessDetailPage';
+import InstallAppPage from './pages/InstallAppPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import Properties from './pages/admin/Properties';
@@ -32,6 +33,10 @@ import Coupons from './pages/admin/Coupons';
 import ChatbotFeedback from './pages/admin/ChatbotFeedback';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import AdminLayout from './components/layouts/AdminLayout';
+import WelcomePage from './pages/mobile/WelcomePage';
+import MobileHomePage from './pages/mobile/MobileHomePage';
+import ChatPage from './pages/mobile/ChatPage';
+import MobilePropertyDetailPage from './pages/mobile/MobilePropertyDetailPage';
 import type { ReactNode } from 'react';
 
 // Lazy load BlogPostPage to avoid react-markdown loading issues
@@ -165,6 +170,37 @@ const routes: RouteConfig[] = [
     name: 'Mess Detail',
     path: '/mess/:id',
     element: <MessDetailPage />,
+    visible: false
+  },
+  {
+    name: 'Install App',
+    path: '/install',
+    element: <InstallAppPage />,
+    visible: false
+  },
+  // Mobile App Routes
+  {
+    name: 'Welcome',
+    path: '/welcome',
+    element: <WelcomePage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Home',
+    path: '/mobile',
+    element: <MobileHomePage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Chat',
+    path: '/mobile/chat',
+    element: <ChatPage />,
+    visible: false
+  },
+  {
+    name: 'Mobile Property Detail',
+    path: '/mobile/property/:id',
+    element: <MobilePropertyDetailPage />,
     visible: false
   },
   // Admin Routes

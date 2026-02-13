@@ -1,46 +1,24 @@
-import { useState, useEffect, useRef ,useCallback} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router';
 import type { PropertyWithDetails } from '@/types/index';
 import { getProperties } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import PropertyCardSmall from '@/components/property/PropertyCardSmall';
 import { Skeleton } from '@/components/ui/skeleton';
-import { supabase } from '@/db/supabase';
-import { toast } from '@/hooks/use-toast';
 
 export default function FeaturedPropertiesSection() {
   const [properties, setProperties] = useState<PropertyWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * Initial fetch
-   */
-  const loadFeaturedProperties = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getProperties({ verified: true });
-      setProperties(data.slice(0, 8));
-    } catch (error) {
-      console.error('Failed to load featured properties:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-   /**
-   * Initial load
-   */
   useEffect(() => {
     loadFeaturedProperties();
-  }, [loadFeaturedProperties]);
+  }, []);
 
-
-  /**
-   * Realtime subscription (created ONCE)
-   */
+  // Set up real-time subscription for properties
   useEffect(() => {
     const channel = supabase
       .channel('featured-properties-changes')
@@ -50,52 +28,12 @@ export default function FeaturedPropertiesSection() {
           event: '*',
           schema: 'public',
           table: 'properties',
+          filter: 'published=eq.true'
         },
         (payload) => {
-          const newRow = payload.new as PropertyWithDetails | null;
-          const oldRow = payload.old as PropertyWithDetails | null;
-
-          // Only react to VERIFIED properties
-          const isRelevant =
-            newRow?.verified === true ||
-            oldRow?.verified === true;
-
-          if (!isRelevant) return;
-
-          if (payload.eventType === 'INSERT' && newRow?.verified) {
-            toast({
-              title: 'New Property Added',
-              description: 'A new verified property is now live.',
-            });
-
-            setProperties((prev) =>
-              [newRow, ...prev].slice(0, 8)
-            );
-          }
-
-          if (payload.eventType === 'UPDATE' && newRow?.verified) {
-            toast({
-              title: 'Property Updated',
-              description: 'A featured property was updated.',
-            });
-
-            setProperties((prev) =>
-              prev.map((p) =>
-                p.id === newRow.id ? newRow : p
-              )
-            );
-          }
-
-          if (payload.eventType === 'DELETE' && oldRow) {
-            toast({
-              title: 'Property Removed',
-              description: 'A featured property was removed.',
-            });
-
-            setProperties((prev) =>
-              prev.filter((p) => p.id !== oldRow.id)
-            );
-          }
+          console.log('Featured property change detected:', payload);
+          // Reload properties when any change occurs
+          loadFeaturedProperties();
         }
       )
       .subscribe();
@@ -104,6 +42,18 @@ export default function FeaturedPropertiesSection() {
       supabase.removeChannel(channel);
     };
   }, []);
+
+  const loadFeaturedProperties = async () => {
+    setLoading(true);
+    try {
+      const data = await getProperties({ verified: true });
+      setProperties(data.slice(0, 8));
+    } catch (error) {
+      console.error('Failed to load featured properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -117,17 +67,17 @@ export default function FeaturedPropertiesSection() {
   };
 
   return (
-    <section className="py-16 xl:py-24">
+    <section className="py-8 xl:py-16 xl:py-24">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-8 gap-4"
+          className="flex flex-col @md:flex-row justify-between items-start @md:items-center mb-2 xl:mb-4 xl:mb-8 gap-4"
         >
           <div>
-            <h2 className="text-3xl xl:text-4xl font-bold mb-2">
+            <h2 className="text-xl xl:text-4xl font-bold mb-2">
               Featured <span className="gradient-text">Properties</span>
             </h2>
             <p className="text-lg text-muted-foreground">

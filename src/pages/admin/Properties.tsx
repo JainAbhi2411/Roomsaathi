@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { Plus, Edit, Trash2, MapPin, IndianRupee, Eye, DoorOpen } from 'lucide-react';
+import { Plus, Edit, Trash2, MapPin, IndianRupee, Eye, EyeOff, DoorOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { getAllPropertiesAdmin, deleteProperty } from '@/db/adminApi';
+import { getAllPropertiesAdmin, deleteProperty, updateProperty } from '@/db/adminApi';
 import { supabase } from '@/db/supabase';
 import type { Property } from '@/types/index';
 import { useToast } from '@/hooks/use-toast';
@@ -62,6 +63,49 @@ export default function Properties() {
       toast({
         title: 'Error',
         description: result.error || 'Failed to delete property',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handlePublishToggle = async (id: string, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    console.log('Toggling publish status:', { id, currentStatus, newStatus });
+    
+    // Optimistically update UI
+    setProperties(prev => 
+      prev.map(p => p.id === id ? { ...p, published: newStatus } as Property : p)
+    );
+    
+    try {
+      const result = await updateProperty(id, { published: newStatus } as any);
+      
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: `Property ${newStatus ? 'published' : 'unpublished'} successfully`
+        });
+        // Reload to ensure consistency
+        await loadProperties();
+      } else {
+        // Revert optimistic update on error
+        setProperties(prev => 
+          prev.map(p => p.id === id ? { ...p, published: currentStatus } as Property : p)
+        );
+        toast({
+          title: 'Error',
+          description: result.error || 'Failed to update property',
+          variant: 'destructive'
+        });
+      }
+    } catch (error: any) {
+      // Revert optimistic update on error
+      setProperties(prev => 
+        prev.map(p => p.id === id ? { ...p, published: currentStatus } as Property : p)
+      );
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update property',
         variant: 'destructive'
       });
     }
@@ -131,17 +175,25 @@ export default function Properties() {
                       <Eye className="h-12 w-12 text-muted-foreground" />
                     </div>
                   )}
-                  {property.verified && (
-                    <Badge className="absolute top-2 right-2 bg-green-500">
-                      Verified
-                    </Badge>
-                  )}
                 </div>
 
                 <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg text-foreground mb-2 line-clamp-1">
-                    {property.name}
-                  </h3>
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-lg text-foreground line-clamp-1 flex-1">
+                      {property.name}
+                    </h3>
+                    <div className="flex items-center gap-2 ml-2">
+                      {(property as any).published ? (
+                        <Eye className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <Switch
+                        checked={(property as any).published || false}
+                        onCheckedChange={() => handlePublishToggle(property.id, (property as any).published || false)}
+                      />
+                    </div>
+                  </div>
                   
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -152,7 +204,17 @@ export default function Properties() {
                       <IndianRupee className="h-4 w-4" />
                       <span>₹{property.price_from.toLocaleString()}/month</span>
                     </div>
-                    <Badge variant="outline">{property.type}</Badge>
+                    <div className="flex gap-2">
+                      <Badge variant="outline">{property.type}</Badge>
+                      {property.verified && (
+                        <Badge className="bg-green-500">Verified</Badge>
+                      )}
+                      {(property as any).published ? (
+                        <Badge className="bg-blue-500">Published</Badge>
+                      ) : (
+                        <Badge variant="secondary">Draft</Badge>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
