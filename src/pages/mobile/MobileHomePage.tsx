@@ -23,6 +23,8 @@ export default function MobileHomePage() {
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
+  //console.log("featured" , featuredProperties);
+
   // 🔥 Load All Verified + Published Properties
   const loadFeaturedProperties = async () => {
     try {
