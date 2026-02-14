@@ -378,17 +378,59 @@ export default function PropertyFormWizard({ property, onCancel }: PropertyFormW
             )}
 
             {currentStep === 2 && (
-              <Button onClick={handleAmenitiesNext} disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save & Continue'}
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    toast({
+                      title: 'Skipped',
+                      description: 'You can add amenities later by editing the property'
+                    });
+                    setCurrentStep(3);
+                  }} 
+                  disabled={isSaving}
+                >
+                  Skip Amenities
+                </Button>
+                <Button onClick={handleAmenitiesNext} disabled={isSaving}>
+                  {isSaving ? 'Saving...' : amenities.length > 0 ? 'Save & Continue' : 'Continue'}
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
             )}
 
             {currentStep === 3 && (
-              <Button onClick={handlePoliciesFinish} disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Finish'}
-                <Save className="h-4 w-4 ml-2" />
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    toast({
+                      title: 'Skipped',
+                      description: 'You can add policies later by editing the property'
+                    });
+                    // Navigate without saving policies
+                    if (isEdit) {
+                      navigate('/admin/properties');
+                    } else {
+                      toast({
+                        title: 'Success',
+                        description: 'Property created successfully! Add rooms to complete the listing.',
+                        duration: 3000
+                      });
+                      setTimeout(() => {
+                        navigate(`/admin/properties/${createdPropertyId}/rooms`);
+                      }, 1000);
+                    }
+                  }} 
+                  disabled={isSaving}
+                >
+                  Skip Policies
+                </Button>
+                <Button onClick={handlePoliciesFinish} disabled={isSaving}>
+                  {isSaving ? 'Saving...' : policies.length > 0 ? 'Save & Finish' : 'Finish'}
+                  <Save className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
             )}
           </div>
         </CardContent>

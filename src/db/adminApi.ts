@@ -136,16 +136,26 @@ export async function updatePropertyPublished(id: string, published: boolean): P
 
 export async function deleteProperty(id: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', id);
+    console.log('Deleting property:', id);
+    
+    const { data, error } = await supabase.rpc('admin_delete_property', {
+      property_id: id
+    });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to delete property');
+    }
+
+    console.log('Property deleted successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting property:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to delete property' };
   }
 }
 
@@ -328,30 +338,49 @@ export async function deletePropertyPolicy(id: string): Promise<{ success: boole
 
 export async function bulkCreatePropertyPolicies(policies: Omit<PropertyPolicy, 'id' | 'created_at' | 'updated_at'>[]): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log('Bulk creating property policies:', policies.length, 'items');
+    
+    if (policies.length === 0) {
+      console.log('No policies to create');
+      return { success: true };
+    }
+
     const { error } = await supabase
       .from('property_policies')
       .insert(policies);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error creating policies:', error);
+      throw error;
+    }
+    
+    console.log('Policies created successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error creating policies:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to create policies' };
   }
 }
 
 export async function bulkDeletePropertyPolicies(propertyId: string): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log('Bulk deleting property policies for property:', propertyId);
+    
     const { error } = await supabase
       .from('property_policies')
       .delete()
       .eq('property_id', propertyId);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error deleting policies:', error);
+      throw error;
+    }
+    
+    console.log('Policies deleted successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting policies:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to delete policies' };
   }
 }
 
@@ -450,30 +479,49 @@ export async function getPropertyAmenities(propertyId: string): Promise<{ proper
 
 export async function bulkCreateAmenities(amenities: { property_id: string; amenity_name: string; amenity_icon: string }[]): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log('Bulk creating amenities:', amenities.length, 'items');
+    
+    if (amenities.length === 0) {
+      console.log('No amenities to create');
+      return { success: true };
+    }
+
     const { error } = await supabase
       .from('amenities')
       .insert(amenities);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error creating amenities:', error);
+      throw error;
+    }
+    
+    console.log('Amenities created successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error creating amenities:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to create amenities' };
   }
 }
 
 export async function bulkDeleteAmenities(propertyId: string): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log('Bulk deleting amenities for property:', propertyId);
+    
     const { error } = await supabase
       .from('amenities')
       .delete()
       .eq('property_id', propertyId);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error deleting amenities:', error);
+      throw error;
+    }
+    
+    console.log('Amenities deleted successfully');
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting amenities:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to delete amenities' };
   }
 }
 
