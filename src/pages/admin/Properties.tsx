@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { getAllPropertiesAdmin, deleteProperty, updateProperty } from '@/db/adminApi';
+import { getAllPropertiesAdmin, deleteProperty, updatePropertyPublished } from '@/db/adminApi';
 import { supabase } from '@/db/supabase';
 import type { Property } from '@/types/index';
 import { useToast } from '@/hooks/use-toast';
@@ -78,7 +78,7 @@ export default function Properties() {
     );
     
     try {
-      const result = await updateProperty(id, { published: newStatus } as any);
+      const result = await updatePropertyPublished(id, newStatus);
       
       if (result.success) {
         toast({

@@ -108,6 +108,32 @@ export async function updateProperty(id: string, property: Partial<Property>): P
   }
 }
 
+export async function updatePropertyPublished(id: string, published: boolean): Promise<{ success: boolean; error?: string; data?: Property }> {
+  try {
+    console.log('Updating property published status:', id, published);
+    
+    const { data, error } = await supabase.rpc('admin_update_property_published', {
+      property_id: id,
+      new_published_status: published
+    });
+    
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to update published status');
+    }
+    
+    console.log('Property published status updated successfully:', data.data);
+    return { success: true, data: data.data };
+  } catch (error: any) {
+    console.error('Error updating property published status:', error);
+    return { success: false, error: error.message || 'Failed to update published status' };
+  }
+}
+
 export async function deleteProperty(id: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { error } = await supabase
