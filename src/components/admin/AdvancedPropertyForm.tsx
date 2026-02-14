@@ -221,8 +221,10 @@ export default function AdvancedPropertyForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('AdvancedPropertyForm: handleSubmit called', { hideButtons, property: property?.id });
 
     if (!validateForm()) {
+      console.log('AdvancedPropertyForm: Validation failed');
       toast({
         title: 'Validation Error',
         description: 'Please fix the errors in the form',
@@ -231,6 +233,7 @@ export default function AdvancedPropertyForm({
       return;
     }
 
+    console.log('AdvancedPropertyForm: Validation passed, saving...');
     setIsSaving(true);
 
     try {
@@ -296,20 +299,27 @@ export default function AdvancedPropertyForm({
         cleaning_service: formData.cleaning_service || null,
       };
 
+      console.log('AdvancedPropertyForm: Calling onSave with cleaned data');
       await onSave(cleanedData);
+      console.log('AdvancedPropertyForm: onSave completed successfully');
 
-      toast({
-        title: 'Success',
-        description: property ? 'Property updated successfully' : 'Property created successfully',
-      });
+      // Only show toast if not in wizard mode (hideButtons = false)
+      if (!hideButtons) {
+        toast({
+          title: 'Success',
+          description: property ? 'Property updated successfully' : 'Property created successfully',
+        });
+      }
     } catch (error: any) {
-      console.error('Error saving property:', error);
+      console.error('AdvancedPropertyForm: Error saving property:', error);
+      // Always show error toast
       toast({
         title: 'Error',
         description: error.message || 'Failed to save property',
         variant: 'destructive',
       });
     } finally {
+      console.log('AdvancedPropertyForm: Setting isSaving to false');
       setIsSaving(false);
     }
   };

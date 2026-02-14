@@ -91,23 +91,34 @@ export default function PropertyFormWizard({ property, onCancel }: PropertyFormW
   };
 
   const handlePropertySave = async (data: any) => {
+    console.log('PropertyFormWizard: handlePropertySave called', { isEdit, propertyId: property?.id });
     setPropertyData(data);
     
     // If editing, save immediately and move to next step
     if (isEdit && property?.id) {
       try {
         setIsSaving(true);
+        console.log('PropertyFormWizard: Updating property', property.id);
+        
         const result = await updateProperty(property.id, data);
+        
+        console.log('PropertyFormWizard: Update result', result);
+        
         if (!result.success) {
-          throw new Error(result.error);
+          throw new Error(result.error || 'Failed to update property');
         }
+        
         setCreatedPropertyId(property.id);
+        
         toast({
           title: 'Success',
           description: 'Property details updated successfully'
         });
+        
+        console.log('PropertyFormWizard: Moving to step 2');
         setCurrentStep(2);
       } catch (error: any) {
+        console.error('PropertyFormWizard: Error updating property', error);
         toast({
           title: 'Error',
           description: error.message || 'Failed to update property',
@@ -122,18 +133,27 @@ export default function PropertyFormWizard({ property, onCancel }: PropertyFormW
     // If creating new, create property first
     try {
       setIsSaving(true);
+      console.log('PropertyFormWizard: Creating new property');
+      
       const result = await createProperty(data);
+      
+      console.log('PropertyFormWizard: Create result', result);
+      
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Failed to create property');
       }
       
       setCreatedPropertyId(result.data.id);
+      
       toast({
         title: 'Success',
         description: 'Property created successfully. Now add amenities and policies.'
       });
+      
+      console.log('PropertyFormWizard: Moving to step 2');
       setCurrentStep(2);
     } catch (error: any) {
+      console.error('PropertyFormWizard: Error creating property', error);
       toast({
         title: 'Error',
         description: error.message || 'Failed to create property',
