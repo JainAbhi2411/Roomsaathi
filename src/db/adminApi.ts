@@ -72,16 +72,24 @@ export async function getAllPropertiesAdmin(): Promise<Property[]> {
 
 export async function createProperty(property: Omit<Property, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; error?: string; data?: Property }> {
   try {
+    console.log('Creating property:', property);
+    
     // Use RPC function to bypass RLS
     const { data, error } = await supabase.rpc('admin_create_property', {
       property_data: property
     });
 
-    if (error) throw error;
-    return { success: true, data };
+    if (error) {
+      console.error('Supabase RPC error:', error);
+      throw error;
+    }
+    
+    // The RPC returns the property data directly, not wrapped in success/error
+    console.log('Property created successfully:', data);
+    return { success: true, data: data as Property };
   } catch (error: any) {
     console.error('Error creating property:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Failed to create property' };
   }
 }
 
@@ -100,8 +108,9 @@ export async function updateProperty(id: string, property: Partial<Property>): P
       throw error;
     }
     
+    // The RPC returns the property data directly, not wrapped in success/error
     console.log('Property updated successfully:', data);
-    return { success: true, data };
+    return { success: true, data: data as Property };
   } catch (error: any) {
     console.error('Error updating property:', error);
     return { success: false, error: error.message || 'Failed to update property' };
