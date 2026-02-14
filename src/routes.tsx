@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react';
+import { Navigate } from 'react-router';
 import HomePage from './pages/HomePage';
 import BrowsePropertiesPage from './pages/BrowsePropertiesPage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
@@ -261,6 +262,16 @@ const routes: RouteConfig[] = [
     visible: false
   },
   // Admin Routes
+  {
+    name: 'Admin Root',
+    path: '/admin',
+    element: (
+      <ProtectedAdminRoute>
+        <Navigate to="/admin/dashboard" replace />
+      </ProtectedAdminRoute>
+    ),
+    visible: false
+  },
   {
     name: 'Admin Login',
     path: '/admin/login',
